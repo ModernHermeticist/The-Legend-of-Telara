@@ -1,18 +1,20 @@
 import libtcodpy as libtcod
-
 import math
+
+from render_functions import RenderOrder
 
 class Entity:
 	"""
 	A generic object to represent players, enemies, items, etc.
 	"""
-	def __init__(self, x, y, char, color, name, blocks=False, fighter=None, ai=None):
+	def __init__(self, x, y, char, color, name, blocks=False, render_order=RenderOrder.CORPSE, fighter=None, ai=None):
 		self.x = x
 		self.y = y
 		self.char = char
 		self.color = color
 		self.name = name
 		self.blocks = blocks
+		self.render_order = render_order
 		self.fighter = fighter
 		self.ai = ai
 
@@ -41,20 +43,20 @@ class Entity:
 
 	def move_astar(self, target, entities, game_map):
 		#Create a FOV map that has the dimensions of the map
-		fov = libtcod.map_new(MAP_WIDTH, MAP_HEIGHT)
+		fov = libtcod.map_new(game_map.width, game_map.height)
  
 		#Scan the current map each turn and set all the walls as unwalkable
-		for y1 in range(MAP_HEIGHT):
-			for x1 in range(MAP_WIDTH):
-				libtcod.map_set_properties(fov, x1, y1, not map[x1][y1].block_sight, not map[x1][y1].blocked)
+		for y1 in range(game_map.height):
+			for x1 in range(game_map.width):
+				libtcod.map_set_properties(fov, x1, y1, not game_map.tiles[x1][y1].block_sight, not game_map.tiles[x1][y1].blocked)
  
 		#Scan all the objects to see if there are objects that must be navigated around
 		#Check also that the object isn't self or the target (so that the start and the end points are free)
 		#The AI class handles the situation if self is next to the target so it will not use this A* function anyway   
-		for obj in objects:
-			if obj.blocks and obj != self and obj != target:
+		for entity in entities:
+			if entity.blocks and entity != self and entity != target:
 				#Set the tile as a wall so it must be navigated around
-				libtcod.map_set_properties(fov, obj.x, obj.y, True, False)
+				libtcod.map_set_properties(fov, entity.x, entity.y, True, False)
  
 		#Allocate a A* path
 		#The 1.41 is the normal diagonal cost of moving, it can be set as 0.0 if diagonal moves are prohibited
@@ -76,7 +78,7 @@ class Entity:
 		else:
 			#Keep the old move function as a backup so that if there are no paths (for example another monster blocks a corridor)
 			#it will still try to move towards the player (closer to the corridor opening)
-			self.move_towards(target.x, target.y)  
+			self.move_towards(target.x, target.y, game_map, entities)  
  
 		#Delete the path to free memory
 		libtcod.path_delete(my_path)
