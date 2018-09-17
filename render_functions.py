@@ -60,8 +60,6 @@ def render_all(con, panel, entities, player, game_map, fov_map, fov_recompute, m
 	libtcod.console_print_ex(panel, 1, 0, libtcod.BKGND_NONE, libtcod.LEFT,
 							get_names_under_mouse(mouse, entities, fov_map))
 
-	libtcod.console_blit(panel, 0, 0, screen_width, panel_height, 0, 0, panel_y)
-
 	if game_state == GameStates.SHOW_INVENTORY:
 		inventory_menu(con, "Press the key next to an item to use it, or Esc to cancel.\n",
 						player.inventory, 50, screen_width, screen_height)
@@ -69,6 +67,8 @@ def render_all(con, panel, entities, player, game_map, fov_map, fov_recompute, m
 	elif game_state == GameStates.DROP_INVENTORY:
 		inventory_menu(con, "Press the key next to an item to drop it, or Esc to cancel.\n",
 						player.inventory, 50, screen_width, screen_height)
+
+	libtcod.console_blit(panel, 0, 0, screen_width, panel_height, 0, 0, panel_y)
 
 def clear_all(con, entities):
 	for entity in entities:

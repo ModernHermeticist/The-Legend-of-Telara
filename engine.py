@@ -14,8 +14,8 @@ from components.inventory import Inventory
 
 
 def main():
-	screen_width = 80
-	screen_height = 50
+	screen_width = 160
+	screen_height = 90
 
 	bar_width = 20
 	panel_height = 7
@@ -59,8 +59,7 @@ def main():
 	entities = [player]
 
 
-	#libtcod.console_set_custom_font('arial12x12.png')
-	#libtcod.console_set_custom_font('terminal8x8_aa_as', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD)
+	libtcod.console_set_custom_font('arial12x12.png', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD)
 
 	libtcod.console_init_root(screen_width, screen_height, 'The Legend of Telara', False)
 
@@ -255,6 +254,7 @@ def main():
 						break
 			else:
 				game_state = GameStates.PLAYERS_TURN
+		print(game_state)
 
 
 if __name__ == '__main__':
