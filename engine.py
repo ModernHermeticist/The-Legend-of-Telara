@@ -58,7 +58,9 @@ def main():
 					fighter=fighter_component, inventory=inventory_component)
 	entities = [player]
 
-	libtcod.console_set_custom_font('arial10x10.png', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD)
+
+	#libtcod.console_set_custom_font('arial12x12.png')
+	#libtcod.console_set_custom_font('terminal8x8_aa_as', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD)
 
 	libtcod.console_init_root(screen_width, screen_height, 'The Legend of Telara', False)
 
