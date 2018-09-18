@@ -4,7 +4,7 @@ from enum import Enum
 
 from game_states import GameStates
 
-from interfaces.menus import inventory_menu, level_up_menu
+from interfaces.menus import inventory_menu, level_up_menu, character_screen
 
 class RenderOrder(Enum):
 	STAIRS = 1
@@ -75,6 +75,9 @@ def render_all(con, panel, entities, player, game_map, fov_map, fov_recompute, m
 
 	elif game_state == GameStates.LEVEL_UP:
 		level_up_menu(con, 'Level up! Choose a stat to raise:', player, 40, screen_width, screen_height)
+
+	elif game_state == GameStates.CHARACTER_SCREEN:
+		character_screen(player, 30, 10, screen_width, screen_height)
 
 	libtcod.console_blit(panel, 0, 0, screen_width, panel_height, 0, 0, panel_y)
 
