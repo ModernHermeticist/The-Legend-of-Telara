@@ -3,8 +3,12 @@ import libtcodpy as libtcod
 from components.fighter import Fighter
 from components.inventory import Inventory
 from components.level import Level
+from components.equipment import Equipment
+from components.equippable import Equippable
 
 from entity import Entity
+
+from equipment_slots import EquipmentSlots
 
 from game_messages import MessageLog
 
@@ -15,7 +19,7 @@ from map_objects.game_map import GameMap
 from render_functions import RenderOrder
 
 def get_constants():
-	window_title = 'The Legened of Telara'
+	window_title = 'The Legend of Telara'
 
 	screen_width = 160
 	screen_height = 90
@@ -24,7 +28,10 @@ def get_constants():
 	panel_height = 7
 	panel_y = screen_height - panel_height
 
-	message_x = bar_width + 2
+	message_panel_width = int(screen_width / 3)
+	char_info_panel_width = int((screen_width / 4) - 10)
+
+	message_log_x = bar_width + 2
 	message_width = screen_width - bar_width - 2
 	message_height = panel_height - 1
 
@@ -60,9 +67,11 @@ def get_constants():
 				'bar_width':             bar_width,
 				'panel_height':          panel_height,
 				'panel_y':               panel_y,
-				'message_x':             message_x,
+				'message_log_x':         message_log_x,
 				'message_width':         message_width,
 				'message_height':        message_height,
+				'message_panel_width':   message_panel_width,
+				'char_info_panel_width': char_info_panel_width,
 				'map_width':             map_width,
 				'map_height':            map_height,
 				'room_max_size':         room_max_size,
@@ -79,19 +88,25 @@ def get_constants():
 	return constants
 
 def get_game_variables(constants):
-	fighter_component = Fighter(hp=30, defense=2, power=5)
+	fighter_component = Fighter(hp=100, defense=1, power=2)
 	inventory_component = Inventory(26)
 	level_component = Level()
+	equipment_component = Equipment()
 	player = Entity(0, 0, '@', libtcod.white, 'Player', blocks=True, render_order=RenderOrder.ACTOR, 
-					fighter=fighter_component, inventory=inventory_component, level=level_component)
+					fighter=fighter_component, inventory=inventory_component, level=level_component,
+					equipment=equipment_component)
 	entities = [player]
+
+	equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=2)
+	dagger = Entity(0,0, '-', libtcod.sky, 'Dagger', equippable=equippable_component)
+	player.inventory.add_item(dagger)
+	player.equipment.toggle_equip(dagger)
 
 	game_map = GameMap(constants['map_width'], constants['map_height'])
 
 	game_map.make_map(constants['max_rooms'], constants['room_min_size'], constants['room_max_size'],
-					  constants['map_width'], constants['map_height'], player, entities, 
-					  constants['max_monsters_per_room'], constants['max_items_per_room'])
-	message_log = MessageLog(constants['message_x'], constants['message_width'], constants['message_height'])
+					  constants['map_width'], constants['map_height'], player, entities)
+	message_log = MessageLog(constants['message_log_x'], constants['message_width'], constants['message_height'])
 	game_state = GameStates.PLAYERS_TURN
 
 	return player, entities, game_map, message_log, game_state

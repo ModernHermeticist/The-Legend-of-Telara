@@ -12,7 +12,8 @@ class RenderOrder(Enum):
 	ITEM = 3
 	ACTOR = 4
 
-def render_all(con, panel, entities, player, game_map, fov_map, fov_recompute, message_log,
+def render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse_panel, entities, 
+				player, game_map, fov_map, fov_recompute, message_log,
 				screen_width, screen_height, bar_width, panel_height, panel_y, mouse, colors, game_state):
 	if fov_recompute:
 		# Draw all the tile in the game map
@@ -44,34 +45,36 @@ def render_all(con, panel, entities, player, game_map, fov_map, fov_recompute, m
 
 	libtcod.console_blit(con, 0, 0, screen_width, screen_height, 0, 0, 0)
 
-	libtcod.console_set_default_background(panel, libtcod.black)
-	libtcod.console_clear(panel)
+	libtcod.console_set_default_background(message_panel, libtcod.dark_sepia)
+	libtcod.console_set_default_background(char_info_panel, libtcod.black)
+	libtcod.console_clear(char_info_panel)
+	libtcod.console_clear(message_panel)
 
 	# Print the game message, one line at a time
 	y = 1
 	for message in message_log.messages:
-		libtcod.console_set_default_foreground(panel, message.color)
-		libtcod.console_print_ex(panel, message_log.x, y, libtcod.BKGND_NONE, libtcod.LEFT, message.text)
+		libtcod.console_set_default_foreground(message_panel, message.color)
+		libtcod.console_print_ex(message_panel, 0, y, libtcod.BKGND_NONE, libtcod.LEFT, message.text)
 		y += 1
 
-	render_bar(panel, 1, 1, bar_width, "HP", player.fighter.hp, 
+	render_bar(char_info_panel, 1, 1, bar_width, "HP", player.fighter.hp, 
 				player.fighter.max_hp, libtcod.light_red, libtcod.darker_red)
-	render_bar(panel, 1, 2, bar_width, "XP", player.level.current_xp, 
+	render_bar(char_info_panel, 1, 2, bar_width, "XP", player.level.current_xp, 
 				player.level.experience_to_next_level, libtcod.gold, libtcod.brass)
-	libtcod.console_print_ex(panel, 1, 3, libtcod.BKGND_NONE, libtcod.LEFT,
+	libtcod.console_print_ex(area_info_panel, 1, 3, libtcod.BKGND_NONE, libtcod.LEFT,
 								'Dungeon level: {0}'.format(game_map.dungeon_level))
 
-	libtcod.console_set_default_foreground(panel, libtcod.light_gray)
-	libtcod.console_print_ex(panel, 1, 0, libtcod.BKGND_NONE, libtcod.LEFT,
+	libtcod.console_set_default_foreground(under_mouse_panel, libtcod.light_gray)
+	libtcod.console_print_ex(under_mouse_panel, 1, 0, libtcod.BKGND_NONE, libtcod.LEFT,
 							get_names_under_mouse(mouse, entities, fov_map))
 
 	if game_state == GameStates.SHOW_INVENTORY:
 		inventory_menu(con, "Press the key next to an item to use it, or Esc to cancel.\n",
-						player.inventory, 50, screen_width, screen_height)
+						player, 50, screen_width, screen_height)
 
 	elif game_state == GameStates.DROP_INVENTORY:
 		inventory_menu(con, "Press the key next to an item to drop it, or Esc to cancel.\n",
-						player.inventory, 50, screen_width, screen_height)
+						player, 50, screen_width, screen_height)
 
 	elif game_state == GameStates.LEVEL_UP:
 		level_up_menu(con, 'Level up! Choose a stat to raise:', player, 40, screen_width, screen_height)
@@ -79,7 +82,8 @@ def render_all(con, panel, entities, player, game_map, fov_map, fov_recompute, m
 	elif game_state == GameStates.CHARACTER_SCREEN:
 		character_screen(player, 30, 10, screen_width, screen_height)
 
-	libtcod.console_blit(panel, 0, 0, screen_width, panel_height, 0, 0, panel_y)
+	libtcod.console_blit(message_panel, 0, 0, screen_width, panel_height, 0, 30, panel_y)
+	libtcod.console_blit(char_info_panel, 0, 0, screen_width, panel_height, 0, 0, panel_y)
 
 def clear_all(con, entities):
 	for entity in entities:

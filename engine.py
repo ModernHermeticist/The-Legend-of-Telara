@@ -13,7 +13,8 @@ from loader_functions.data_loaders import load_game, save_game
 from interfaces.menus import main_menu, message_box
 
 
-def play_game(player, entities, game_map, message_log, game_state, con, panel, constants):
+def play_game(player, entities, game_map, message_log, game_state, con, message_panel,
+					 char_info_panel, area_info_panel, under_mouse_panel, constants):
 	fov_recompute = True
 
 	fov_map = initialize_fov(game_map)
@@ -32,9 +33,10 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 		if fov_recompute:
 			recompute_fov(fov_map, player.x, player.y, constants['fov_radius'], constants['fov_light_walls'], constants['fov_algorithm'])
 
-		render_all(con, panel, entities, player, game_map, fov_map, fov_recompute,
-					message_log, constants['screen_width'], constants['screen_height'], constants['bar_width'], constants['panel_height'],
-					constants['panel_y'], mouse, constants['colors'], game_state)
+		render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse_panel, entities, 
+				   player, game_map, fov_map, fov_recompute, message_log,
+				   constants['screen_width'], constants['screen_height'], constants['bar_width'],
+				   constants['panel_height'], constants['panel_y'], mouse, constants['colors'], game_state)
 
 		fov_recompute = False
 
@@ -124,12 +126,12 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 
 		if level_up:
 			if level_up == 'hp':
-				player.fighter.max_hp += 20
+				player.fighter.base_max_hp += 20
 				player.fighter.hp += 20
 			elif level_up == 'str':
-				player.fighter.power += 1
+				player.fighter.base_power += 1
 			elif level_up == 'def':
-				player.fighter.defense += 1
+				player.fighter.base_defense += 1
 
 			game_state = previous_game_state
 
@@ -162,14 +164,15 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 			libtcod.console_set_fullscreen(not libtcod.console_is_fullscreen())
 
 		for player_turn_result in player_turn_results:
-			message = player_turn_result.get('message')
-			dead_entity = player_turn_result.get('dead')
-			item_added = player_turn_result.get('item_added')
-			item_consumed = player_turn_result.get('consumed')
-			item_dropped = player_turn_result.get('item_dropped')
-			targeting = player_turn_result.get('targeting')
+			message =             player_turn_result.get('message')
+			dead_entity =         player_turn_result.get('dead')
+			item_added =          player_turn_result.get('item_added')
+			item_consumed =       player_turn_result.get('consumed')
+			item_dropped =        player_turn_result.get('item_dropped')
+			equip =               player_turn_result.get('equip')
+			targeting =           player_turn_result.get('targeting')
 			targeting_cancelled = player_turn_result.get('targeting_cancelled')
-			xp = player_turn_result.get('xp')
+			xp =                  player_turn_result.get('xp')
 
 			if message:
 				message_log.add_message(message)
@@ -187,6 +190,21 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 				game_state = GameStates.ENEMY_TURN
 
 			if item_consumed:
+				game_state = GameStates.ENEMY_TURN
+
+			if equip:
+				equip_results = player.equipment.toggle_equip(equip)
+
+				for equip_result in equip_results:
+					equipped = equip_result.get('equipped')
+					unequipped = equip_result.get('unequipped')
+
+					if equipped:
+						message_log.add_message(Message('You equipped the {0}.'.format(equipped.name)))
+
+					if unequipped:
+						message_log.add_message(Message('You unequipped the {0}.'.format(unequipped.name)))
+
 				game_state = GameStates.ENEMY_TURN
 
 			if targeting:
@@ -243,7 +261,6 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 						break
 			else:
 				game_state = GameStates.PLAYERS_TURN
-			print(player.level.current_xp)
 
 
 def main():
@@ -255,7 +272,10 @@ def main():
 	libtcod.console_init_root(constants['screen_width'], constants['screen_height'], constants['window_title'], False)
 
 	con = libtcod.console_new(constants['screen_width'], constants['screen_height'])
-	panel = libtcod.console_new(constants['screen_width'], constants['panel_height'])
+	message_panel = libtcod.console_new(constants['message_panel_width'], constants['panel_height'])
+	char_info_panel = libtcod.console_new(constants['char_info_panel_width'], constants['panel_height'])
+	area_info_panel = libtcod.console_new(constants['screen_width'], constants['panel_height'])
+	under_mouse_panel = libtcod.console_new(constants['screen_width'], constants['panel_height'])
 
 
 	player = None
@@ -308,7 +328,8 @@ def main():
 
 		else:
 			libtcod.console_clear(con)
-			play_game(player, entities, game_map, message_log, game_state, con, panel, constants)
+			play_game(player, entities, game_map, message_log, game_state, con, message_panel,
+					 char_info_panel, area_info_panel, under_mouse_panel, constants)
 
 			show_main_menu = True
 
