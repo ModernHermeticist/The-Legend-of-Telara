@@ -102,7 +102,7 @@ class GameMap:
 							render_order=RenderOrder.STAIRS, stairs=stairs_component)
 		entities.append(down_stairs)
 		if self.dungeon_level == 1:
-			dialogue_component = Dialogue(character='The Story Teller')
+			dialogue_component = Dialogue(character='The Story Teller', scene='Intro')
 			story_teller = Entity(center_of_last_room_x - 1, center_of_last_room_y - 1, '@', libtcod.orange, 'The Story Teller', 
 							blocks=True, render_order=RenderOrder.ACTOR, dialogue=dialogue_component, invulnerable=True)
 			entities.append(story_teller)

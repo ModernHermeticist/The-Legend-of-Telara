@@ -29,6 +29,8 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 
 	targeting_item = None
 
+	npc = None
+
 	while not libtcod.console_is_window_closed():
 		libtcod.sys_check_for_event(libtcod.EVENT_KEY_PRESS | libtcod.EVENT_MOUSE, key, mouse)
 
@@ -38,7 +40,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 		render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse_panel, entities, 
 				   player, game_map, fov_map, fov_recompute, message_log,
 				   constants['screen_width'], constants['screen_height'], constants['bar_width'],
-				   constants['panel_height'], constants['panel_y'], mouse, constants['colors'], game_state)
+				   constants['panel_height'], constants['panel_y'], mouse, constants['colors'], game_state, npc)
 
 		fov_recompute = False
 
@@ -50,6 +52,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 		mouse_action = handle_mouse(mouse)
 
 		move =                  action.get('move')
+		interact =              action.get('interact')
 		wait =                  action.get('wait')
 		pickup =                action.get('pickup')
 		show_inventory =        action.get('show_inventory')
@@ -85,6 +88,19 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 
 				game_state = GameStates.ENEMY_TURN
 
+		elif move and game_state == GameStates.INTERACT:
+			dx, dy = move
+			destination_x = player.x + dx
+			destination_y = player.y + dy
+
+			if not game_map.is_blocked(destination_x, destination_y):
+				target = get_blocking_entities_at_location(entities, destination_x, destination_y)
+
+				if target:
+					npc = target
+
+
+
 		elif wait:
 			game_state = GameStates.ENEMY_TURN
 
@@ -105,6 +121,10 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 		if drop_inventory:
 			previous_game_state = game_state
 			game_state = GameStates.DROP_INVENTORY
+
+		if interact:
+			previous_game_state = GameStates.PLAYERS_TURN
+			game_state = GameStates.INTERACT
 
 		if inventory_index is not None and previous_game_state != GameStates.PLAYER_DEAD and \
 			inventory_index < len(player.inventory.items):
@@ -141,6 +161,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 			previous_game_state = game_state
 			game_state = GameStates.CHARACTER_SCREEN
 
+
 		if game_state == GameStates.TARGETING:
 			if left_click:
 				target_x, target_y = left_click
@@ -151,10 +172,11 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 			elif right_click:
 				player_turn_results.append({'targeting_cancelled': True})
 
+
 		if exit:
-			if game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.CHARACTER_SCREEN):
+			if game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.CHARACTER_SCREEN, GameStates.INTERACT):
 				game_state = previous_game_state
-			elif game_state == GameStates.TARGETING:
+			elif game_state in (GameStates.TARGETING, GameStates.INTERACT):
 				player_turn_results.append({'targeting_cancelled': True})
 			else:
 				libtcod.console_clear(0)
@@ -166,15 +188,16 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 			libtcod.console_set_fullscreen(not libtcod.console_is_fullscreen())
 
 		for player_turn_result in player_turn_results:
-			message =             player_turn_result.get('message')
-			dead_entity =         player_turn_result.get('dead')
-			item_added =          player_turn_result.get('item_added')
-			item_consumed =       player_turn_result.get('consumed')
-			item_dropped =        player_turn_result.get('item_dropped')
-			equip =               player_turn_result.get('equip')
-			targeting =           player_turn_result.get('targeting')
-			targeting_cancelled = player_turn_result.get('targeting_cancelled')
-			xp =                  player_turn_result.get('xp')
+			message =               player_turn_result.get('message')
+			dead_entity =           player_turn_result.get('dead')
+			item_added =            player_turn_result.get('item_added')
+			item_consumed =         player_turn_result.get('consumed')
+			item_dropped =          player_turn_result.get('item_dropped')
+			equip =                 player_turn_result.get('equip')
+			targeting =             player_turn_result.get('targeting')
+			targeting_cancelled =   player_turn_result.get('targeting_cancelled')
+			xp =                    player_turn_result.get('xp')
+			interacting_cancelled = player_turn_result.get('interacting_cancelled')
 
 			if message:
 				message_log.add_message(message)
@@ -218,8 +241,12 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 				message_log.add_message(targeting_item.item.targeting_message)
 
 			if targeting_cancelled:
-				gamestate = previous_game_state
+				game_state = previous_game_state
 				message_log.add_message(Message('Targeting cancelled.'))
+
+			if interacting_cancelled:
+				game_state = previous_game_state
+				message_log.add_message(Message('Interacting cancelled.'))
 
 			if xp:
 				leveled_up = player.level.add_xp(xp)

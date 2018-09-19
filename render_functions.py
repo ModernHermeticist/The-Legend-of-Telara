@@ -4,7 +4,7 @@ from enum import Enum
 
 from game_states import GameStates
 
-from interfaces.menus import inventory_menu, level_up_menu, character_screen, controls_menu
+from interfaces.menus import inventory_menu, level_up_menu, character_screen, controls_menu, dialogue_screen
 
 class RenderOrder(Enum):
 	STAIRS = 1
@@ -14,7 +14,7 @@ class RenderOrder(Enum):
 
 def render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse_panel, entities, 
 				player, game_map, fov_map, fov_recompute, message_log,
-				screen_width, screen_height, bar_width, panel_height, panel_y, mouse, colors, game_state):
+				screen_width, screen_height, bar_width, panel_height, panel_y, mouse, colors, game_state, npc):
 	if fov_recompute:
 		# Draw all the tile in the game map
 		for y in range(game_map.height):
@@ -88,7 +88,10 @@ def render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse
 	elif game_state == GameStates.CHARACTER_SCREEN:
 		character_screen(player, 30, 10, screen_width, screen_height)
 
-	libtcod.console_blit(message_panel, 0, 0, screen_width, panel_height, 0, 30, panel_y)
+	elif game_state == GameStates.INTERACT and npc:
+		dialogue_screen(player, npc, 50, 30, screen_width, screen_height )
+
+	libtcod.console_blit(message_panel, 0, 0, screen_width, panel_height, 0, 30, panel_y - 1)
 	libtcod.console_blit(char_info_panel, 0, 0, screen_width, panel_height, 0, 0, panel_y)
 	libtcod.console_blit(area_info_panel, 0, 0, screen_width, panel_height, 0, 0, panel_y + 3)
 	libtcod.console_blit(under_mouse_panel, 0, 0, screen_width, panel_height, 0, 0, panel_y - 1)

@@ -127,6 +127,21 @@ def character_screen(player, character_screen_width, character_screen_height, sc
 	libtcod.console_blit(window, 0, 0, character_screen_width, character_screen_height, 0, x, y, 1.0, 0.7)
 
 def dialogue_screen(player, npc, dialogue_screen_width, dialogue_screen_height, screen_width, screen_height):
+	# X = 50 Y = 30
+	window = libtcod.console_new(dialogue_screen_width, dialogue_screen_height)
+	libtcod.console_set_default_background(window, libtcod.darker_grey)
+	libtcod.console_set_default_foreground(window, libtcod.white)
+	libtcod.console_clear(window)
+
+	libtcod.console_print_rect_ex(window, 0, 0, dialogue_screen_width, dialogue_screen_height, libtcod.BKGND_NONE,
+									libtcod.LEFT, '{0}'.format(npc.dialogue.dialogue))
+	libtcod.console_print_rect_ex(window, 0, 29, dialogue_screen_width, dialogue_screen_height, libtcod.BKGND_NONE,
+									libtcod.LEFT, 'Press ESC to close this window.')
+
+	x = screen_width // 2 - dialogue_screen_width // 2
+	y = screen_height // 2 - dialogue_screen_height // 2
+	libtcod.console_blit(window, 0, 0, dialogue_screen_width, dialogue_screen_height, 0, x, y, 1.0, 1.0)
+
 	
 
 def message_box(con, header, background_color, width, screen_width, screen_height):

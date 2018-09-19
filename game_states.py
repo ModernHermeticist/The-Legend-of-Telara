@@ -10,3 +10,4 @@ class GameStates(Enum):
 	LEVEL_UP = 7
 	CHARACTER_SCREEN = 8
 	CONTROLS_SCREEN = 9
+	INTERACT = 10

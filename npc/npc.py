@@ -1,6 +1,11 @@
-from components.dialogue import Dialogue
 
 
 class NPC():
-	def __init__(self, name, dialogue, inventory, level, hp, mp, power, defense):
-		pass
+	def __init__(self, name, inventory, hp, mp, power, defense, **kwargs):
+		self.name = name
+		self.inventory = inventory
+		self.hp = hp
+		self.mp = mp
+		self.power = power
+		self.defense = defense
+		self.function_kwargs = kwargs

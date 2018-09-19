@@ -16,6 +16,8 @@ def handle_keys(key, game_state):
 		return handle_level_up_menu(key)
 	elif game_state == GameStates.CHARACTER_SCREEN:
 		return handle_character_screen(key)
+	elif game_state == GameStates.INTERACT:
+		return handle_interacting_keys(key)
 
 	return {}
 
@@ -51,6 +53,8 @@ def handle_player_turn_keys(key):
 		return {'take_stairs': True}
 	elif key_char == 'a':
 		return {'show_character_screen': True}
+	elif key.vk == libtcod.KEY_SPACE:
+		return {'interact': True}
 
 	if key.vk == libtcod.KEY_ENTER and key.lalt:
 		# Alt+Enter: toggle full screen
@@ -88,6 +92,30 @@ def handle_inventory_keys(key):
 def handle_targeting_keys(key):
 	if key.vk == libtcod.KEY_ESCAPE:
 		return {'exit': True}
+
+	return {}
+
+def handle_interacting_keys(key):
+	key_char = chr(key.c)
+
+	if key.vk == libtcod.KEY_ESCAPE:
+		return {'exit': True}
+	elif key.vk == libtcod.KEY_UP or key_char == 'i':
+		return {'move': (0, -1)}
+	elif key.vk == libtcod.KEY_DOWN or key_char == ',':
+		return {'move': (0, 1)}
+	elif key.vk == libtcod.KEY_LEFT or key_char == 'j':
+		return {'move': (-1, 0)}
+	elif key.vk == libtcod.KEY_RIGHT or key_char == 'l':
+		return {'move': (1, 0)}
+	elif key_char == 'u':
+		return {'move': (-1, -1)}
+	elif key_char == 'o':
+		return {'move': (1, -1)}
+	elif key_char == 'm':
+		return {'move': (-1, 1)}
+	elif key_char == '.':
+		return {'move': (1, 1)}
 
 	return {}
 
