@@ -126,5 +126,8 @@ def character_screen(player, character_screen_width, character_screen_height, sc
 	y = screen_height // 2 - character_screen_height // 2
 	libtcod.console_blit(window, 0, 0, character_screen_width, character_screen_height, 0, x, y, 1.0, 0.7)
 
+def dialogue_screen(player, npc, dialogue_screen_width, dialogue_screen_height, screen_width, screen_height):
+	
+
 def message_box(con, header, background_color, width, screen_width, screen_height):
 	menu(con, header, background_color, [], width, screen_width, screen_height)
