@@ -4,7 +4,7 @@ from enum import Enum
 
 from game_states import GameStates
 
-from interfaces.menus import inventory_menu, level_up_menu, character_screen
+from interfaces.menus import inventory_menu, level_up_menu, character_screen, controls_menu
 
 class RenderOrder(Enum):
 	STAIRS = 1
@@ -45,8 +45,12 @@ def render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse
 
 	libtcod.console_blit(con, 0, 0, screen_width, screen_height, 0, 0, 0)
 
-	libtcod.console_set_default_background(message_panel, libtcod.dark_sepia)
+	libtcod.console_set_default_background(message_panel, libtcod.darkest_grey)
 	libtcod.console_set_default_background(char_info_panel, libtcod.black)
+	libtcod.console_set_default_background(area_info_panel, libtcod.black)
+	libtcod.console_set_default_background(under_mouse_panel, libtcod.black)
+	libtcod.console_clear(under_mouse_panel)
+	libtcod.console_clear(char_info_panel)
 	libtcod.console_clear(char_info_panel)
 	libtcod.console_clear(message_panel)
 
@@ -57,14 +61,16 @@ def render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse
 		libtcod.console_print_ex(message_panel, 0, y, libtcod.BKGND_NONE, libtcod.LEFT, message.text)
 		y += 1
 
-	render_bar(char_info_panel, 1, 1, bar_width, "HP", player.fighter.hp, 
+	render_bar(char_info_panel, 1, 0, bar_width, "HP", player.fighter.hp, 
 				player.fighter.max_hp, libtcod.light_red, libtcod.darker_red)
+	render_bar(char_info_panel, 1, 1, bar_width, "MP", player.fighter.mp, 
+				player.fighter.max_mp, libtcod.blue, libtcod.darker_blue)
 	render_bar(char_info_panel, 1, 2, bar_width, "XP", player.level.current_xp, 
 				player.level.experience_to_next_level, libtcod.gold, libtcod.brass)
-	libtcod.console_print_ex(area_info_panel, 1, 3, libtcod.BKGND_NONE, libtcod.LEFT,
+	libtcod.console_print_ex(area_info_panel, 1, 0, libtcod.BKGND_NONE, libtcod.LEFT,
 								'Dungeon level: {0}'.format(game_map.dungeon_level))
 
-	libtcod.console_set_default_foreground(under_mouse_panel, libtcod.light_gray)
+	libtcod.console_set_default_foreground(under_mouse_panel, libtcod.white)
 	libtcod.console_print_ex(under_mouse_panel, 1, 0, libtcod.BKGND_NONE, libtcod.LEFT,
 							get_names_under_mouse(mouse, entities, fov_map))
 
@@ -84,6 +90,9 @@ def render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse
 
 	libtcod.console_blit(message_panel, 0, 0, screen_width, panel_height, 0, 30, panel_y)
 	libtcod.console_blit(char_info_panel, 0, 0, screen_width, panel_height, 0, 0, panel_y)
+	libtcod.console_blit(area_info_panel, 0, 0, screen_width, panel_height, 0, 0, panel_y + 3)
+	libtcod.console_blit(under_mouse_panel, 0, 0, screen_width, panel_height, 0, 0, panel_y - 1)
+
 
 def clear_all(con, entities):
 	for entity in entities:

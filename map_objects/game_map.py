@@ -7,6 +7,7 @@ from components.equippable import Equippable
 from components.fighter import Fighter
 from components.item import Item
 from components.stairs import Stairs
+from components.dialogue import Dialogue
 
 from entity import Entity
 
@@ -100,6 +101,11 @@ class GameMap:
 		down_stairs = Entity(center_of_last_room_x, center_of_last_room_y, '>', libtcod.black, 'Stairs', 
 							render_order=RenderOrder.STAIRS, stairs=stairs_component)
 		entities.append(down_stairs)
+		if self.dungeon_level == 1:
+			dialogue_component = Dialogue(character='The Story Teller')
+			story_teller = Entity(center_of_last_room_x - 1, center_of_last_room_y - 1, '@', libtcod.orange, 'The Story Teller', 
+							blocks=True, render_order=RenderOrder.ACTOR, dialogue=dialogue_component, invulnerable=True)
+			entities.append(story_teller)
 
 	def create_room(self, room):
 		# go through the tiles in the rectangle and make them passable
@@ -151,13 +157,13 @@ class GameMap:
 				monster_choice = random_choice_from_dict(monster_chances)
 
 				if monster_choice == 'orc':
-					fighter_component = Fighter(hp=20, defense=0, power=4, xp=35)
+					fighter_component = Fighter(hp=20, mp=0, defense=0, power=4, xp=35)
 					ai_component = BasicMonster()
 
 					monster = Entity(x, y, 'o', libtcod.desaturated_green, 'Orc', blocks=True,
 									 render_order=RenderOrder.ACTOR, fighter=fighter_component, ai=ai_component)
 				elif monster_choice == 'troll':
-					fighter_component = Fighter(hp=30, defense=2, power=8, xp=100)
+					fighter_component = Fighter(hp=30, mp=0, defense=2, power=8, xp=100)
 					ai_component = BasicMonster()
 
 					monster = Entity(x, y, 'T', libtcod.darker_green, 'Troll', blocks=True, fighter=fighter_component,

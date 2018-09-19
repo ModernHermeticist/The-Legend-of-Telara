@@ -23,7 +23,7 @@ class MessageLog:
 
 		for line in new_msg_lines:
 			# If the buffer is full, remove the first line to make room for the new one
-			if len(self.messages) == self.height:
+			if len(self.messages) == self.height - 1:
 				del self.messages[0]
 
 			# Add the new line as a Message object, with the text and the color

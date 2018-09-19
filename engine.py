@@ -6,11 +6,13 @@ from entity import get_blocking_entities_at_location
 from fov_functions import initialize_fov, recompute_fov
 from game_messages import Message
 from game_states import GameStates
-from input_handlers import handle_keys, handle_mouse, handle_main_menu
+from input_handlers import handle_keys, handle_mouse, handle_main_menu, handle_controls_menu
 from render_functions import clear_all, render_all
 from loader_functions.initialize_new_game import get_constants, get_game_variables
 from loader_functions.data_loaders import load_game, save_game
-from interfaces.menus import main_menu, message_box
+from interfaces.menus import main_menu, message_box, controls_menu
+
+from font_functions import load_customfont
 
 
 def play_game(player, entities, game_map, message_log, game_state, con, message_panel,
@@ -72,12 +74,12 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 			if not game_map.is_blocked(destination_x, destination_y):
 				target = get_blocking_entities_at_location(entities, destination_x, destination_y)
 
-				if target:
+				if target and not target.invulnerable:
 					attack_results = player.fighter.attack(target)
 					player_turn_results.extend(attack_results)
 
 
-				else:
+				elif not target:
 					player.move(dx, dy)
 					fov_recompute = True
 
@@ -273,9 +275,9 @@ def main():
 
 	con = libtcod.console_new(constants['screen_width'], constants['screen_height'])
 	message_panel = libtcod.console_new(constants['message_panel_width'], constants['panel_height'])
-	char_info_panel = libtcod.console_new(constants['char_info_panel_width'], constants['panel_height'])
-	area_info_panel = libtcod.console_new(constants['screen_width'], constants['panel_height'])
-	under_mouse_panel = libtcod.console_new(constants['screen_width'], constants['panel_height'])
+	char_info_panel = libtcod.console_new(constants['char_info_panel_width'], constants['char_info_panel_height'])
+	area_info_panel = libtcod.console_new(constants['area_info_panel_width'], constants['area_info_panel_height'])
+	under_mouse_panel = libtcod.console_new(constants['under_mouse_panel_width'], constants['under_mouse_panel_height'])
 
 
 	player = None
@@ -286,6 +288,7 @@ def main():
 
 	show_main_menu = True
 	show_load_error_message = False
+	show_controls_menu = False
 
 	main_menu_background_image = libtcod.image_load('menu_background.png')
 
@@ -308,25 +311,45 @@ def main():
 
 			new_game = action.get('new_game')
 			load_saved_game = action.get('load_game')
+			controls = action.get('controls')
 			exit_game = action.get('exit')
 
 			if show_load_error_message and (new_game or load_saved_game or exit_game):
 				show_load_error_message = False
+
 			elif new_game:
 				player, entities, game_map, message_log, game_state = get_game_variables(constants)
 				game_state = GameStates.PLAYERS_TURN
-
 				show_main_menu = False
+
 			elif load_saved_game:
 				try:
 					player, entities, game_map, message_log, game_state = load_game()
 					show_main_menu = False
 				except FileNotFoundError:
 					show_load_error_message = True
-			elif exit_game:
+
+			elif controls and show_controls_menu == False:
+				show_controls_menu = True
+				show_main_menu = False
+
+			elif exit_game:	
 				break
 
-		else:
+		elif show_controls_menu:
+			libtcod.console_clear(0)
+			controls_menu(con, '', 30, constants['screen_width'], constants['screen_height'])
+			action = handle_controls_menu(key)
+			libtcod.console_flush()
+			back_to_main_menu = action.get('exit')
+
+			if back_to_main_menu:
+				show_controls_menu = False
+				show_main_menu = True
+				libtcod.console_clear(0)
+
+
+		elif show_main_menu == False and show_controls_menu == False:
 			libtcod.console_clear(con)
 			play_game(player, entities, game_map, message_log, game_state, con, message_panel,
 					 char_info_panel, area_info_panel, under_mouse_panel, constants)

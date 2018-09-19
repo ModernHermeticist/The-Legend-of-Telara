@@ -21,15 +21,21 @@ from render_functions import RenderOrder
 def get_constants():
 	window_title = 'The Legend of Telara'
 
-	screen_width = 160
-	screen_height = 90
+	screen_width = 120
+	screen_height = 70
 
 	bar_width = 20
 	panel_height = 7
+	message_panel_height = 7
+	char_info_panel_height = 3
+	area_info_panel_height = 1
+	under_mouse_panel_height = 1
 	panel_y = screen_height - panel_height
 
 	message_panel_width = int(screen_width / 3)
 	char_info_panel_width = int((screen_width / 4) - 10)
+	area_info_panel_width = int((screen_width / 4) - 10)
+	under_mouse_panel_width = int((screen_width / 4) - 10)
 
 	message_log_x = bar_width + 2
 	message_width = screen_width - bar_width - 2
@@ -61,34 +67,39 @@ def get_constants():
 	}
 
 	constants = {
-				'window_title':          window_title,
-				'screen_width':          screen_width,
-				'screen_height':         screen_height,
-				'bar_width':             bar_width,
-				'panel_height':          panel_height,
-				'panel_y':               panel_y,
-				'message_log_x':         message_log_x,
-				'message_width':         message_width,
-				'message_height':        message_height,
-				'message_panel_width':   message_panel_width,
-				'char_info_panel_width': char_info_panel_width,
-				'map_width':             map_width,
-				'map_height':            map_height,
-				'room_max_size':         room_max_size,
-				'room_min_size':         room_min_size,
-				'max_rooms':             max_rooms,
-				'fov_algorithm':         fov_algorithm,
-				'fov_light_walls':       fov_light_walls,
-				'fov_radius':            fov_radius,
-				'max_monsters_per_room': max_monsters_per_room,
-				'max_items_per_room':    max_items_per_room,
-				'colors':                colors
+				'window_title':             window_title,
+				'screen_width':             screen_width,
+				'screen_height':            screen_height,
+				'bar_width':                bar_width,
+				'panel_height':             panel_height,
+				'area_info_panel_height':   area_info_panel_height,
+				'char_info_panel_height':   char_info_panel_height,
+				'panel_y':                  panel_y,
+				'message_log_x':            message_log_x,
+				'message_width':            message_width,
+				'message_panel_height':     message_panel_height,
+				'message_panel_width':      message_panel_width,
+				'under_mouse_panel_height': under_mouse_panel_height,
+				'under_mouse_panel_width':  under_mouse_panel_width,
+				'char_info_panel_width':    char_info_panel_width,
+				'area_info_panel_width':    area_info_panel_width,
+				'map_width':                map_width,
+				'map_height':               map_height,
+				'room_max_size':            room_max_size,
+				'room_min_size':            room_min_size,
+				'max_rooms':                max_rooms,
+				'fov_algorithm':            fov_algorithm,
+				'fov_light_walls':          fov_light_walls,
+				'fov_radius':               fov_radius,
+				'max_monsters_per_room':    max_monsters_per_room,
+				'max_items_per_room':       max_items_per_room,
+				'colors':                   colors
 	}
 
 	return constants
 
 def get_game_variables(constants):
-	fighter_component = Fighter(hp=100, defense=1, power=2)
+	fighter_component = Fighter(hp=100, mp=10, defense=1, power=2)
 	inventory_component = Inventory(26)
 	level_component = Level()
 	equipment_component = Equipment()
@@ -106,7 +117,7 @@ def get_game_variables(constants):
 
 	game_map.make_map(constants['max_rooms'], constants['room_min_size'], constants['room_max_size'],
 					  constants['map_width'], constants['map_height'], player, entities)
-	message_log = MessageLog(constants['message_log_x'], constants['message_width'], constants['message_height'])
+	message_log = MessageLog(constants['message_log_x'], constants['message_width'], constants['message_panel_height'])
 	game_state = GameStates.PLAYERS_TURN
 
 	return player, entities, game_map, message_log, game_state

@@ -91,6 +91,12 @@ def handle_targeting_keys(key):
 
 	return {}
 
+def handle_controls_menu(key):
+	if key.vk == libtcod.KEY_ESCAPE:
+		return {'exit': True}
+
+	return {}
+
 
 
 def handle_player_dead_keys(key):
@@ -117,7 +123,10 @@ def handle_main_menu(key):
 	elif key_char == 'b':
 		return {'load_game': True}
 
-	elif key_char == 'c' or key.vk == libtcod.KEY_ESCAPE:
+	elif key_char == 'c':
+		return {'controls': True}
+
+	elif key_char == 'd' or key.vk == libtcod.KEY_ESCAPE:
 		return {'exit': True}
 
 	return {}
