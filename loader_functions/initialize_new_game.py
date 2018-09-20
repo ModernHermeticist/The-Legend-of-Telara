@@ -24,16 +24,16 @@ def get_constants():
 	screen_width = 120
 	screen_height = 70
 
-	bar_width = 20
+	bar_width = 21
 	panel_height = 7
 	message_panel_height = 7
-	char_info_panel_height = 3
+	char_info_panel_height = 4
 	area_info_panel_height = 1
 	under_mouse_panel_height = 1
 	panel_y = screen_height - panel_height
 
 	message_panel_width = int((screen_width / 3) + 10)
-	char_info_panel_width = int((screen_width / 4) - 10)
+	char_info_panel_width = int((screen_width / 4))
 	area_info_panel_width = int((screen_width / 4) - 10)
 	under_mouse_panel_width = int((screen_width / 4) - 10)
 
@@ -43,19 +43,19 @@ def get_constants():
 
 
 	# Size of the map
-	map_width = 100
+	map_width = 110
 	map_height = 50
 
 	# Some variables for the rooms in the map
-	room_max_size = 15
+	room_max_size = 10
 	room_min_size = 5
 	max_rooms = 30
 
 	fov_algorithm = 0
 	fov_light_walls = True
-	fov_radius = 10
+	fov_radius = 7
 
-	max_monsters_per_room = 3
+	max_monsters_per_room = 8
 
 	max_items_per_room = 2
 
@@ -99,7 +99,7 @@ def get_constants():
 	return constants
 
 def get_game_variables(constants):
-	fighter_component = Fighter(hp=1000, mp=10, defense=1, power=60)
+	fighter_component = Fighter(hp=100, mp=10, defense=1, power=6)
 	inventory_component = Inventory(26)
 	level_component = Level()
 	equipment_component = Equipment()

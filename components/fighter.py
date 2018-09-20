@@ -1,5 +1,7 @@
 import libtcodpy as libtcod
 
+from random import randint
+
 from game_messages import Message
 
 
@@ -12,6 +14,7 @@ class Fighter():
 		self.mp = mp
 		self.base_defense = defense
 		self.base_power = power
+		self.min_power = 1
 		self.xp = xp
 
 	@property
@@ -69,7 +72,7 @@ class Fighter():
 	def attack(self, target):
 		results = []
 
-		damage = self.power - target.fighter.defense
+		damage = randint(self.min_power, self.power) - target.fighter.defense
 
 		if damage > 0:
 			results.append({'message': Message('{0} attacks {1} for {2} hit points.'.format(

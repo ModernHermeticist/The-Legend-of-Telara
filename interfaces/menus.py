@@ -59,10 +59,12 @@ def main_menu(con, background_image, screen_width, screen_height):
 	#libtcod.image_blit_2x(background_image, 0, 0, 0)
 
 	libtcod.console_set_default_foreground(0, libtcod.light_yellow)
-	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) - 4, libtcod.BKGND_NONE, libtcod.CENTER,
+	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) - 6, libtcod.BKGND_NONE, libtcod.CENTER,
 							 'THE LEGEND OF TELARA')
+	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) - 4, libtcod.BKGND_NONE, libtcod.CENTER,
+							 'THIS GAME IS UNBALANCED, UNSTABLE, AND UNFORGIVING')
 	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height - 2), libtcod.BKGND_NONE, libtcod.CENTER,
-							 'By Jacob Queen')
+							 'By Jacob Queen, 2018')
 
 	menu(con, '', libtcod.black, ['Play a new game', 'Continue last game', 'Controls', 'Quit'], 22, screen_width, screen_height)
 
@@ -86,13 +88,16 @@ def controls_menu(con, header, menu_width, screen_width, screen_height):
 			   'INVENTORY:                  c',
 			   'CHARACTER SCREEN:           z',
 			   'USE STAIRS:                 q',
+			   'INSPECT:                space',
+			   'STOP INSPECTING:          esc',
+			   'CLOSE SCREEN:             esc',
 			   'MAIN MENU:                esc',
 			   'FULL SCREEN:        alt+enter',
 			   '',
-			   'Press escape to return.']
+			   'Press ESC to return.']
 
 	libtcod.console_set_default_foreground(0, libtcod.white)
-	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) - 10, libtcod.BKGND_NONE, libtcod.CENTER,
+	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) - 11, libtcod.BKGND_NONE, libtcod.CENTER,
 							 'Controls')
 	menu(con, header, libtcod.black, options, menu_width, screen_width, screen_height, False)
 

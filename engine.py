@@ -1,8 +1,9 @@
 import libtcodpy as libtcod
+#from pygame import mixer
 
 
 from death_functions import kill_monster, kill_player
-from entity import get_blocking_entities_at_location
+from entity import get_blocking_entities_at_location, get_non_blocking_entities_at_location
 from fov_functions import initialize_fov, recompute_fov
 from game_messages import Message
 from game_states import GameStates
@@ -94,10 +95,22 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 			destination_y = player.y + dy
 
 			if not game_map.is_blocked(destination_x, destination_y):
-				target = get_blocking_entities_at_location(entities, destination_x, destination_y)
+				blocking_target = get_blocking_entities_at_location(entities, destination_x, destination_y)
+				non_blocking_target = get_non_blocking_entities_at_location(entities, destination_x, destination_y)
 
-				if target:
-					npc = target
+				if blocking_target:
+					try:
+						if blocking_target.dialogue.dialogue:
+							npc = blocking_target
+					except (AttributeError):
+						pass
+					message_log.add_message(Message('You see {0}'.format(blocking_target.name), libtcod.white))
+
+				elif non_blocking_target:
+					message_log.add_message(Message('You see {0}'.format(non_blocking_target.name), libtcod.white))
+
+				else:
+					message_log.add_message(Message('There is nothing to inspect here.', libtcod.white))
 
 
 
@@ -175,6 +188,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 
 		if exit:
 			if game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.CHARACTER_SCREEN, GameStates.INTERACT):
+				npc = None
 				game_state = previous_game_state
 			elif game_state in (GameStates.TARGETING, GameStates.INTERACT):
 				player_turn_results.append({'targeting_cancelled': True})
@@ -294,11 +308,14 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 
 def main():
 	constants = get_constants()
-
+	#mixer.init(frequency=44100, size=16, channels=2,buffer=4096)
+	#mixer.music.load('A Memory Lost.ogg')
+	#mixer.music.play(loops=0, start=0.0)
+	#mixer.music.set_volume(0.01)
 
 	libtcod.console_set_custom_font('terminal12x12_gs_ro.png', libtcod.FONT_LAYOUT_ASCII_INROW | libtcod.FONT_TYPE_GREYSCALE, 16, 16)
 
-	libtcod.console_init_root(constants['screen_width'], constants['screen_height'], constants['window_title'], False)
+	libtcod.console_init_root(constants['screen_width'], constants['screen_height'], constants['window_title'], False, libtcod.RENDERER_SDL)
 
 	con = libtcod.console_new(constants['screen_width'], constants['screen_height'])
 	message_panel = libtcod.console_new(constants['message_panel_width'], constants['panel_height'])

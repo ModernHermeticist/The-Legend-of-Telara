@@ -62,13 +62,16 @@ def render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse
 		y += 1
 
 	render_bar(char_info_panel, 1, 0, bar_width, "HP", player.fighter.hp, 
-				player.fighter.max_hp, libtcod.light_red, libtcod.darker_red)
+				player.fighter.max_hp, libtcod.light_red, libtcod.darker_red, libtcod.black)
 	render_bar(char_info_panel, 1, 1, bar_width, "MP", player.fighter.mp, 
-				player.fighter.max_mp, libtcod.blue, libtcod.darker_blue)
+				player.fighter.max_mp, libtcod.light_blue, libtcod.darker_blue, libtcod.black)
 	render_bar(char_info_panel, 1, 2, bar_width, "XP", player.level.current_xp, 
-				player.level.experience_to_next_level, libtcod.gold, libtcod.brass)
+				player.level.experience_to_next_level, libtcod.gold, libtcod.brass, libtcod.black)
+	libtcod.console_set_default_foreground(char_info_panel, libtcod.white)
+	libtcod.console_print_ex(char_info_panel, 1, 3, libtcod.BKGND_NONE, libtcod.LEFT,
+								'Player Level: {0}'.format(player.level.current_level))
 	libtcod.console_print_ex(area_info_panel, 1, 0, libtcod.BKGND_NONE, libtcod.LEFT,
-								'Dungeon level: {0}'.format(game_map.dungeon_level))
+								'Dungeon Level: {0}'.format(game_map.dungeon_level))
 
 	libtcod.console_set_default_foreground(under_mouse_panel, libtcod.white)
 	libtcod.console_print_ex(under_mouse_panel, 1, 0, libtcod.BKGND_NONE, libtcod.LEFT,
@@ -93,7 +96,7 @@ def render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse
 
 	libtcod.console_blit(message_panel, 0, 0, screen_width, panel_height, 0, 30, panel_y - 1)
 	libtcod.console_blit(char_info_panel, 0, 0, screen_width, panel_height, 0, 0, panel_y)
-	libtcod.console_blit(area_info_panel, 0, 0, screen_width, panel_height, 0, 0, panel_y + 3)
+	libtcod.console_blit(area_info_panel, 0, 0, screen_width, panel_height, 0, 0, panel_y + 4)
 	libtcod.console_blit(under_mouse_panel, 0, 0, screen_width, panel_height, 0, 0, panel_y - 1)
 
 
@@ -123,7 +126,7 @@ def get_names_under_mouse(mouse, entities, fov_map):
 	return names.capitalize()
 
 
-def render_bar(panel, x, y, total_width, name, value, maximum, bar_color, back_color):
+def render_bar(panel, x, y, total_width, name, value, maximum, bar_color, back_color, text_color=libtcod.white):
 	bar_width = int(float(value) / maximum * total_width)
 
 	libtcod.console_set_default_background(panel, back_color)
@@ -133,6 +136,6 @@ def render_bar(panel, x, y, total_width, name, value, maximum, bar_color, back_c
 	if bar_width > 0:
 		libtcod.console_rect(panel, x, y, bar_width, 1, False, libtcod.BKGND_SCREEN)
 
-	libtcod.console_set_default_foreground(panel, libtcod.white)
+	libtcod.console_set_default_foreground(panel, text_color)
 	libtcod.console_print_ex(panel, int(x + total_width / 2), y, libtcod.BKGND_NONE,
 							libtcod.CENTER, "{0}: {1}/{2}".format(name, value, maximum))
