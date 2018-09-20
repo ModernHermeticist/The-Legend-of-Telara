@@ -1,10 +1,14 @@
 import libtcodpy as libtcod
 
-from components.fighter import Fighter
+from components.combat_classes.fighter import Fighter
+from components.combat_classes.warrior import Warrior
+from components.races.human import Human
 from components.inventory import Inventory
 from components.level import Level
 from components.equipment import Equipment
 from components.equippable import Equippable
+
+from interfaces.character_creation_menu import character_creation_menu
 
 from entity import Entity
 
@@ -66,6 +70,14 @@ def get_constants():
 		'light_ground': libtcod.Color(200, 180, 50)
 	}
 
+	races = {
+		'human': Human()
+	}
+
+	combat_classes = {
+		'warrior': Warrior()
+	}
+
 	constants = {
 				'window_title':             window_title,
 				'screen_width':             screen_width,
@@ -93,25 +105,19 @@ def get_constants():
 				'fov_radius':               fov_radius,
 				'max_monsters_per_room':    max_monsters_per_room,
 				'max_items_per_room':       max_items_per_room,
-				'colors':                   colors
+				'colors':                   colors,
+				'races':                    races,
+				'combat_classes':           combat_classes
 	}
 
 	return constants
 
-def get_game_variables(constants):
-	fighter_component = Fighter(hp=100, mp=10, defense=1, power=6)
-	inventory_component = Inventory(26)
-	level_component = Level()
-	equipment_component = Equipment()
-	player = Entity(0, 0, '@', libtcod.white, 'Player', blocks=True, render_order=RenderOrder.ACTOR, 
-					fighter=fighter_component, inventory=inventory_component, level=level_component,
-					equipment=equipment_component)
-	entities = [player]
+def get_new_game_variables(constants):
 
-	equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=2)
-	dagger = Entity(0,0, '-', libtcod.sky, 'Dagger', equippable=equippable_component)
-	player.inventory.add_item(dagger)
-	player.equipment.toggle_equip(dagger)
+	player = character_creation_menu(0, 50, constants['screen_width'], constants['screen_height'],
+										entity, constants['combat_classes'], constants['races'])
+
+	entities = [player]
 
 	game_map = GameMap(constants['map_width'], constants['map_height'])
 

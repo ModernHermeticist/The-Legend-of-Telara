@@ -9,9 +9,10 @@ from game_messages import Message
 from game_states import GameStates
 from input_handlers import handle_keys, handle_mouse, handle_main_menu, handle_controls_menu
 from render_functions import clear_all, render_all
-from loader_functions.initialize_new_game import get_constants, get_game_variables
+from loader_functions.initialize_new_game import get_constants, get_new_game_variables
 from loader_functions.data_loaders import load_game, save_game
 from interfaces.menus import main_menu, message_box, controls_menu
+from interfaces.character_creation_menu import character_creation_menu
 
 from font_functions import load_customfont
 
@@ -79,7 +80,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 				target = get_blocking_entities_at_location(entities, destination_x, destination_y)
 
 				if target and not target.invulnerable:
-					attack_results = player.fighter.attack(target)
+					attack_results = player.combat_class.attack(target)
 					player_turn_results.extend(attack_results)
 
 
@@ -161,12 +162,12 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 
 		if level_up:
 			if level_up == 'hp':
-				player.fighter.base_max_hp += 20
-				player.fighter.hp += 20
+				player.combat_class.base_max_hp += 20
+				player.combat_class.hp += 20
 			elif level_up == 'str':
-				player.fighter.base_power += 1
+				player.combat_class.base_power += 1
 			elif level_up == 'def':
-				player.fighter.base_defense += 1
+				player.combat_class.base_defense += 1
 
 			game_state = previous_game_state
 
@@ -362,7 +363,7 @@ def main():
 				show_load_error_message = False
 
 			elif new_game:
-				player, entities, game_map, message_log, game_state = get_game_variables(constants)
+				player, entities, game_map, message_log, game_state = get_new_game_variables(constants)
 				game_state = GameStates.PLAYERS_TURN
 				show_main_menu = False
 

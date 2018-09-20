@@ -11,7 +11,7 @@ class Entity:
 	"""
 	A generic object to represent players, enemies, items, etc.
 	"""
-	def __init__(self, x, y, char, color, name, blocks=False, render_order=RenderOrder.CORPSE, fighter=None, ai=None,
+	def __init__(self, x, y, char, color, name, blocks=False, render_order=RenderOrder.CORPSE, combat_class=None, race=None, ai=None,
 				 item=None, inventory=None, stairs=None, level=None, equipment=None, equippable=None, dialogue=None, invulnerable=False):
 		self.x = x
 		self.y = y
@@ -20,7 +20,8 @@ class Entity:
 		self.name = name
 		self.blocks = blocks
 		self.render_order = render_order
-		self.fighter = fighter
+		self.combat_class = combat_class
+		self.race = race
 		self.ai = ai
 		self.item = item
 		self.inventory = inventory
@@ -31,8 +32,11 @@ class Entity:
 		self.dialogue = dialogue
 		self.invulnerable = invulnerable
 
-		if self.fighter:
-			self.fighter.owner = self
+		if self.combat_class:
+			self.combat_class.owner = self
+
+		if self.race:
+			self.race.owner = self
 
 		if self.ai:
 			self.ai.owner = self

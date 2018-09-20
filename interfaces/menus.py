@@ -36,7 +36,9 @@ def menu(con, header, background_color, options, width, screen_width, screen_hei
 	# Blit the contents of "window" to the root console
 	x = int(screen_width / 2 - width / 2)
 	y = int(screen_height / 2 - height / 2)
-	libtcod.console_blit(window, 0, 0, width, height, 0, x, y, 1.0, 0.7)
+	libtcod.console_blit(window, 0, 0, width, height, 0, x, y, 1.0, 0.9)
+
+
 
 def inventory_menu(con, header, player, inventory_width, screen_width, screen_height):
 	# Show a menu with each item of the inventory as an option
@@ -53,7 +55,7 @@ def inventory_menu(con, header, player, inventory_width, screen_width, screen_he
 			else:
 				options.append(item.name)
 
-	menu(con, header, libtcod.darker_grey, options, inventory_width, screen_width, screen_height)
+	menu(con, header, libtcod.darker_blue, options, inventory_width, screen_width, screen_height)
 
 def main_menu(con, background_image, screen_width, screen_height):
 	#libtcod.image_blit_2x(background_image, 0, 0, 0)
@@ -69,9 +71,9 @@ def main_menu(con, background_image, screen_width, screen_height):
 	menu(con, '', libtcod.black, ['Play a new game', 'Continue last game', 'Controls', 'Quit'], 22, screen_width, screen_height)
 
 def level_up_menu(con, header, player, menu_width, screen_width, screen_height):
-	options = ['Constitution (+20 HP, from {0})'.format(player.fighter.max_hp),
-			   'Strength (+1 attack, from {0})'.format(player.fighter.power),
-			   'Agility (+1 defense, from {0})'.format(player.fighter.defense)]
+	options = ['Constitution (+20 HP, from {0})'.format(player.combat_class.max_hp),
+			   'Strength (+1 attack, from {0})'.format(player.combat_class.power),
+			   'Agility (+1 defense, from {0})'.format(player.combat_class.defense)]
 
 	menu(con, header, libtcod.darker_grey, options, menu_width, screen_width, screen_height)
 
@@ -104,7 +106,9 @@ def controls_menu(con, header, menu_width, screen_width, screen_height):
 def character_screen(player, character_screen_width, character_screen_height, screen_width, screen_height):
 	window = libtcod.console_new(character_screen_width, character_screen_height)
 
+	libtcod.console_set_default_background(window, libtcod.darker_blue)
 	libtcod.console_set_default_foreground(window, libtcod.white)
+	libtcod.console_clear(window)
 
 	libtcod.console_print_rect_ex(window, 0, 1, character_screen_width, character_screen_height, libtcod.BKGND_NONE,
 									libtcod.LEFT, 'Character Information')
@@ -119,17 +123,17 @@ def character_screen(player, character_screen_width, character_screen_height, sc
 									libtcod.LEFT, 'Experience to level: {0}'.format(player.level.experience_to_next_level))
 
 	libtcod.console_print_rect_ex(window, 0, 6, character_screen_width, character_screen_height, libtcod.BKGND_NONE,
-									libtcod.LEFT, 'Maximum HP: {0}'.format(player.fighter.max_hp))
+									libtcod.LEFT, 'Maximum HP: {0}'.format(player.combat_class.max_hp))
 
 	libtcod.console_print_rect_ex(window, 0, 7, character_screen_width, character_screen_height, libtcod.BKGND_NONE,
-									libtcod.LEFT, 'Attack: {0}'.format(player.fighter.power))
+									libtcod.LEFT, 'Attack: {0}'.format(player.combat_class.power))
 
 	libtcod.console_print_rect_ex(window, 0, 8, character_screen_width, character_screen_height, libtcod.BKGND_NONE,
-									libtcod.LEFT, 'Defense: {0}'.format(player.fighter.defense))
+									libtcod.LEFT, 'Defense: {0}'.format(player.combat_class.defense))
 
 	x = screen_width // 2 - character_screen_width // 2
 	y = screen_height // 2 - character_screen_height // 2
-	libtcod.console_blit(window, 0, 0, character_screen_width, character_screen_height, 0, x, y, 1.0, 0.7)
+	libtcod.console_blit(window, 0, 0, character_screen_width, character_screen_height, 0, x, y, 1.0, 0.9)
 
 def dialogue_screen(player, npc, dialogue_screen_width, dialogue_screen_height, screen_width, screen_height):
 	# X = 50 Y = 30

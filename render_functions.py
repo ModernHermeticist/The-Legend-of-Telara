@@ -61,10 +61,10 @@ def render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse
 		libtcod.console_print_ex(message_panel, 0, y, libtcod.BKGND_NONE, libtcod.LEFT, message.text)
 		y += 1
 
-	render_bar(char_info_panel, 1, 0, bar_width, "HP", player.fighter.hp, 
-				player.fighter.max_hp, libtcod.light_red, libtcod.darker_red, libtcod.black)
-	render_bar(char_info_panel, 1, 1, bar_width, "MP", player.fighter.mp, 
-				player.fighter.max_mp, libtcod.light_blue, libtcod.darker_blue, libtcod.black)
+	render_bar(char_info_panel, 1, 0, bar_width, "HP", player.combat_class.hp, 
+				player.combat_class.max_hp, libtcod.light_red, libtcod.darker_red, libtcod.black)
+	render_bar(char_info_panel, 1, 1, bar_width, "MP", player.combat_class.mp, 
+				player.combat_class.max_mp, libtcod.light_blue, libtcod.darker_blue, libtcod.black)
 	render_bar(char_info_panel, 1, 2, bar_width, "XP", player.level.current_xp, 
 				player.level.experience_to_next_level, libtcod.gold, libtcod.brass, libtcod.black)
 	libtcod.console_set_default_foreground(char_info_panel, libtcod.white)

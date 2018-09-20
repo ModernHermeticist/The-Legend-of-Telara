@@ -1,26 +1,25 @@
 import libtcodpy as libtcod
 from random import randint
 
-from components.ai import BasicMonster
-from components.equipment import EquipmentSlots
-from components.equippable import Equippable
-from components.fighter import Fighter
-from components.item import Item
 from components.stairs import Stairs
 from components.dialogue import Dialogue
 
 from entity import Entity
 
+from render_functions import RenderOrder
+
 from game_messages import Message
 
-from components.item_functions import cast_confuse, cast_fireball, cast_lightning, heal
 
 from map_objects.rectangle import Rect
 from map_objects.tile import Tile
 
-from render_functions import RenderOrder
 
 from random_utils import random_choice_from_dict, from_dungeon_level
+
+from monster_lists.monsters_one import get_easy_monsters, choose_easy_monster
+
+from item_lists.items_one import get_starter_items, choose_starter_item
 
 
 class GameMap:
@@ -133,20 +132,9 @@ class GameMap:
 		# Get a random number of items
 		number_of_items = randint(0, max_items_per_room)
 
-		monster_chances = {
-		'orc': from_dungeon_level([[60,1],[30,3],[10,4],[0,5]], self.dungeon_level),
-		'gnoll': from_dungeon_level([[80,1],[50,2],[30,3],[0,4]], self.dungeon_level),
-		'troll': from_dungeon_level([[15,3],[30,5],[60,7]], self.dungeon_level)
-		}
+		monster_chances = get_easy_monsters(self.dungeon_level)
 
-		item_chances = {
-		'healing_potion': 35,
-		'broken_iron_sword': from_dungeon_level([[5,2]], self.dungeon_level),
-		'cracked_wooden_shield': from_dungeon_level([[15,2]], self.dungeon_level),
-		'lightning_scroll': from_dungeon_level([[20,3]],self.dungeon_level), 
-		'fireball_scroll': from_dungeon_level([[15,3]],self.dungeon_level), 
-		'confusion_scroll': from_dungeon_level([[10,2]],self.dungeon_level)
-		}
+		item_chances = get_starter_items(self.dungeon_level)
 
 		for i in range(number_of_monsters):
 			# Choose a random location in the room
@@ -157,28 +145,7 @@ class GameMap:
 			if not any([entity for entity in entities if entity.x == x and entity.y == y]):
 				monster_choice = random_choice_from_dict(monster_chances)
 
-				if monster_choice == 'gnoll':
-					fighter_component = Fighter(hp=20+(self.dungeon_level), mp=0, defense=0+self.dungeon_level,
-												power=3+(self.dungeon_level-1), xp=20+(2*(self.dungeon_level-1)))
-					ai_component = BasicMonster()
-
-					monster = Entity(x, y, 'g', libtcod.desaturated_green, 'Gnoll', blocks=True,
-									 render_order=RenderOrder.ACTOR, fighter=fighter_component, ai=ai_component)
-
-				elif monster_choice == 'orc':
-					fighter_component = Fighter(hp=20+(5*self.dungeon_level-1), mp=0, defense=1+self.dungeon_level,
-												power=4+(2*self.dungeon_level-1), xp=35+(5*(self.dungeon_level-1)))
-					ai_component = BasicMonster()
-
-					monster = Entity(x, y, 'o', libtcod.desaturated_green, 'Orc', blocks=True,
-									 render_order=RenderOrder.ACTOR, fighter=fighter_component, ai=ai_component)
-				elif monster_choice == 'troll':
-					fighter_component = Fighter(hp=50+(5*self.dungeon_level-1), mp=0, defense=3+self.dungeon_level, 
-												power=8+(2*self.dungeon_level-1), xp=100+(5*(self.dungeon_level-1)))
-					ai_component = BasicMonster()
-
-					monster = Entity(x, y, 'T', libtcod.darker_green, 'Troll', blocks=True, fighter=fighter_component,
-									 render_order=RenderOrder.ACTOR, ai=ai_component)
+				monster = choose_easy_monster(monster_choice, self.dungeon_level, x, y)
 
 				entities.append(monster)
 
@@ -189,34 +156,7 @@ class GameMap:
 			if not any([entity for entity in entities if entity.x == x and entity.y == y]):
 				item_choice = random_choice_from_dict(item_chances)
 
-				if item_choice == 'healing_potion':
-					item_component = Item(use_function=heal, amount=40)
-					item = Entity(x, y, '!', libtcod.violet, 'Healing Potion', render_order=RenderOrder.ITEM,
-								  item=item_component)
-				elif item_choice == 'broken_iron_sword':
-					equippable_component = Equippable(EquipmentSlots.MAIN_HAND, min_power_bonus=1, power_bonus=3)
-					item = Entity(x, y, '/', libtcod.brass, 'Broken Iron Sword', render_order=RenderOrder.ITEM,
-								  equippable=equippable_component)
-				elif item_choice == 'cracked_wooden_shield':
-					equippable_component = Equippable(EquipmentSlots.OFF_HAND, defense_bonus=1)
-					item = Entity(x, y, '[', libtcod.darker_orange, 'Cracked Wooden Shield', render_order=RenderOrder.ITEM,
-								  equippable=equippable_component)
-				elif item_choice == 'fireball_scroll':
-					item_component = Item(use_function=cast_fireball, targeting=True, targeting_message=Message(
-						'Left-click a target tile for the fireball, or right-click to cancel.', libtcod.light_cyan),
-										  damage=25, radius=3)
-					item = Entity(x, y, '#', libtcod.red, 'Fireball Scroll', render_order=RenderOrder.ITEM,
-								  item=item_component)
-				elif item_choice == 'confusion_scroll':
-					item_component = Item(use_function=cast_confuse, targeting=True, targeting_message=Message(
-						'Left-click an enemy to confuse it, or right-click to cancel.', libtcod.light_cyan))
-					item = Entity(x, y, '#', libtcod.light_pink, 'Confusion Scroll', render_order=RenderOrder.ITEM,
-								  item=item_component)
-
-				elif item_choice == 'lightning_scroll':
-					item_component = Item(use_function=cast_lightning, damage=40, maximum_range=5)
-					item = Entity(x, y, '#', libtcod.yellow, 'Lightning Scroll', render_order=RenderOrder.ITEM,
-								  item=item_component)
+				item = choose_starter_item(item_choice, x, y)
 
 				entities.append(item)
 

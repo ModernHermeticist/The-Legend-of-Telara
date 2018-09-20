@@ -89,6 +89,22 @@ def handle_inventory_keys(key):
 
 	return {}
 
+def handle_create_character_screen_keys(key):
+	index = key.c - ord('a')
+
+	if index >= 0:
+		return {'inventory_index': index}
+
+	if key.vk == libtcod.KEY_ENTER and key.lalt:
+		# Alt+Enter: toggle fullscreen
+		return {'fullscreen': True}
+
+	elif key.vk == libtcod.KEY_ESCAPE:
+		# Exit the menu
+		return {'exit': True}
+
+	return {}
+
 def handle_targeting_keys(key):
 	if key.vk == libtcod.KEY_ESCAPE:
 		return {'exit': True}
