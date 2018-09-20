@@ -134,8 +134,8 @@ class GameMap:
 		number_of_items = randint(0, max_items_per_room)
 
 		monster_chances = {
-		'orc': 60,
-		'gnoll': 80,
+		'orc': from_dungeon_level([[60,1],[30,3],[10,4],[0,5]], self.dungeon_level),
+		'gnoll': from_dungeon_level([[80,1],[50,2],[30,3],[0,4]], self.dungeon_level),
 		'troll': from_dungeon_level([[15,3],[30,5],[60,7]], self.dungeon_level)
 		}
 
@@ -159,7 +159,7 @@ class GameMap:
 
 				if monster_choice == 'gnoll':
 					fighter_component = Fighter(hp=20+(self.dungeon_level), mp=0, defense=0+self.dungeon_level,
-												power=2+(self.dungeon_level-1), xp=20+(2*(self.dungeon_level-1)))
+												power=3+(self.dungeon_level-1), xp=20+(2*(self.dungeon_level-1)))
 					ai_component = BasicMonster()
 
 					monster = Entity(x, y, 'g', libtcod.desaturated_green, 'Gnoll', blocks=True,
@@ -173,7 +173,8 @@ class GameMap:
 					monster = Entity(x, y, 'o', libtcod.desaturated_green, 'Orc', blocks=True,
 									 render_order=RenderOrder.ACTOR, fighter=fighter_component, ai=ai_component)
 				elif monster_choice == 'troll':
-					fighter_component = Fighter(hp=30, mp=0, defense=2, power=8, xp=100)
+					fighter_component = Fighter(hp=50+(5*self.dungeon_level-1), mp=0, defense=3+self.dungeon_level, 
+												power=8+(2*self.dungeon_level-1), xp=100+(5*(self.dungeon_level-1)))
 					ai_component = BasicMonster()
 
 					monster = Entity(x, y, 'T', libtcod.darker_green, 'Troll', blocks=True, fighter=fighter_component,
