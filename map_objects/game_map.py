@@ -19,7 +19,7 @@ from random_utils import random_choice_from_dict, from_dungeon_level
 
 from monster_lists.monsters_one import get_easy_monsters, choose_easy_monster
 
-from item_lists.items_one import get_starter_items, choose_starter_item
+from item_lists.items_one import get_early_items, choose_early_item
 
 
 class GameMap:
@@ -134,7 +134,7 @@ class GameMap:
 
 		monster_chances = get_easy_monsters(self.dungeon_level)
 
-		item_chances = get_starter_items(self.dungeon_level)
+		item_chances = get_early_items(self.dungeon_level)
 
 		for i in range(number_of_monsters):
 			# Choose a random location in the room
@@ -156,7 +156,7 @@ class GameMap:
 			if not any([entity for entity in entities if entity.x == x and entity.y == y]):
 				item_choice = random_choice_from_dict(item_chances)
 
-				item = choose_starter_item(item_choice, x, y)
+				item = choose_early_item(item_choice, x, y)
 
 				entities.append(item)
 

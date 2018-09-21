@@ -182,10 +182,17 @@ def get_new_game_variables(constants):
 
 	player = apply_class_stats_to_race(player)
 
-	equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=2)
-	dagger = Entity(0,0, '-', libtcod.sky, 'Dagger', equippable=equippable_component)
-	player.inventory.add_item(dagger)
-	player.equipment.toggle_equip(dagger)
+	if player.combat_class.class_name == 'Warrior': 
+		equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=1)
+		dagger = Entity(0,0, '-', libtcod.sky, 'Dagger', equippable=equippable_component)
+		player.inventory.add_item(dagger)
+		player.equipment.toggle_equip(dagger)
+
+	elif player.combat_class.class_name == 'Archer': 
+		equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=1)
+		dagger = Entity(0,0, '-', libtcod.sky, 'Dagger', equippable=equippable_component)
+		player.inventory.add_item(dagger)
+		player.equipment.toggle_equip(dagger)
 
 	entities = [player]
 

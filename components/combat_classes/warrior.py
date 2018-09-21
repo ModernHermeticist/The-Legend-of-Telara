@@ -7,7 +7,7 @@ from game_messages import Message
 
 
 class Warrior():
-	def __init__(self, hp=10, mp=0, defense=1, power=1, xp=0):
+	def __init__(self, class_name='Warrior', hp=10, mp=0, defense=1, power=1, xp=0):
 		self.base_max_hp = hp
 		self.hp = hp
 		self.base_max_mp = mp
@@ -16,6 +16,7 @@ class Warrior():
 		self.base_power = power
 		self.min_power = 1
 		self.xp = xp
+		self.class_name= class_name
 
 	@property
 	def max_hp(self):

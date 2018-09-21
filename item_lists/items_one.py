@@ -11,7 +11,7 @@ from entity import Entity
 from components.item_functions import cast_confuse, cast_fireball, cast_lightning, heal
 
 
-def get_starter_items(dungeon_level):
+def get_early_items(dungeon_level):
 
 	item_chances = {
 		'healing_potion': 35,
@@ -25,7 +25,7 @@ def get_starter_items(dungeon_level):
 	return item_chances
 
 
-def choose_starter_item(item_choice, x, y):
+def choose_early_item(item_choice, x, y):
 	if item_choice == 'healing_potion':
 		item_component = Item(use_function=heal, amount=40)
 		item = Entity(x, y, '!', libtcod.violet, 'Healing Potion', render_order=RenderOrder.ITEM,
