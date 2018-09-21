@@ -65,6 +65,8 @@ def main_menu(con, background_image, screen_width, screen_height):
 							 'THE LEGEND OF TELARA')
 	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) - 4, libtcod.BKGND_NONE, libtcod.CENTER,
 							 'THIS GAME IS UNBALANCED, UNSTABLE, AND UNFORGIVING')
+	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height - 3), libtcod.BKGND_NONE, libtcod.CENTER,
+							 'ALPHA RELEASE 0.01')
 	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height - 2), libtcod.BKGND_NONE, libtcod.CENTER,
 							 'By Jacob Queen, 2018')
 

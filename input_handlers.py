@@ -18,6 +18,10 @@ def handle_keys(key, game_state):
 		return handle_character_screen(key)
 	elif game_state == GameStates.INTERACT:
 		return handle_interacting_keys(key)
+	elif game_state == GameStates.SELECT_RACE:
+		return handle_select_race_keys(key)
+	elif game_state == GameStates.SELECT_CLASS:
+		return handle_select_combat_class_keys(key)
 
 	return {}
 
@@ -89,11 +93,30 @@ def handle_inventory_keys(key):
 
 	return {}
 
-def handle_create_character_screen_keys(key):
-	index = key.c - ord('a')
+def handle_select_race_keys(key):
+	key_char = chr(key.c)
 
-	if index >= 0:
-		return {'inventory_index': index}
+	if key_char == 'a':
+		return {'human': True}
+
+	if key.vk == libtcod.KEY_ENTER and key.lalt:
+		# Alt+Enter: toggle fullscreen
+		return {'fullscreen': True}
+
+	elif key.vk == libtcod.KEY_ESCAPE:
+		# Exit the menu
+		return {'exit': True}
+
+	return {}
+
+def handle_select_combat_class_keys(key):
+	key_char = chr(key.c)
+
+	if key_char == 'a':
+		return {'warrior': True}
+
+	if key_char == 'b':
+		return {'archer': True}
 
 	if key.vk == libtcod.KEY_ENTER and key.lalt:
 		# Alt+Enter: toggle fullscreen

@@ -2,13 +2,16 @@ import libtcodpy as libtcod
 
 from components.combat_classes.fighter import Fighter
 from components.combat_classes.warrior import Warrior
+from components.combat_classes.archer import Archer
 from components.races.human import Human
 from components.inventory import Inventory
 from components.level import Level
 from components.equipment import Equipment
 from components.equippable import Equippable
 
-from interfaces.character_creation_menu import character_creation_menu
+from interfaces.character_creation_menu import select_race_menu, select_combat_class_menu, select_name_menu
+
+from input_handlers import handle_keys
 
 from entity import Entity
 
@@ -70,13 +73,11 @@ def get_constants():
 		'light_ground': libtcod.Color(200, 180, 50)
 	}
 
-	races = {
-		'human': Human()
-	}
+	races = ['Human']
 
-	combat_classes = {
-		'warrior': Warrior()
-	}
+	combat_classes = ['Warrior',
+					  'Archer']
+	
 
 	constants = {
 				'window_title':             window_title,
@@ -113,9 +114,78 @@ def get_constants():
 	return constants
 
 def get_new_game_variables(constants):
+	race_component = None
+	class_component = None
+	game_state = GameStates.SELECT_RACE
+	previous_game_state = game_state
+	key = libtcod.Key()
+	mouse = libtcod.Mouse()
 
-	player = character_creation_menu(0, 50, constants['screen_width'], constants['screen_height'],
-										entity, constants['combat_classes'], constants['races'])
+
+	select_name_menu(0, 50, constants['screen_width'], constants['screen_height'])
+	libtcod.console_flush()
+	name = enter_player_name(constants['screen_width'], constants['screen_height'])
+	if name == None:
+		return None, None, None, None, None	
+
+	while not libtcod.console_is_window_closed():
+		libtcod.sys_check_for_event(libtcod.EVENT_KEY_PRESS | libtcod.EVENT_MOUSE, key, mouse)
+		libtcod.console_flush()
+		action = handle_keys(key, game_state)
+
+		if game_state == GameStates.SELECT_RACE:
+			select_race_menu(0, 50, constants['screen_width'], constants['screen_height'], constants['races'])
+
+			action = handle_keys(key, game_state)
+
+			human = action.get('human')
+
+			exit = action.get('exit')
+
+			if human:
+				race_component = Human()
+				game_state = GameStates.SELECT_CLASS
+
+			elif exit:
+				break
+
+		elif game_state == GameStates.SELECT_CLASS:
+			select_combat_class_menu(0, 50, constants['screen_width'], constants['screen_height'], constants['combat_classes'])
+
+			action = handle_keys(key, game_state)
+
+			warrior = action.get('warrior')
+			archer =  action.get('archer')
+
+			exit =    action.get('exit')
+
+			if warrior:
+				class_component = Warrior()
+				break
+
+			if archer:
+				class_component = Archer()
+				break
+
+			elif exit:
+				game_state = GameStates.SELECT_RACE
+	if exit:
+		return None, None, None, None, None		
+
+	inventory_component = Inventory(26)
+	level_component = Level()
+	equipment_component = Equipment()
+
+	player = Entity(0, 0, '@', libtcod.white, name, blocks=True, render_order=RenderOrder.ACTOR, 
+					combat_class=class_component, race=race_component, inventory=inventory_component, level=level_component,
+					equipment=equipment_component)
+
+	player = apply_class_stats_to_race(player)
+
+	equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=2)
+	dagger = Entity(0,0, '-', libtcod.sky, 'Dagger', equippable=equippable_component)
+	player.inventory.add_item(dagger)
+	player.equipment.toggle_equip(dagger)
 
 	entities = [player]
 
@@ -127,3 +197,55 @@ def get_new_game_variables(constants):
 	game_state = GameStates.PLAYERS_TURN
 
 	return player, entities, game_map, message_log, game_state
+
+def apply_class_stats_to_race(player):
+
+	player.combat_class.base_max_hp += player.race.hp
+	player.combat_class.hp += player.race.hp
+
+	player.combat_class.base_max_mp += player.race.mp
+	player.combat_class.mp += player.race.mp
+
+	player.combat_class.base_power += player.race.power
+
+	player.combat_class.base_defense += player.race.defense
+	return player
+
+def enter_player_name(screen_width, screen_height):
+	letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
+			   'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
+			   'w', 'x', 'y', 'z']
+	name = ''
+	x = len(name) + int(screen_width / 2 - 11) + 10
+	y = int(screen_height / 2)
+	key = libtcod.console_wait_for_keypress(True)
+	while key.vk != libtcod.KEY_ENTER and key.vk != libtcod.KEY_ESCAPE:
+		if key.vk == libtcod.KEY_BACKSPACE:
+			if len(name) >= 0:
+				name = name[0:len(name)-1]
+				libtcod.console_print_ex(0, x, y, libtcod.BKGND_NONE, libtcod.LEFT, ' ')
+				libtcod.console_flush()
+		else:
+			letter = chr(key.c)
+			for item in letters:
+				if letter == item:
+					if len(name) <= 12:
+						name = name + letter  #add to the string
+						if len(name) == 1:
+							name = name.capitalize()
+							letter = letter.capitalize()
+						#libtcod.console_set_char(0, x,  y, letter)  #print new character at appropriate position on screen
+						libtcod.console_print_ex(0, x, y, libtcod.BKGND_NONE, libtcod.LEFT, letter)
+
+						libtcod.console_set_default_foreground(0, libtcod.white)  #make it white or something
+						libtcod.console_flush()
+					break
+		x = len(name) + int(screen_width / 2 - 11) + 10
+		key = libtcod.console_wait_for_keypress(True)
+
+	if key.vk == libtcod.KEY_ESCAPE:
+		libtcod.console_clear(0)
+		libtcod.console_flush()
+		return None
+	elif key.vk == libtcod.KEY_ENTER:
+		return name

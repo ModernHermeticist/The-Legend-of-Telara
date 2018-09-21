@@ -15,31 +15,31 @@ from components.equippable import Equippable
 from equipment_slots import EquipmentSlots
 from render_functions import RenderOrder
 
-def character_creation_menu(con, character_creation_width, screen_width, screen_height, combat_classes, races):
-	inventory_component = Inventory(26)
-	level_component = Level()
-	equipment_component = Equipment()
-	"""
-	SO HERE WE NEED TO HANDLE DECIDING WHAT OUR CHARACTER WILL BE SO WE CAN SET "PLAYER" EQUAL TO IT
-	"""
+
+def select_name_menu(con, select_race_width, screen_width, screen_height):
+	libtcod.console_clear(con)
+	libtcod.console_set_default_background(con, libtcod.black)
+	libtcod.console_set_default_foreground(con, libtcod.white)
+
+	menu(con, 'Character Creation\n\nEnter Name: ', libtcod.darker_blue, "", 26, screen_width, screen_height, False)
+
+def select_race_menu(con, select_race_width, screen_width, screen_height, races):
+	libtcod.console_clear(con)
+	libtcod.console_set_default_background(con, libtcod.black)
+	libtcod.console_set_default_foreground(con, libtcod.white)
+
+	menu(con, 'Select Race\n\n', libtcod.darker_blue, races, 22, screen_width, screen_height)
 
 
-	player = Entity(0, 0, '@', libtcod.white, 'Player', blocks=True, render_order=RenderOrder.ACTOR, 
-					combat_class=class_component, inventory=inventory_component, level=level_component,
-					equipment=equipment_component)
+
+def select_combat_class_menu(con, select_race_width, screen_width, screen_height, combat_classes):
+	libtcod.console_clear(con)
+	libtcod.console_set_default_background(con, libtcod.black)
+	libtcod.console_set_default_foreground(con, libtcod.white)
+
+	menu(con, 'Select Class\n\n', libtcod.darker_blue, combat_classes, 22, screen_width, screen_height)
 
 
-	"""
-	HERE WE ARE ASSIGNING INITIAL EQUIPMENT
-	ACTUALLY WE COULD PROBABLY HARD CODE THE CLASS TEMPLATES WITH GEAR
-	"""
 
-
-	equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=2)
-	dagger = Entity(0,0, '-', libtcod.sky, 'Dagger', equippable=equippable_component)
-	player.inventory.add_item(dagger)
-	player.equipment.toggle_equip(dagger)
-
-	return player
 
 	

@@ -12,7 +12,6 @@ from render_functions import clear_all, render_all
 from loader_functions.initialize_new_game import get_constants, get_new_game_variables
 from loader_functions.data_loaders import load_game, save_game
 from interfaces.menus import main_menu, message_box, controls_menu
-from interfaces.character_creation_menu import character_creation_menu
 
 from font_functions import load_customfont
 
@@ -364,8 +363,9 @@ def main():
 
 			elif new_game:
 				player, entities, game_map, message_log, game_state = get_new_game_variables(constants)
-				game_state = GameStates.PLAYERS_TURN
-				show_main_menu = False
+				if player != None:
+					game_state = GameStates.PLAYERS_TURN
+					show_main_menu = False
 
 			elif load_saved_game:
 				try:
