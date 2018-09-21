@@ -28,7 +28,7 @@ def select_race_menu(con, select_race_width, screen_width, screen_height, races)
 	libtcod.console_set_default_background(con, libtcod.black)
 	libtcod.console_set_default_foreground(con, libtcod.white)
 
-	menu(con, 'Select Race\n\n', libtcod.darker_blue, races, 22, screen_width, screen_height)
+	menu(con, 'Character Creation\n\nSelect Race\n\n', libtcod.darker_blue, races, 22, screen_width, screen_height)
 
 
 
@@ -37,7 +37,7 @@ def select_combat_class_menu(con, select_race_width, screen_width, screen_height
 	libtcod.console_set_default_background(con, libtcod.black)
 	libtcod.console_set_default_foreground(con, libtcod.white)
 
-	menu(con, 'Select Class\n\n', libtcod.darker_blue, combat_classes, 22, screen_width, screen_height)
+	menu(con, 'Character Creation\n\nSelect Class\n\n', libtcod.darker_blue, combat_classes, 22, screen_width, screen_height)
 
 
 

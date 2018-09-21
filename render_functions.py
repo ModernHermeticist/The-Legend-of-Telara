@@ -4,7 +4,7 @@ from enum import Enum
 
 from game_states import GameStates
 
-from interfaces.menus import inventory_menu, level_up_menu, character_screen, controls_menu, dialogue_screen
+from interfaces.menus import inventory_menu, level_up_menu, character_screen, controls_menu, dialogue_screen, inspect_item_menu
 
 class RenderOrder(Enum):
 	STAIRS = 1
@@ -14,7 +14,7 @@ class RenderOrder(Enum):
 
 def render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse_panel, entities, 
 				player, game_map, fov_map, fov_recompute, message_log,
-				screen_width, screen_height, bar_width, panel_height, panel_y, mouse, colors, game_state, npc):
+				screen_width, screen_height, bar_width, panel_height, panel_y, mouse, colors, game_state, npc, item):
 	if fov_recompute:
 		# Draw all the tile in the game map
 		for y in range(game_map.height):
@@ -77,13 +77,16 @@ def render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse
 	libtcod.console_print_ex(under_mouse_panel, 1, 0, libtcod.BKGND_NONE, libtcod.LEFT,
 							get_names_under_mouse(mouse, entities, fov_map))
 
-	if game_state == GameStates.SHOW_INVENTORY:
+	if game_state in (GameStates.SHOW_INVENTORY, GameStates.CHOOSE_ITEM_TO_INSPECT):
 		inventory_menu(con, "Press the key next to an item to use it, or Esc to cancel.\n",
 						player, 50, screen_width, screen_height)
 
-	elif game_state == GameStates.DROP_INVENTORY:
+	elif game_state in (GameStates.DROP_INVENTORY, GameStates.CHOOSE_ITEM_TO_INSPECT):
 		inventory_menu(con, "Press the key next to an item to drop it, or Esc to cancel.\n",
 						player, 50, screen_width, screen_height)
+
+	elif game_state == GameStates.INSPECT_ITEM:
+		inspect_item_menu(con, '', item, 30, 30, screen_width, screen_height)
 
 	elif game_state == GameStates.LEVEL_UP:
 		level_up_menu(con, 'Level up! Choose a stat to raise:', player, 40, screen_width, screen_height)

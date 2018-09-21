@@ -34,7 +34,7 @@ def get_constants():
 	bar_width = 21
 	panel_height = 7
 	message_panel_height = 7
-	char_info_panel_height = 4
+	char_info_panel_height = 8
 	area_info_panel_height = 1
 	under_mouse_panel_height = 1
 	panel_y = screen_height - panel_height
@@ -116,24 +116,27 @@ def get_constants():
 def get_new_game_variables(constants):
 	race_component = None
 	class_component = None
-	game_state = GameStates.SELECT_RACE
+	game_state = GameStates.ENTER_PLAYER_NAME
 	previous_game_state = game_state
 	key = libtcod.Key()
 	mouse = libtcod.Mouse()
 
-
-	select_name_menu(0, 50, constants['screen_width'], constants['screen_height'])
-	libtcod.console_flush()
-	name = enter_player_name(constants['screen_width'], constants['screen_height'])
-	if name == None:
-		return None, None, None, None, None	
 
 	while not libtcod.console_is_window_closed():
 		libtcod.sys_check_for_event(libtcod.EVENT_KEY_PRESS | libtcod.EVENT_MOUSE, key, mouse)
 		libtcod.console_flush()
 		action = handle_keys(key, game_state)
 
-		if game_state == GameStates.SELECT_RACE:
+		if game_state == GameStates.ENTER_PLAYER_NAME:
+			select_name_menu(0, 50, constants['screen_width'], constants['screen_height'])
+			libtcod.console_flush()
+			name = enter_player_name(constants['screen_width'], constants['screen_height'])
+			if name == None:
+				return None, None, None, None, None	
+			else:
+				game_state = GameStates.SELECT_RACE
+
+		elif game_state == GameStates.SELECT_RACE:
 			select_race_menu(0, 50, constants['screen_width'], constants['screen_height'], constants['races'])
 
 			action = handle_keys(key, game_state)
@@ -147,7 +150,7 @@ def get_new_game_variables(constants):
 				game_state = GameStates.SELECT_CLASS
 
 			elif exit:
-				break
+				game_state = GameStates.ENTER_PLAYER_NAME
 
 		elif game_state == GameStates.SELECT_CLASS:
 			select_combat_class_menu(0, 50, constants['screen_width'], constants['screen_height'], constants['combat_classes'])
@@ -170,6 +173,8 @@ def get_new_game_variables(constants):
 			elif exit:
 				game_state = GameStates.SELECT_RACE
 	if exit:
+		libtcod.console_clear(0)
+		libtcod.console_flush()
 		return None, None, None, None, None		
 
 	inventory_component = Inventory(26)
@@ -185,12 +190,18 @@ def get_new_game_variables(constants):
 	if player.combat_class.class_name == 'Warrior': 
 		equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=1)
 		dagger = Entity(0,0, '-', libtcod.sky, 'Dagger', equippable=equippable_component)
+
+		dagger.item.description = "Better than your bare hands."
+
 		player.inventory.add_item(dagger)
 		player.equipment.toggle_equip(dagger)
 
 	elif player.combat_class.class_name == 'Archer': 
 		equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=1)
 		dagger = Entity(0,0, '-', libtcod.sky, 'Dagger', equippable=equippable_component)
+
+		dagger.item.description = "Better than your bare hands."
+
 		player.inventory.add_item(dagger)
 		player.equipment.toggle_equip(dagger)
 

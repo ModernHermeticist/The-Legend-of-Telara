@@ -4,6 +4,8 @@ from random_utils import from_dungeon_level
 
 from render_functions import RenderOrder
 
+from game_messages import Message
+
 from components.equipment import EquipmentSlots
 from components.equippable import Equippable
 from components.item import Item
@@ -27,7 +29,9 @@ def get_early_items(dungeon_level):
 
 def choose_early_item(item_choice, x, y):
 	if item_choice == 'healing_potion':
-		item_component = Item(use_function=heal, amount=40)
+		item_description = ("Clearly brewed by an individual with little alchemical training,"
+							"this simple healing potion will mildly soothe the pain of battle.")
+		item_component = Item(description=item_description, use_function=heal, amount=40)
 		item = Entity(x, y, '!', libtcod.violet, 'Healing Potion', render_order=RenderOrder.ITEM,
 					  item=item_component)
 

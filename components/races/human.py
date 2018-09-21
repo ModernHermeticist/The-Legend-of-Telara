@@ -4,3 +4,4 @@ class Human():
 		self.mp = 10
 		self.defense = 1
 		self.power = 1
+		self.race_name = 'Human'

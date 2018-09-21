@@ -32,6 +32,8 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 
 	npc = None
 
+	item = None
+
 	while not libtcod.console_is_window_closed():
 		libtcod.sys_check_for_event(libtcod.EVENT_KEY_PRESS | libtcod.EVENT_MOUSE, key, mouse)
 
@@ -41,7 +43,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 		render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse_panel, entities, 
 				   player, game_map, fov_map, fov_recompute, message_log,
 				   constants['screen_width'], constants['screen_height'], constants['bar_width'],
-				   constants['panel_height'], constants['panel_y'], mouse, constants['colors'], game_state, npc)
+				   constants['panel_height'], constants['panel_y'], mouse, constants['colors'], game_state, npc, item)
 
 		fov_recompute = False
 
@@ -54,6 +56,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 
 		move =                  action.get('move')
 		interact =              action.get('interact')
+		inspect_item =          action.get('inspect_item')
 		wait =                  action.get('wait')
 		pickup =                action.get('pickup')
 		show_inventory =        action.get('show_inventory')
@@ -138,14 +141,21 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 		if interact:
 			previous_game_state = GameStates.PLAYERS_TURN
 			game_state = GameStates.INTERACT
+			message_log.add_message(Message('You begin to look around.'))
 
 		if inventory_index is not None and previous_game_state != GameStates.PLAYER_DEAD and \
 			inventory_index < len(player.inventory.items):
 			item = player.inventory.items[inventory_index]
+
 			if game_state == GameStates.SHOW_INVENTORY:
 				player_turn_results.extend(player.inventory.use(item, entities=entities, fov_map=fov_map))
 			elif game_state == GameStates.DROP_INVENTORY:
 				player_turn_results.extend(player.inventory.drop_item(item))
+
+			elif game_state == GameStates.CHOOSE_ITEM_TO_INSPECT:
+				previous_game_state = GameStates.CHOOSE_ITEM_TO_INSPECT
+				game_state = GameStates.INSPECT_ITEM
+				message_log.add_message(Message('You inspect the {0}.'.format(item.name)))
 
 		if take_stairs and game_state == GameStates.PLAYERS_TURN:
 			for entity in entities:
@@ -185,13 +195,33 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 			elif right_click:
 				player_turn_results.append({'targeting_cancelled': True})
 
+		if game_state == GameStates.SHOW_INVENTORY:
+			if inspect_item:
+				previous_game_state = game_state
+				game_state = GameStates.CHOOSE_ITEM_TO_INSPECT
+				message_log.add_message(Message('Choose an item to inspect.', libtcod.yellow))
+
 
 		if exit:
 			if game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.CHARACTER_SCREEN, GameStates.INTERACT):
-				npc = None
+				if game_state == (GameStates.INTERACT):
+					player_turn_results.append({'interacting_cancelled': True})
+					game_state = previous_game_state
+					npc = None
+				else:
+					game_state = previous_game_state
+
+			elif game_state == GameStates.INSPECT_ITEM:
 				game_state = previous_game_state
-			elif game_state in (GameStates.TARGETING, GameStates.INTERACT):
+
+			elif game_state == GameStates.CHOOSE_ITEM_TO_INSPECT:
+				game_state = GameStates.PLAYERS_TURN
+				message_log.add_message(Message('Item inspection cancelled.', libtcod.yellow))
+
+			elif game_state == GameStates.TARGETING:
 				player_turn_results.append({'targeting_cancelled': True})
+				game_state = previous_game_state
+
 			else:
 				libtcod.console_clear(0)
 				save_game(player, entities, game_map, message_log, game_state)
@@ -260,7 +290,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 
 			if interacting_cancelled:
 				game_state = previous_game_state
-				message_log.add_message(Message('Interacting cancelled.'))
+				message_log.add_message(Message('You stop looking around.'))
 
 			if xp:
 				leveled_up = player.level.add_xp(xp)
