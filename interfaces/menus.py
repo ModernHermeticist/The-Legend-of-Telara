@@ -59,14 +59,25 @@ def inventory_menu(con, header, player, inventory_width, screen_width, screen_he
 
 def main_menu(con, background_image, screen_width, screen_height):
 	#libtcod.image_blit_2x(background_image, 0, 0, 0)
+	libtcod.console_set_default_foreground(0, libtcod.white)
+
+	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) - 15, libtcod.BKGND_NONE, libtcod.CENTER,
+							 'THERE IS A BUG WHERE ON SAVE AND LOAD THE PLAYER CHARACTER SHOWS UP AGAIN ON ANOTHER FLOOR')
+	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) - 14, libtcod.BKGND_NONE, libtcod.CENTER,
+							 'ALSO THE NEXT THING ON THE TODO LIST IS ADDING PURE RANGED ATTACKS (WEAPONS/CHARACTER SPELLS)')
+	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) - 13, libtcod.BKGND_NONE, libtcod.CENTER,
+							 'DO THIS BY STARTING WITH HOW SCROLL TARGETING WORKS: ADD AN OVERLAY THAT SHOWS HOW FAR')
+	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) - 12, libtcod.BKGND_NONE, libtcod.CENTER,
+							 'YOU CAN TARGET AND THE AREA OF EFFECT ON THE SCROLL')
 
 	libtcod.console_set_default_foreground(0, libtcod.light_yellow)
+
 	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) - 6, libtcod.BKGND_NONE, libtcod.CENTER,
 							 'THE LEGEND OF TELARA')
 	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) - 4, libtcod.BKGND_NONE, libtcod.CENTER,
 							 'THIS GAME IS UNBALANCED, UNSTABLE, AND UNFORGIVING')
 	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height - 3), libtcod.BKGND_NONE, libtcod.CENTER,
-							 'ALPHA RELEASE 0.01')
+							 'PRE-ALPHA VERSION 0.01')
 	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height - 2), libtcod.BKGND_NONE, libtcod.CENTER,
 							 'By Jacob Queen, 2018')
 
@@ -186,7 +197,7 @@ def character_screen(player, character_screen_width, character_screen_height, sc
 
 	x = screen_width // 2 - character_screen_width // 2
 	y = screen_height // 2 - character_screen_height // 2
-	libtcod.console_blit(window, 0, 0, character_screen_width, character_screen_height, 0, x, y, 1.0, 0.9)
+	libtcod.console_blit(window, 0, 0, character_screen_width, character_screen_height, 0, x, y, 1.0, 1.0)
 
 def dialogue_screen(player, npc, dialogue_screen_width, dialogue_screen_height, screen_width, screen_height):
 	# X = 50 Y = 30

@@ -188,7 +188,7 @@ def get_new_game_variables(constants):
 	player = apply_class_stats_to_race(player)
 
 	if player.combat_class.class_name == 'Warrior': 
-		equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=1)
+		equippable_component = Equippable(EquipmentSlots.MAIN_HAND, min_power_bonus=0, max_power_bonus=1)
 		dagger = Entity(0,0, '-', libtcod.sky, 'Dagger', equippable=equippable_component)
 
 		dagger.item.description = "Better than your bare hands."
@@ -197,7 +197,7 @@ def get_new_game_variables(constants):
 		player.equipment.toggle_equip(dagger)
 
 	elif player.combat_class.class_name == 'Archer': 
-		equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=1)
+		equippable_component = Equippable(EquipmentSlots.MAIN_HAND, min_power_bonus=0, max_power_bonus=1)
 		dagger = Entity(0,0, '-', libtcod.sky, 'Dagger', equippable=equippable_component)
 
 		dagger.item.description = "Better than your bare hands."
@@ -237,7 +237,7 @@ def enter_player_name(screen_width, screen_height):
 	x = len(name) + int(screen_width / 2 - 11) + 10
 	y = int(screen_height / 2)
 	key = libtcod.console_wait_for_keypress(True)
-	while key.vk != libtcod.KEY_ENTER and key.vk != libtcod.KEY_ESCAPE:
+	while True:
 		if key.vk == libtcod.KEY_BACKSPACE:
 			if len(name) >= 0:
 				name = name[0:len(name)-1]
@@ -261,9 +261,9 @@ def enter_player_name(screen_width, screen_height):
 		x = len(name) + int(screen_width / 2 - 11) + 10
 		key = libtcod.console_wait_for_keypress(True)
 
-	if key.vk == libtcod.KEY_ESCAPE:
-		libtcod.console_clear(0)
-		libtcod.console_flush()
-		return None
-	elif key.vk == libtcod.KEY_ENTER:
-		return name
+		if key.vk == libtcod.KEY_ESCAPE:
+			libtcod.console_clear(0)
+			libtcod.console_flush()
+			return None
+		elif len(name) > 0 and key.vk == libtcod.KEY_ENTER:
+			return name

@@ -17,11 +17,9 @@ from font_functions import load_customfont
 
 
 def play_game(player, entities, game_map, message_log, game_state, con, message_panel,
-					 char_info_panel, area_info_panel, under_mouse_panel, constants):
+					 char_info_panel, area_info_panel, under_mouse_panel, constants, floor_index, entity_index, fov_index):
 	fov_recompute = True
-
 	fov_map = initialize_fov(game_map)
-
 	key = libtcod.Key()
 	mouse = libtcod.Mouse()
 
@@ -160,12 +158,33 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 		if take_stairs and game_state == GameStates.PLAYERS_TURN:
 			for entity in entities:
 				if entity.stairs and entity.x == player.x and entity.y == player.y:
-					entities = game_map.next_floor(player, message_log, constants)
-					fov_map = initialize_fov(game_map)
-					fov_recompute = True
-					libtcod.console_clear(con)
+					if entity.name == 'Stairs Down':
+						if len(floor_index) == game_map.dungeon_level:
+							entities = game_map.new_floor(player, message_log, constants)
+							fov_map = initialize_fov(game_map)
+							floor_index.append(game_map.tiles)
+							entity_index.append(entities)
+							fov_index.append(fov_map)
+							fov_recompute = True
+							libtcod.console_clear(con)
+							break
 
-					break
+						elif len(floor_index) > game_map.dungeon_level:
+							# Update the entity index with the floors NEW entity list
+							entity_index[game_map.dungeon_level-1] = entities
+							entities, player, fov_map = game_map.next_floor(player, entity_index, floor_index, fov_index, message_log, constants)
+							fov_recompute = True
+							libtcod.console_clear(con)
+							break
+
+
+					elif entity.name == 'Stairs Up':
+							entity_index[game_map.dungeon_level-1] = entities
+							entities, player, fov_map = game_map.previous_floor(player, entity_index, floor_index, fov_index, message_log, constants)
+							fov_recompute = True
+							libtcod.console_clear(con)
+							break
+
 			else:
 				message_log.add_message(Message('There are no stairs here.', libtcod.yellow))
 
@@ -211,12 +230,13 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 				else:
 					game_state = previous_game_state
 
+			elif game_state == GameStates.CHOOSE_ITEM_TO_INSPECT:
+				game_state = GameStates.SHOW_INVENTORY
+				previous_game_state = GameStates.PLAYERS_TURN
+				message_log.add_message(Message('Item inspection cancelled.', libtcod.yellow))
+
 			elif game_state == GameStates.INSPECT_ITEM:
 				game_state = previous_game_state
-
-			elif game_state == GameStates.CHOOSE_ITEM_TO_INSPECT:
-				game_state = GameStates.PLAYERS_TURN
-				message_log.add_message(Message('Item inspection cancelled.', libtcod.yellow))
 
 			elif game_state == GameStates.TARGETING:
 				player_turn_results.append({'targeting_cancelled': True})
@@ -224,7 +244,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 
 			else:
 				libtcod.console_clear(0)
-				save_game(player, entities, game_map, message_log, game_state)
+				save_game(player, entities, game_map, message_log, game_state, floor_index, entity_index, fov_index)
 
 				return True
 
@@ -364,6 +384,7 @@ def main():
 	show_load_error_message = False
 	show_controls_menu = False
 
+
 	main_menu_background_image = libtcod.image_load('menu_background.png')
 
 	key = libtcod.Key()
@@ -393,13 +414,21 @@ def main():
 
 			elif new_game:
 				player, entities, game_map, message_log, game_state = get_new_game_variables(constants)
+
 				if player != None:
+					fov_map = initialize_fov(game_map)
+					floor_index = []
+					entity_index = []
+					fov_index = []
+					floor_index.append(game_map.tiles)
+					entity_index.append(entities)
+					fov_index.append(fov_map)
 					game_state = GameStates.PLAYERS_TURN
 					show_main_menu = False
 
 			elif load_saved_game:
 				try:
-					player, entities, game_map, message_log, game_state = load_game()
+					player, entities, game_map, message_log, game_state, floor_index, entity_index, fov_index = load_game()
 					show_main_menu = False
 				except FileNotFoundError:
 					show_load_error_message = True
@@ -427,7 +456,7 @@ def main():
 		elif show_main_menu == False and show_controls_menu == False:
 			libtcod.console_clear(con)
 			play_game(player, entities, game_map, message_log, game_state, con, message_panel,
-					 char_info_panel, area_info_panel, under_mouse_panel, constants)
+					 char_info_panel, area_info_panel, under_mouse_panel, constants, floor_index, entity_index, fov_index)
 
 			show_main_menu = True
 

@@ -7,8 +7,8 @@ from game_states import GameStates
 from interfaces.menus import inventory_menu, level_up_menu, character_screen, controls_menu, dialogue_screen, inspect_item_menu
 
 class RenderOrder(Enum):
-	STAIRS = 1
-	CORPSE = 2
+	CORPSE = 1
+	STAIRS = 2
 	ITEM = 3
 	ACTOR = 4
 
@@ -92,7 +92,7 @@ def render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse
 		level_up_menu(con, 'Level up! Choose a stat to raise:', player, 40, screen_width, screen_height)
 
 	elif game_state == GameStates.CHARACTER_SCREEN:
-		character_screen(player, 30, 10, screen_width, screen_height)
+		character_screen(player, 30, 15, screen_width, screen_height)
 
 	elif game_state == GameStates.INTERACT and npc:
 		dialogue_screen(player, npc, 50, 30, screen_width, screen_height )

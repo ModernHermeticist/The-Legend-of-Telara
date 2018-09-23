@@ -6,6 +6,9 @@ from components.dialogue import Dialogue
 
 from entity import Entity
 
+from components.equipment import EquipmentSlots
+from components.equippable import Equippable
+
 from render_functions import RenderOrder
 
 from game_messages import Message
@@ -27,6 +30,13 @@ class GameMap:
 		self.width = width
 		self.height = height
 		self.tiles = self.initialize_tiles()
+
+		self.stairs_down_x = None
+		self.stairs_down_y = None
+
+		self.stairs_up_x = None
+		self.stairs_up_y = None
+
 
 		self.dungeon_level = dungeon_level
 
@@ -96,15 +106,42 @@ class GameMap:
 				rooms.append(new_room)
 				num_rooms += 1
 
+		self.stairs_down_x = center_of_last_room_x
+		self.stairs_down_y = center_of_last_room_y
+
+		#self.stairs_down_x = player.x + 2
+		#self.stairs_down_y = player.y + 2
+
+		self.stairs_up_x = player.x
+		self.stairs_up_y = player.y
+
 		stairs_component = Stairs(self.dungeon_level + 1)
-		down_stairs = Entity(center_of_last_room_x, center_of_last_room_y, '>', libtcod.black, 'Stairs', 
+		down_stairs = Entity(self.stairs_down_x, self.stairs_down_y, '>', libtcod.black, 'Stairs Down', 
 							render_order=RenderOrder.STAIRS, stairs=stairs_component)
 		entities.append(down_stairs)
+
+		if self.dungeon_level > 1:
+			stairs_component = Stairs(self.dungeon_level - 1)
+			up_stairs = Entity(self.stairs_up_x, self.stairs_up_y, '<', libtcod.black, 'Stairs Up', 
+								render_order=RenderOrder.STAIRS, stairs=stairs_component)
+			entities.append(up_stairs)
+
 		if self.dungeon_level == 1:
 			dialogue_component = Dialogue(character='The Story Teller', scene='Intro')
 			story_teller = Entity(center_of_last_room_x - 1, center_of_last_room_y - 1, '@', libtcod.orange, 'The Story Teller', 
 							blocks=True, render_order=RenderOrder.ACTOR, dialogue=dialogue_component, invulnerable=True)
 			entities.append(story_teller)
+
+		if self.dungeon_level == 1:
+			equippable_component = Equippable(EquipmentSlots.MAIN_HAND, min_power_bonus=1, max_power_bonus=3)
+			item = Entity(player.x-1, player.y-1, '/', libtcod.brass, 'Broken Iron Sword', render_order=RenderOrder.ITEM,
+						  equippable=equippable_component)
+			item.item.description = ("Long ago a knight stood atop the battlements of lost Fort Grey Mount.\n"
+									 "He looked wistfully to the fields in the distance.\n\n"
+									 "Nothing but corpses could he see for miles.")
+			entities.append(item)
+
+
 
 	def create_room(self, room):
 		# go through the tiles in the rectangle and make them passable
@@ -166,7 +203,7 @@ class GameMap:
 
 		return False
 
-	def next_floor(self, player, message_log, constants):
+	def new_floor(self, player, message_log, constants):
 		self.dungeon_level += 1
 		entities = [player]
 
@@ -179,3 +216,45 @@ class GameMap:
 		message_log.add_message(Message('You take a moment to rest, and recover your strength.', libtcod.light_violet))
 
 		return entities
+
+	def previous_floor(self, player, entity_index, floor_index, fov_index, message_log, constants):
+		self.dungeon_level -= 1
+
+		self.tiles = self.initialize_tiles()
+		self.tiles = floor_index[self.dungeon_level-1]
+		fov_map = fov_index[self.dungeon_level-1]
+		entities = [player]
+		entities.extend(entity_index[self.dungeon_level-1])
+
+
+		# Place the player on top of the stairs to the floor one down
+		for entity in entities:
+			if entity.name == 'Stairs Down':
+				player.x = entity.x
+				player.y = entity.y
+
+				break
+		message_log.add_message(Message('You climb up familiar stairs.', libtcod.light_violet))		
+
+		return entities, player, fov_map
+
+	def next_floor(self, player, entity_index, floor_index, fov_index, message_log, constants):
+
+		self.dungeon_level += 1
+
+		self.tiles = self.initialize_tiles()
+		self.tiles = floor_index[self.dungeon_level-1]
+		fov_map = fov_index[self.dungeon_level-1]
+		entities = [player]
+		entities.extend(entity_index[self.dungeon_level-1])
+
+		# Place the player on top of the stairs to the floor one up
+		for entity in entities:
+			if entity.name == 'Stairs Up':
+				player.x = entity.x
+				player.y = entity.y
+
+				break
+		message_log.add_message(Message('You climb down familiar stairs.', libtcod.light_violet))		
+
+		return entities, player, fov_map

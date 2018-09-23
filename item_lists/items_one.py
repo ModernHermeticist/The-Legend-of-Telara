@@ -16,8 +16,8 @@ from components.item_functions import cast_confuse, cast_fireball, cast_lightnin
 def get_early_items(dungeon_level):
 
 	item_chances = {
-		'healing_potion': 35,
-		'broken_iron_sword': from_dungeon_level([[5,2]], dungeon_level),
+		'healing_potion': 38,
+		'broken_iron_sword': from_dungeon_level([[15,2]], dungeon_level),
 		'cracked_wooden_shield': from_dungeon_level([[15,2]], dungeon_level),
 		'lightning_scroll': from_dungeon_level([[20,3]], dungeon_level), 
 		'fireball_scroll': from_dungeon_level([[15,3]], dungeon_level), 
@@ -36,9 +36,12 @@ def choose_early_item(item_choice, x, y):
 					  item=item_component)
 
 	elif item_choice == 'broken_iron_sword':
-		equippable_component = Equippable(EquipmentSlots.MAIN_HAND, min_power_bonus=1, power_bonus=3)
+		equippable_component = Equippable(EquipmentSlots.MAIN_HAND, min_power_bonus=1, max_power_bonus=3)
 		item = Entity(x, y, '/', libtcod.brass, 'Broken Iron Sword', render_order=RenderOrder.ITEM,
 					  equippable=equippable_component)
+		item.item.description = ("Long ago a knight stood atop the battlements of lost Fort Grey Mount.\n"
+								 "He looked wistfully to the fields in the distance.\n\n"
+								 "Nothing but corpses could he see for miles.")
 
 	elif item_choice == 'cracked_wooden_shield':
 		equippable_component = Equippable(EquipmentSlots.OFF_HAND, defense_bonus=1)
