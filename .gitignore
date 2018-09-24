@@ -6,6 +6,11 @@ __pycache__/
 # C extensions
 *.so
 
+# Game Save Data Files
+*.dat
+*.bak
+*.dir
+
 # Distribution / packaging
 .Python
 build/
@@ -109,3 +114,5 @@ venv.bak/
 .mypy_cache/
 .dmypy.json
 dmypy.json
+savegame.bak
+savegame.dir
