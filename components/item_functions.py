@@ -4,17 +4,15 @@ from components.ai import ConfusedMonster
 
 from game_messages import Message
 
-def heal(*args, **kwargs):
-	entity = args[0]
-	amount = kwargs.get('amount')
+def heal(owner, targeting_range, area_of_effect, damage, heal_amount, entities, fov_map, target_x, target_y):
 
 	results = []
 
-	if entity.combat_class.hp == entity.combat_class.max_hp:
+	if owner.combat_class.hp == owner.combat_class.max_hp:
 		results.append({'consumed': False, 'message': Message('You are already at full health!', libtcod.yellow)})
 
 	else:
-		entity.combat_class.heal(amount)
+		owner.combat_class.heal(heal_amount)
 		results.append({'consumed': True, 'message': Message('Your wounds begin to heal!', libtcod.green)})
 
 	return results
@@ -48,41 +46,42 @@ def cast_lightning(*args, **kwargs):
 
 	return results
 
-def cast_fireball(targeting_range, *args, **kwargs):
-	entities = kwargs.get('entities')
-	fov_map = kwargs.get('fov_map')
-	damage = kwargs.get('damage')
-	radius = kwargs.get('radius')
-	target_x = kwargs.get('target_x')
-	target_y = kwargs.get('target_y')
+def cast_fireball(caster, targeting_range, area_of_effect, damage, heal_amount, entities, fov_map, target_x, target_y):
 
 	results = []
 
-	
-	if not libtcod.map_is_in_fov(fov_map, target_x, target_y):
-		results.append({'consumed': False, 'message': Message('You cannot target a tile outside your field of view.', libtcod.yellow)})
+	targeting_range_offset = int(targeting_range / 2)
+
+
+	area_of_effect_offset = int(area_of_effect / 2)
+
+
+	if caster.distance(target_x, target_y) > targeting_range_offset+1:
+		results.append({'consumed': False, 'message': Message('You cannot target a tile outside your casting range.', libtcod.yellow)})
 		return results
 
-	results.append({'consumed': True, 'message': Message('The fireball explodes, burning everything within {0} tiles!'.format(radius), libtcod.orange)})
+	results.append({'consumed': True, 'message': Message('The fireball explodes, burning everything within {0} tiles!'.format(
+					area_of_effect_offset), libtcod.orange)})
 
 	for entity in entities:
-		if entity.distance(target_x, target_y) <= radius and entity.combat_class:
+		if entity.distance(target_x, target_y) <= area_of_effect_offset+1 and entity.combat_class:
 			results.append({'message': Message('The {0} gets burned for {1} damage.'.format(entity.name, damage), libtcod.orange)})
 			results.extend(entity.combat_class.take_damage(damage))
 
 	return results
 
-def cast_confuse(*args, **kwargs):
-
-	entities = kwargs.get('entities')
-	fov_map = kwargs.get('fov_map')
-	target_x = kwargs.get('target_x')
-	target_y = kwargs.get('target_y')
+def cast_confuse(caster, targeting_range, area_of_effect, damage, heal_amount, entities, fov_map, target_x, target_y):
 
 	results = []
 
-	if not libtcod.map_is_in_fov(fov_map, target_x, target_y):
-		results.append({'consumed': False, 'message': Message('You cannot target a tile outside of your field of view!', libtcod.yellow)})
+	targeting_range_offset = int(targeting_range / 2)
+
+
+	area_of_effect_offset = int(area_of_effect / 2)
+
+
+	if caster.distance(target_x, target_y) > targeting_range_offset+1:
+		results.append({'consumed': False, 'message': Message('You cannot target a tile outside your casting range.', libtcod.yellow)})
 		return results
 
 	for entity in entities:

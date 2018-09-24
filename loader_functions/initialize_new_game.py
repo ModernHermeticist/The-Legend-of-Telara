@@ -39,13 +39,14 @@ def get_constants():
 	under_mouse_panel_height = 1
 	panel_y = screen_height - panel_height
 
-	message_panel_width = int((screen_width / 3) + 10)
+	message_panel_width = int((screen_width / 3) + 15)
 	char_info_panel_width = int((screen_width / 4))
 	area_info_panel_width = int((screen_width / 4) - 10)
 	under_mouse_panel_width = int((screen_width / 4) - 10)
 
-	message_log_x = bar_width + 2
-	message_width = screen_width - bar_width - 2
+	message_log_x = message_panel_width - 6
+	#message_width = screen_width - bar_width - 6
+	message_width = message_panel_width
 	message_height = panel_height - 1
 
 
@@ -72,7 +73,7 @@ def get_constants():
 		'light_wall':           libtcod.Color(130, 110, 50),
 		'light_ground':         libtcod.Color(200, 180, 50),
 		'area_of_effect':       libtcod.Color(255, 140, 0),
-		'targeting_range':      libtcod.Color(34, 139, 34)  
+		'targeting_range':      libtcod.Color(152, 251, 152)  
 	}
 
 	races = ['Human']

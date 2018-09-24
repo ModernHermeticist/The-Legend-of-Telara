@@ -75,11 +75,11 @@ class Fighter():
 		damage = randint(self.min_power, self.power) - target.combat_class.defense
 
 		if damage > 0:
-			results.append({'message': Message('{0} attacks {1} for {2} hit points.'.format(
-				self.owner.name.capitalize(), target.name, str(damage)), libtcod.white)})
+			results.append({'message': Message('{0} attacks {1} for {2} damage.'.format(
+				self.owner.name.capitalize(), target.name, str(damage)), libtcod.orange)})
 			results.extend(target.combat_class.take_damage(damage))
 		else:
 			results.append({'message': Message('{0} attacks {1} but does no damage.'.format(
-				self.owner.name.capitalize(), target.name), libtcod.white)})
+				self.owner.name.capitalize(), target.name), libtcod.dark_orange)})
 
 		return results

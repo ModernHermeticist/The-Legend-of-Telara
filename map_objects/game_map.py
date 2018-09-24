@@ -129,10 +129,23 @@ class GameMap:
 			entities.append(up_stairs)
 
 		if self.dungeon_level == 1:
-			item_component = Item(use_function=cast_fireball, targeting=True, targeting_message=Message(
-				'Left-click a target tile for the fireball, or right-click to cancel.', libtcod.light_cyan),
-								  targeting_range=3, damage=25, radius=3)
+			item_description = ("A simple scroll with otherwise unintelligible glyphs scrawled across it.\n"
+									"You are capable of interpreting the word \"Fire\", though what exactly that\n"
+									"means remains to be seen.")
+			item_component = Item(description=item_description, use_function=cast_fireball, targeting=True, targeting_message=Message(
+				'Left-click a target tile for the fireball,\nor right-click to cancel.', libtcod.light_cyan),
+								  targeting_range=9, area_of_effect=3, damage=25)
 			item = Entity(player.x+1, player.y, '#', libtcod.red, 'Fireball Scroll', render_order=RenderOrder.ITEM,
+						  item=item_component)
+			entities.append(item)
+
+		if self.dungeon_level == 1:
+			item_description = ("The longer you attempt to understand the words on this scroll the more\n"
+									"you feel like you've been tricked.")
+			item_component = Item(description=item_description, use_function=cast_confuse, targeting=True, targeting_message=Message(
+				'Left-click an enemy to confuse it, or right-click to cancel.', libtcod.light_cyan),
+								 targeting_range=9, area_of_effect=1)
+			item = Entity(player.x+2, player.y, '#', libtcod.light_pink, 'Confusion Scroll', render_order=RenderOrder.ITEM,
 						  item=item_component)
 			entities.append(item)
 
@@ -148,7 +161,7 @@ class GameMap:
 						  equippable=equippable_component)
 			item.item.description = ("Long ago a knight stood atop the battlements of lost Fort Grey Mount.\n"
 									 "He looked wistfully to the fields in the distance.\n\n"
-									 "Nothing but corpses could he see for miles.")
+									 "\"Such a waste..\" He thought, as he threw his sword to the ground.")
 			entities.append(item)
 
 

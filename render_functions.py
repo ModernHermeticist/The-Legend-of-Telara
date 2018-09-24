@@ -15,7 +15,7 @@ class RenderOrder(Enum):
 
 def render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse_panel, entities, 
 				player, game_map, fov_map, fov_recompute, message_log,
-				screen_width, screen_height, bar_width, panel_height, panel_y, mouse, colors, game_state, npc, targeting_item):
+				screen_width, screen_height, bar_width, panel_height, panel_y, mouse, colors, game_state, npc, targeting_item, item):
 	if fov_recompute:
 		# Draw all the tile in the game map
 		for y in range(game_map.height):
@@ -154,17 +154,19 @@ def targeting_overlay(con, mouse, player, game_map, fov_map, colors, targeting_i
 	targeting_range = targeting_item.item.targeting_range
 	targeting_range_offset = int(targeting_range/2)
 
-	area_of_effect = 3
-	area_of_effect_offset = int(targeting_range/2)
+	area_of_effect = targeting_item.item.area_of_effect
+	area_of_effect_offset = int(area_of_effect/2)
 
 
 	for y in range(targeting_range):
 		for x in range(targeting_range):
-			libtcod.console_set_char_background(con, player.x-x+targeting_range_offset, 
-				player.y-y+targeting_range_offset, colors.get('targeting_range'), libtcod.BKGND_SET)
+			if game_map.tiles[player.x-x+targeting_range_offset][player.y-y+targeting_range_offset].explored:
+				libtcod.console_set_char_background(con, player.x-x+targeting_range_offset, 
+					player.y-y+targeting_range_offset, colors.get('targeting_range'), libtcod.BKGND_SET)
 
-	if libtcod.map_is_in_fov(fov_map, mouse.cx, mouse.cy) and not game_map.tiles[mouse.cx][mouse.cy].blocked and not game_map.tiles[mouse.cx][mouse.cy].block_sight:
+	if libtcod.map_is_in_fov(fov_map, mouse.cx, mouse.cy):
 		for y in range(area_of_effect):
 			for x in range(area_of_effect):
-				libtcod.console_set_char_background(con, mouse.cx-x+area_of_effect_offset, 
-					mouse.cy-y+area_of_effect_offset, colors.get('area_of_effect'), libtcod.BKGND_SET)
+				if game_map.tiles[mouse.cx-x+area_of_effect_offset][mouse.cy-y+area_of_effect_offset].explored:
+					libtcod.console_set_char_background(con, mouse.cx-x+area_of_effect_offset, 
+						mouse.cy-y+area_of_effect_offset, colors.get('area_of_effect'), libtcod.BKGND_SET)

@@ -66,9 +66,8 @@ def main_menu(con, background_image, screen_width, screen_height):
 	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) - 14, libtcod.BKGND_NONE, libtcod.CENTER,
 							 'ALSO THE NEXT THING ON THE TODO LIST IS ADDING PURE RANGED ATTACKS (WEAPONS/CHARACTER SPELLS)')
 	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) - 13, libtcod.BKGND_NONE, libtcod.CENTER,
-							 'DO THIS BY STARTING WITH HOW SCROLL TARGETING WORKS: ADD AN OVERLAY THAT SHOWS HOW FAR')
-	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) - 12, libtcod.BKGND_NONE, libtcod.CENTER,
-							 'YOU CAN TARGET AND THE AREA OF EFFECT ON THE SCROLL')
+							 'ADD BOWS!!!!')
+
 
 	libtcod.console_set_default_foreground(0, libtcod.light_yellow)
 

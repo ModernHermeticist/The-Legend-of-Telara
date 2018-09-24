@@ -47,7 +47,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 		render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse_panel, entities, 
 				   player, game_map, fov_map, fov_recompute, message_log,
 				   constants['screen_width'], constants['screen_height'], constants['bar_width'],
-				   constants['panel_height'], constants['panel_y'], mouse, constants['colors'], game_state, npc, targeting_item)
+				   constants['panel_height'], constants['panel_y'], mouse, constants['colors'], game_state, npc, targeting_item, item)
 
 		fov_recompute = False
 
@@ -219,7 +219,6 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 			old_mouse_y = mouse_y
 			if left_click:
 				target_x, target_y = left_click
-
 				item_use_results = player.inventory.use(targeting_item, entities=entities, fov_map=fov_map,
 														target_x=target_x, target_y=target_y)
 				player_turn_results.extend(item_use_results)
@@ -331,7 +330,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 
 			if xp:
 				leveled_up = player.level.add_xp(xp)
-				message_log.add_message(Message('You gain {0} experience points.'.format(xp)))
+				message_log.add_message(Message('You gain {0} experience points.'.format(xp), libtcod.lighter_yellow))
 
 				if leveled_up:
 					message_log.add_message(Message(
@@ -382,7 +381,7 @@ def main():
 
 	libtcod.console_set_custom_font('terminal12x12_gs_ro.png', libtcod.FONT_LAYOUT_ASCII_INROW | libtcod.FONT_TYPE_GREYSCALE, 16, 16)
 
-	libtcod.console_init_root(constants['screen_width'], constants['screen_height'], constants['window_title'], False, libtcod.RENDERER_SDL)
+	libtcod.console_init_root(constants['screen_width'], constants['screen_height'], constants['window_title'], False, libtcod.RENDERER_OPENGL)
 
 	con = libtcod.console_new(constants['screen_width'], constants['screen_height'])
 	message_panel = libtcod.console_new(constants['message_panel_width'], constants['panel_height'])

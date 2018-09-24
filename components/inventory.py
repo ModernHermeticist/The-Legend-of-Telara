@@ -25,7 +25,7 @@ class Inventory:
 
 		return results
 
-	def use(self, item_entity, **kwargs):
+	def use(self, item_entity, entities=None, fov_map=None, target_x=None, target_y=None):
 		results = []
 
 		item_component = item_entity.item
@@ -39,12 +39,12 @@ class Inventory:
 				results.append({'message': Message('The {0} cannot be used like this!'.format(item_entity.name), libtcod.yellow)})
 
 		else:
-			if item_component.targeting and not (kwargs.get('target_x') or kwargs.get('target_y')):
+			if item_component.targeting and (target_x == None or target_y == None):
 				results.append({'targeting': item_entity})
 
 			else:
-				kwargs = {**item_component.function_kwargs, **kwargs}
-				item_use_results = item_component.use_function(self.owner, **kwargs)
+				item_use_results = item_component.use_function(self.owner, item_component.targeting_range, item_component.area_of_effect, 
+					item_component.damage, item_component.heal_amount, entities, fov_map, target_x, target_y)
 
 				for item_use_result in item_use_results:
 					if item_use_result.get('consumed'):
