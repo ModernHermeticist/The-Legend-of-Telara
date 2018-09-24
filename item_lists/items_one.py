@@ -51,7 +51,7 @@ def choose_early_item(item_choice, x, y):
 	elif item_choice == 'fireball_scroll':
 		item_component = Item(use_function=cast_fireball, targeting=True, targeting_message=Message(
 			'Left-click a target tile for the fireball, or right-click to cancel.', libtcod.light_cyan),
-							  damage=25, radius=3)
+							  targeting_range=3, radius=3, damage=25)
 		item = Entity(x, y, '#', libtcod.red, 'Fireball Scroll', render_order=RenderOrder.ITEM,
 					  item=item_component)
 

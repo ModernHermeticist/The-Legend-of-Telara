@@ -1,8 +1,0 @@
-'player_index', (0, 5)
-'entities', (512, 18043)
-'game_map', (18944, 148921)
-'message_log', (167936, 549)
-'game_state', (168960, 37)
-'floor_index', (169472, 746259)
-'entity_index', (915968, 46934)
-'fov_index', (963072, 48)

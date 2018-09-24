@@ -4,6 +4,7 @@ from enum import Enum
 
 from game_states import GameStates
 
+
 from interfaces.menus import inventory_menu, level_up_menu, character_screen, controls_menu, dialogue_screen, inspect_item_menu
 
 class RenderOrder(Enum):
@@ -14,7 +15,7 @@ class RenderOrder(Enum):
 
 def render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse_panel, entities, 
 				player, game_map, fov_map, fov_recompute, message_log,
-				screen_width, screen_height, bar_width, panel_height, panel_y, mouse, colors, game_state, npc, item):
+				screen_width, screen_height, bar_width, panel_height, panel_y, mouse, colors, game_state, npc, targeting_item):
 	if fov_recompute:
 		# Draw all the tile in the game map
 		for y in range(game_map.height):
@@ -88,6 +89,9 @@ def render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse
 	elif game_state == GameStates.INSPECT_ITEM:
 		inspect_item_menu(con, '', item, 30, 30, screen_width, screen_height)
 
+	elif game_state == GameStates.TARGETING:
+		targeting_overlay(con, mouse, player, game_map, fov_map, colors, targeting_item)
+
 	elif game_state == GameStates.LEVEL_UP:
 		level_up_menu(con, 'Level up! Choose a stat to raise:', player, 40, screen_width, screen_height)
 
@@ -142,3 +146,25 @@ def render_bar(panel, x, y, total_width, name, value, maximum, bar_color, back_c
 	libtcod.console_set_default_foreground(panel, text_color)
 	libtcod.console_print_ex(panel, int(x + total_width / 2), y, libtcod.BKGND_NONE,
 							libtcod.CENTER, "{0}: {1}/{2}".format(name, value, maximum))
+
+def targeting_overlay(con, mouse, player, game_map, fov_map, colors, targeting_item):
+
+
+
+	targeting_range = targeting_item.item.targeting_range
+	targeting_range_offset = int(targeting_range/2)
+
+	area_of_effect = 3
+	area_of_effect_offset = int(targeting_range/2)
+
+
+	for y in range(targeting_range):
+		for x in range(targeting_range):
+			libtcod.console_set_char_background(con, player.x-x+targeting_range_offset, 
+				player.y-y+targeting_range_offset, colors.get('targeting_range'), libtcod.BKGND_SET)
+
+	if libtcod.map_is_in_fov(fov_map, mouse.cx, mouse.cy) and not game_map.tiles[mouse.cx][mouse.cy].blocked and not game_map.tiles[mouse.cx][mouse.cy].block_sight:
+		for y in range(area_of_effect):
+			for x in range(area_of_effect):
+				libtcod.console_set_char_background(con, mouse.cx-x+area_of_effect_offset, 
+					mouse.cy-y+area_of_effect_offset, colors.get('area_of_effect'), libtcod.BKGND_SET)

@@ -26,6 +26,12 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 	game_state = GameStates.PLAYERS_TURN
 	previous_game_state = game_state
 
+	mouse_x = mouse.cx
+	old_mouse_x = mouse_x
+
+	mouse_y = mouse.cy
+	old_mouse_y = mouse_y
+
 	targeting_item = None
 
 	npc = None
@@ -41,7 +47,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 		render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse_panel, entities, 
 				   player, game_map, fov_map, fov_recompute, message_log,
 				   constants['screen_width'], constants['screen_height'], constants['bar_width'],
-				   constants['panel_height'], constants['panel_y'], mouse, constants['colors'], game_state, npc, item)
+				   constants['panel_height'], constants['panel_y'], mouse, constants['colors'], game_state, npc, targeting_item)
 
 		fov_recompute = False
 
@@ -205,14 +211,23 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 
 
 		if game_state == GameStates.TARGETING:
+			mouse_x = mouse.cx
+			mouse_y = mouse.cy
+			if old_mouse_y != mouse_y or old_mouse_x != mouse_x:
+				fov_recompute = True
+			old_mouse_x = mouse_x
+			old_mouse_y = mouse_y
 			if left_click:
 				target_x, target_y = left_click
 
 				item_use_results = player.inventory.use(targeting_item, entities=entities, fov_map=fov_map,
 														target_x=target_x, target_y=target_y)
 				player_turn_results.extend(item_use_results)
+				fov_recompute = True
 			elif right_click:
 				player_turn_results.append({'targeting_cancelled': True})
+				fov_recompute = True
+
 
 		if game_state == GameStates.SHOW_INVENTORY:
 			if inspect_item:
@@ -241,6 +256,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 			elif game_state == GameStates.TARGETING:
 				player_turn_results.append({'targeting_cancelled': True})
 				game_state = previous_game_state
+				fov_recompute = True
 
 			else:
 				libtcod.console_clear(0)
@@ -303,6 +319,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 				targeting_item = targeting
 
 				message_log.add_message(targeting_item.item.targeting_message)
+
 
 			if targeting_cancelled:
 				game_state = previous_game_state

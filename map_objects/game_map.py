@@ -8,6 +8,8 @@ from entity import Entity
 
 from components.equipment import EquipmentSlots
 from components.equippable import Equippable
+from components.item import Item
+from components.item_functions import *
 
 from render_functions import RenderOrder
 
@@ -125,6 +127,14 @@ class GameMap:
 			up_stairs = Entity(self.stairs_up_x, self.stairs_up_y, '<', libtcod.black, 'Stairs Up', 
 								render_order=RenderOrder.STAIRS, stairs=stairs_component)
 			entities.append(up_stairs)
+
+		if self.dungeon_level == 1:
+			item_component = Item(use_function=cast_fireball, targeting=True, targeting_message=Message(
+				'Left-click a target tile for the fireball, or right-click to cancel.', libtcod.light_cyan),
+								  targeting_range=3, damage=25, radius=3)
+			item = Entity(player.x+1, player.y, '#', libtcod.red, 'Fireball Scroll', render_order=RenderOrder.ITEM,
+						  item=item_component)
+			entities.append(item)
 
 		if self.dungeon_level == 1:
 			dialogue_component = Dialogue(character='The Story Teller', scene='Intro')

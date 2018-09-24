@@ -48,7 +48,7 @@ def cast_lightning(*args, **kwargs):
 
 	return results
 
-def cast_fireball(*args, **kwargs):
+def cast_fireball(targeting_range, *args, **kwargs):
 	entities = kwargs.get('entities')
 	fov_map = kwargs.get('fov_map')
 	damage = kwargs.get('damage')
@@ -58,6 +58,7 @@ def cast_fireball(*args, **kwargs):
 
 	results = []
 
+	
 	if not libtcod.map_is_in_fov(fov_map, target_x, target_y):
 		results.append({'consumed': False, 'message': Message('You cannot target a tile outside your field of view.', libtcod.yellow)})
 		return results
