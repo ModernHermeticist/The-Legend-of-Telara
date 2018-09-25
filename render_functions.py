@@ -96,7 +96,7 @@ def render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse
 		level_up_menu(con, 'Level up! Choose a stat to raise:', player, 40, screen_width, screen_height)
 
 	elif game_state == GameStates.CHARACTER_SCREEN:
-		character_screen(player, 30, 15, screen_width, screen_height)
+		character_screen(player, 30, 17, screen_width, screen_height)
 
 	elif game_state == GameStates.INTERACT and npc:
 		dialogue_screen(player, npc, 50, 30, screen_width, screen_height )
@@ -166,7 +166,8 @@ def targeting_overlay(con, mouse, player, game_map, fov_map, colors, targeting_i
 	for y in range(targeting_range):
 		for x in range(targeting_range):
 			if game_map.tiles[player.x-x+targeting_range_offset][player.y-y+targeting_range_offset].explored and \
-			libtcod.map_is_in_fov(fov_map, player.x-x+targeting_range_offset, player.y-y+targeting_range_offset):
+			libtcod.map_is_in_fov(fov_map, player.x-x+targeting_range_offset, player.y-y+targeting_range_offset) and not \
+			game_map.tiles[player.x-x+targeting_range_offset][player.y-y+targeting_range_offset].blocked:
 				libtcod.console_set_char_background(con, player.x-x+targeting_range_offset, 
 					player.y-y+targeting_range_offset, colors.get('targeting_range'), libtcod.BKGND_SET)
 

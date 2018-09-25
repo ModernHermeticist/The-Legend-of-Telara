@@ -62,13 +62,13 @@ def cast_fireball(caster, targeting_range, area_of_effect, damage, heal_amount, 
 					area_of_effect_offset), libtcod.orange)})
 
 	for entity in entities:
-		if entity.distance(target_x, target_y) <= area_of_effect_offset+1 and entity.combat_class:
+		if entity.distance(target_x, target_y) <= area_of_effect_offset and entity.combat_class and entity.alive:
 			results.append({'message': Message('The {0} gets burned for {1} damage.'.format(entity.name, damage), libtcod.orange)})
 			results.extend(entity.combat_class.take_damage(damage))
 
 	return results
 
-def cast_confuse(caster, targeting_range, area_of_effect, damage, heal_amount, entities, fov_map, target_x, target_y):
+def cast_confuse(caster, targeting_range, area_of_effect, damage, heal_amount, maximum_range, entities, fov_map, target_x, target_y):
 
 	results = []
 
@@ -78,7 +78,7 @@ def cast_confuse(caster, targeting_range, area_of_effect, damage, heal_amount, e
 	area_of_effect_offset = int(area_of_effect / 2)
 
 
-	if caster.distance(target_x, target_y) > targeting_range_offset+1:
+	if caster.distance(target_x, target_y) > targeting_range_offset:
 		results.append({'consumed': False, 'message': Message('You cannot target a tile outside your casting range.', libtcod.yellow)})
 		return results
 

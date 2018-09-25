@@ -94,7 +94,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 				target = get_blocking_entities_at_location(entities, destination_x, destination_y)
 
 				if target and not target.invulnerable:
-					attack_results = player.combat_class.attack(target, player)
+					attack_results = player.combat_class.attack(target)
 					player_turn_results.extend(attack_results)
 
 
@@ -215,9 +215,9 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 				player.combat_class.base_max_hp += 20
 				player.combat_class.hp += 20
 			elif level_up == 'str':
-				player.combat_class.base_power += 1
-			elif level_up == 'def':
-				player.combat_class.base_defense += 1
+				player.combat_class.base_strength += 1
+			elif level_up == 'dex':
+				player.combat_class.base_dexterity += 1
 
 			game_state = previous_game_state
 
@@ -252,7 +252,10 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 
 			elif left_click and targeting_item == None:
 				target_x, target_y = left_click
-				target = get_blocking_entities_at_location(entities, target_x, target_y)
+				if not game_map.tiles[target_x][target_y].blocked:
+					target = get_blocking_entities_at_location(entities, target_x, target_y)
+				else:
+					message_log.add_message(Message('You can\'t attack that.', libtcod.yellow))	
 
 				if target and not target.invulnerable:
 					attack_results = player.combat_class.attack(target)

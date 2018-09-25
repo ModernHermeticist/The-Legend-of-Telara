@@ -16,7 +16,15 @@ from equipment_slots import EquipmentSlots
 from render_functions import RenderOrder
 
 
-def select_name_menu(con, select_race_width, screen_width, screen_height):
+def select_sex_menu(con, select_sex_width, screen_width, screen_height, sexes):
+	libtcod.console_clear(con)
+	libtcod.console_set_default_background(con, libtcod.black)
+	libtcod.console_set_default_foreground(con, libtcod.white)
+
+	menu(con, 'Character Creation\n\nSelect Sex\n\n', libtcod.darker_blue, sexes, 26, screen_width, screen_height, True)	
+
+
+def select_name_menu(con, select_name_width, screen_width, screen_height):
 	libtcod.console_clear(con)
 	libtcod.console_set_default_background(con, libtcod.black)
 	libtcod.console_set_default_foreground(con, libtcod.white)
@@ -32,7 +40,7 @@ def select_race_menu(con, select_race_width, screen_width, screen_height, races)
 
 
 
-def select_combat_class_menu(con, select_race_width, screen_width, screen_height, combat_classes):
+def select_combat_class_menu(con, select_class_width, screen_width, screen_height, combat_classes):
 	libtcod.console_clear(con)
 	libtcod.console_set_default_background(con, libtcod.black)
 	libtcod.console_set_default_foreground(con, libtcod.white)

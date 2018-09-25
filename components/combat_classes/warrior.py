@@ -7,7 +7,7 @@ from game_messages import Message
 
 
 class Warrior():
-	def __init__(self, class_name='Warrior', hp=10, mp=0, defense=1, min_damage=0, max_damage=1, 
+	def __init__(self, class_name='Warrior', hp=10, mp=0, armor=1, min_damage=0, max_damage=1, 
 				strength=1, dexterity=0, xp=0):
 		self.base_max_hp = hp
 		self.hp = hp
@@ -15,7 +15,7 @@ class Warrior():
 		self.mp = mp
 		self.base_min_damage = min_damage
 		self.base_max_damage = max_damage
-		self.base_defense = defense
+		self.base_armor = armor
 		self.base_strength = strength
 		self.base_dexterity = dexterity
 		self.xp = xp
@@ -49,13 +49,13 @@ class Warrior():
 		return self.base_dexterity + bonus
 
 	@property
-	def defense(self):
+	def armor(self):
 		if self.owner and self.owner.equipment:
-			bonus = self.owner.equipment.defense_bonus
+			bonus = self.owner.equipment.armor_bonus
 		else:
 			bonus = 0
 
-		return self.base_defense + bonus
+		return self.base_armor + bonus
 
 	@property
 	def min_damage(self):
@@ -64,8 +64,7 @@ class Warrior():
 		else:
 			bonus = 0
 
-		return self.base_min_damage + bonus
-		# + int(self.strength / 3)
+		return self.base_min_damage + bonus + int(self.strength / 3)
 
 	@property
 	def max_damage(self):
@@ -74,8 +73,7 @@ class Warrior():
 		else:
 			bonus = 0
 
-		return self.base_max_damage + bonus
-		# + int(self.strength / 3)
+		return self.base_max_damage + bonus + int(self.strength / 3)
 
 	@property
 	def max_mp(self):
@@ -102,10 +100,10 @@ class Warrior():
 		if self.hp > self.max_hp:
 			self.hp = self.max_hp
 
-	def attack(self, target, player):
+	def attack(self, target):
 		results = []
 
-		damage = randint(self.min_damage, self.max_damage) - target.combat_class.defense
+		damage = randint(self.min_damage, self.max_damage) - target.combat_class.armor
 
 		if damage > 0:
 			results.append({'message': Message('{0} attacks {1} for {2} damage.'.format(

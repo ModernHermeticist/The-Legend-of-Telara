@@ -7,12 +7,12 @@ from game_messages import Message
 
 
 class Fighter():
-	def __init__(self, hp, mp, defense, min_damage=0, max_damage=1, xp=0):
+	def __init__(self, hp, mp, armor, min_damage=0, max_damage=1, xp=0):
 		self.base_max_hp = hp
 		self.hp = hp
 		self.base_max_mp = mp
 		self.mp = mp
-		self.defense = defense
+		self.armor = armor
 		self.min_damage = min_damage
 		self.max_damage = max_damage
 		self.xp = xp
@@ -76,7 +76,7 @@ class Fighter():
 	def attack(self, target):
 		results = []
 
-		damage = randint(self.min_damage, self.max_damage) - target.combat_class.defense
+		damage = randint(self.min_damage, self.max_damage) - target.combat_class.armor
 
 		if damage > 0:
 			results.append({'message': Message('{0} attacks {1} for {2} damage.'.format(

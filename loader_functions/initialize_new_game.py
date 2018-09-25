@@ -9,7 +9,7 @@ from components.level import Level
 from components.equipment import Equipment
 from components.equippable import Equippable
 
-from interfaces.character_creation_menu import select_race_menu, select_combat_class_menu, select_name_menu
+from interfaces.character_creation_menu import select_race_menu, select_combat_class_menu, select_name_menu, select_sex_menu
 
 from input_handlers import handle_keys
 
@@ -56,8 +56,8 @@ def get_constants():
 
 	# Some variables for the rooms in the map
 	room_max_size = 10
-	room_min_size = 5
-	max_rooms = 30
+	room_min_size = 4
+	max_rooms = 60
 
 	fov_algorithm = 0
 	fov_light_walls = True
@@ -75,6 +75,9 @@ def get_constants():
 		'area_of_effect':       libtcod.Color(255, 140, 0),
 		'targeting_range':      libtcod.Color(152, 251, 152)  
 	}
+
+	sexes = ['Male',
+		     'Female']
 
 	races = ['Human']
 
@@ -110,6 +113,7 @@ def get_constants():
 				'max_monsters_per_room':    max_monsters_per_room,
 				'max_items_per_room':       max_items_per_room,
 				'colors':                   colors,
+				'sexes':                    sexes,
 				'races':                    races,
 				'combat_classes':           combat_classes
 	}
@@ -119,7 +123,7 @@ def get_constants():
 def get_new_game_variables(constants):
 	race_component = None
 	class_component = None
-	game_state = GameStates.ENTER_PLAYER_NAME
+	game_state = GameStates.SELECT_SEX
 	previous_game_state = game_state
 	key = libtcod.Key()
 	mouse = libtcod.Mouse()
@@ -130,12 +134,35 @@ def get_new_game_variables(constants):
 		libtcod.console_flush()
 		action = handle_keys(key, game_state)
 
-		if game_state == GameStates.ENTER_PLAYER_NAME:
+		if game_state == GameStates.SELECT_SEX:
+			select_sex_menu(0, 50, constants['screen_width'], constants['screen_height'], constants['sexes'])
+
+			action = handle_keys(key, game_state)
+
+			male = action.get('male')
+			female = action.get('female')
+
+			exit = action.get('exit')
+
+			if male:
+				sex = 'Male'
+				game_state = GameStates.ENTER_PLAYER_NAME
+
+			elif female:
+				sex = 'Female'
+				game_state = GameStates.ENTER_PLAYER_NAME
+
+			elif exit:
+				break
+
+
+
+		elif game_state == GameStates.ENTER_PLAYER_NAME:
 			select_name_menu(0, 50, constants['screen_width'], constants['screen_height'])
 			libtcod.console_flush()
 			name = enter_player_name(constants['screen_width'], constants['screen_height'])
 			if name == None:
-				return None, None, None, None, None	
+				game_state = GameStates.SELECT_SEX
 			else:
 				game_state = GameStates.SELECT_RACE
 
@@ -184,7 +211,7 @@ def get_new_game_variables(constants):
 	level_component = Level()
 	equipment_component = Equipment()
 
-	player = Entity(0, 0, '@', libtcod.white, name, blocks=True, render_order=RenderOrder.ACTOR, 
+	player = Entity(0, 0, '@', libtcod.white, name, sex, blocks=True, render_order=RenderOrder.ACTOR, 
 					combat_class=class_component, race=race_component, inventory=inventory_component, level=level_component,
 					equipment=equipment_component)
 
@@ -229,7 +256,7 @@ def apply_class_stats_to_race(player):
 
 	player.combat_class.base_strength += player.race.strength
 
-	player.combat_class.base_defense += player.race.defense
+	player.combat_class.base_armor += player.race.armor
 
 	player.combat_class.base_min_damage += player.race.min_damage
 	player.combat_class.base_max_damage += player.race.max_damage

@@ -37,7 +37,7 @@ def choose_early_item(item_choice, x, y):
 					  item=item_component)
 
 	elif item_choice == 'broken_iron_sword':
-		equippable_component = Equippable(EquipmentSlots.MAIN_HAND, min_power_bonus=1, max_power_bonus=3)
+		equippable_component = Equippable(EquipmentSlots.MAIN_HAND, min_damage_bonus=1, max_damage_bonus=3)
 		item = Entity(x, y, '/', libtcod.brass, 'Broken Iron Sword', render_order=RenderOrder.ITEM,
 					  equippable=equippable_component)
 		item.item.description = ("Long ago a knight stood atop the battlements of lost Fort Grey Mount.\n"
@@ -45,16 +45,16 @@ def choose_early_item(item_choice, x, y):
 								 "\"Such a waste..\" He thought, as he threw his sword to the ground.")
 
 	elif item_choice == 'flimsy_wooden_bow':
-		equippable_component = Equippable(EquipmentSlots.MAIN_HAND, ranged=True, min_dexterity_bonus=1, max_dexterity_bonus=2)
-		item = Entity(x, y, 'D', libtcod.brown, 'Flimsy Wooden Bow', render_order=RenderOrder.ITEM,
+		equippable_component = Equippable(EquipmentSlots.MAIN_HAND, ranged=True, min_damage_bonus=1, max_damage_bonus=2)
+		item = Entity(x, y, 'D', libtcod.sepia, 'Flimsy Wooden Bow', render_order=RenderOrder.ITEM,
 					  equippable=equippable_component)
-		item.item.targeting_range = 7
+		item.item.targeting_range = 9
 		item.item.area_of_effect = 1
 		item.item.description = ("Legends tell of a woman who made wielding a bow an art form."
 								"You probably wont get much accomplished with this thing though.")
 
 	elif item_choice == 'cracked_wooden_board':
-		equippable_component = Equippable(EquipmentSlots.OFF_HAND, defense_bonus=1)
+		equippable_component = Equippable(EquipmentSlots.OFF_HAND, armor_bonus=1)
 		item = Entity(x, y, '[', libtcod.darker_orange, 'Cracked Wooden Board', render_order=RenderOrder.ITEM,
 					  equippable=equippable_component)
 		item.item.description = ("In moments of crises even this might be useful.")

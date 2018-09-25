@@ -87,14 +87,14 @@ class Equipment:
 		return bonus
 
 	@property
-	def defense_bonus(self):
+	def armor_bonus(self):
 		bonus = 0
 
 		if self.main_hand and self.main_hand.equippable:
-			bonus += self.main_hand.equippable.defense_bonus
+			bonus += self.main_hand.equippable.armor_bonus
 
 		if self.off_hand and self.off_hand.equippable:
-			bonus += self.off_hand.equippable.defense_bonus
+			bonus += self.off_hand.equippable.armor_bonus
 
 		return bonus
 

@@ -85,9 +85,9 @@ def main_menu(con, background_image, screen_width, screen_height):
 	menu(con, '', libtcod.black, ['Play a new game', 'Continue last game', 'Controls', 'Quit'], 22, screen_width, screen_height)
 
 def level_up_menu(con, header, player, menu_width, screen_width, screen_height):
-	options = ['Constitution (+20 HP, from {0})'.format(player.combat_class.max_hp),
-			   'Strength (+1 attack, from {0})'.format(player.combat_class.power),
-			   'Agility (+1 defense, from {0})'.format(player.combat_class.defense)]
+	options = ['Constitution (+20 HP)'.format(player.combat_class.max_hp),
+			   'Strength     (+1 strength)'.format(player.combat_class.base_strength),
+			   'Dexterity    (+1 dexterity)'.format(player.combat_class.base_dexterity)]
 
 	menu(con, header, libtcod.darker_grey, options, menu_width, screen_width, screen_height)
 
@@ -158,6 +158,11 @@ def character_screen(player, character_screen_width, character_screen_height, sc
 	y += 1
 
 	libtcod.console_print_rect_ex(window, 0, y, character_screen_width, character_screen_height, libtcod.BKGND_NONE,
+									libtcod.LEFT, 'Sex: {0}'.format(player.sex))
+
+	y += 1
+
+	libtcod.console_print_rect_ex(window, 0, y, character_screen_width, character_screen_height, libtcod.BKGND_NONE,
 									libtcod.LEFT, 'Race: {0}'.format(player.race.race_name))
 
 	y += 1
@@ -183,22 +188,29 @@ def character_screen(player, character_screen_width, character_screen_height, sc
 	y += 2
 
 	libtcod.console_print_rect_ex(window, 0, y, character_screen_width, character_screen_height, libtcod.BKGND_NONE,
-									libtcod.LEFT, 'Maximum HP: {0}'.format(player.combat_class.max_hp))
+									libtcod.LEFT, 'HP/Max HP: {0}/{1}'.format(player.combat_class.hp, player.combat_class.max_hp))
 
 	y += 1
 
 	libtcod.console_print_rect_ex(window, 0, y, character_screen_width, character_screen_height, libtcod.BKGND_NONE,
-									libtcod.LEFT, 'Min Damage: {0}'.format(player.combat_class.min_damage))
+									libtcod.LEFT, 'Damage: {0} - {1}'.format(player.combat_class.min_damage, player.combat_class.max_damage))
 
 	y += 1
 
 	libtcod.console_print_rect_ex(window, 0, y, character_screen_width, character_screen_height, libtcod.BKGND_NONE,
-									libtcod.LEFT, 'Max Damage: {0}'.format(player.combat_class.max_damage))
+									libtcod.LEFT, 'Armor: {0}'.format(player.combat_class.armor))
+
+	y += 2
+
+	libtcod.console_print_rect_ex(window, 0, y, character_screen_width, character_screen_height, libtcod.BKGND_NONE,
+									libtcod.LEFT, 'Strength: {0}'.format(player.combat_class.strength))
 
 	y += 1
 
 	libtcod.console_print_rect_ex(window, 0, y, character_screen_width, character_screen_height, libtcod.BKGND_NONE,
-									libtcod.LEFT, 'Defense: {0}'.format(player.combat_class.defense))
+									libtcod.LEFT, 'Dexterity: {0}'.format(player.combat_class.dexterity))
+
+	
 
 
 	x = screen_width // 2 - character_screen_width // 2

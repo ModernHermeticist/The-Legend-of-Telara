@@ -26,6 +26,8 @@ def handle_keys(key, game_state):
 		return handle_select_race_keys(key)
 	elif game_state == GameStates.SELECT_CLASS:
 		return handle_select_combat_class_keys(key)
+	elif game_state == GameStates.SELECT_SEX:
+		return handle_select_sex_keys(key)
 
 	return {}
 
@@ -121,6 +123,25 @@ def handle_choose_item_to_inspect_keys(key):
 
 def handle_inspect_item_keys(key):
 	if key.vk == libtcod.KEY_ESCAPE:
+		return {'exit': True}
+
+	return {}
+
+def handle_select_sex_keys(key):
+	key_char = chr(key.c)
+
+	if key_char == 'a':
+		return {'male': True}
+
+	elif key_char == 'b':
+		return {'female': True}
+
+	if key.vk == libtcod.KEY_ENTER and key.lalt:
+		# Alt+Enter: toggle fullscreen
+		return {'fullscreen': True}
+
+	elif key.vk == libtcod.KEY_ESCAPE:
+		# Exit the menu
 		return {'exit': True}
 
 	return {}
