@@ -45,7 +45,7 @@ def choose_early_item(item_choice, x, y):
 								 "\"Such a waste..\" He thought, as he threw his sword to the ground.")
 
 	elif item_choice == 'flimsy_wooden_bow':
-		equippable_component = Equippable(EquipmentSlots.MAIN_HAND, ranged=True, min_power_bonus=1, max_power_bonus=2)
+		equippable_component = Equippable(EquipmentSlots.MAIN_HAND, ranged=True, min_dexterity_bonus=1, max_dexterity_bonus=2)
 		item = Entity(x, y, 'D', libtcod.brown, 'Flimsy Wooden Bow', render_order=RenderOrder.ITEM,
 					  equippable=equippable_component)
 		item.item.targeting_range = 7

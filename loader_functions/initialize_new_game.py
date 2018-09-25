@@ -191,7 +191,7 @@ def get_new_game_variables(constants):
 	player = apply_class_stats_to_race(player)
 
 	if player.combat_class.class_name == 'Warrior': 
-		equippable_component = Equippable(EquipmentSlots.MAIN_HAND, min_power_bonus=0, max_power_bonus=1)
+		equippable_component = Equippable(EquipmentSlots.MAIN_HAND, min_damage_bonus=0, max_damage_bonus=1)
 		dagger = Entity(0,0, '-', libtcod.sky, 'Dagger', equippable=equippable_component)
 
 		dagger.item.description = "Better than your bare hands."
@@ -200,7 +200,7 @@ def get_new_game_variables(constants):
 		player.equipment.toggle_equip(dagger)
 
 	elif player.combat_class.class_name == 'Archer': 
-		equippable_component = Equippable(EquipmentSlots.MAIN_HAND, min_power_bonus=0, max_power_bonus=1)
+		equippable_component = Equippable(EquipmentSlots.MAIN_HAND, min_damage_bonus=0, max_damage_bonus=1)
 		dagger = Entity(0,0, '-', libtcod.sky, 'Dagger', equippable=equippable_component)
 
 		dagger.item.description = "Better than your bare hands."
@@ -227,9 +227,12 @@ def apply_class_stats_to_race(player):
 	player.combat_class.base_max_mp += player.race.mp
 	player.combat_class.mp += player.race.mp
 
-	player.combat_class.base_power += player.race.power
+	player.combat_class.base_strength += player.race.strength
 
 	player.combat_class.base_defense += player.race.defense
+
+	player.combat_class.base_min_damage += player.race.min_damage
+	player.combat_class.base_max_damage += player.race.max_damage
 	return player
 
 def enter_player_name(screen_width, screen_height):

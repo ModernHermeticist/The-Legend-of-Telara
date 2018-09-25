@@ -94,7 +94,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 				target = get_blocking_entities_at_location(entities, destination_x, destination_y)
 
 				if target and not target.invulnerable:
-					attack_results = player.combat_class.attack(target)
+					attack_results = player.combat_class.attack(target, player)
 					player_turn_results.extend(attack_results)
 
 

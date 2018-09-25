@@ -1,9 +1,10 @@
 class Human():
 	def __init__(self):
 		self.hp = 100
-		#self.hp = 1000
 		self.mp = 10
 		self.defense = 1
-		self.power = 1
-		#self.power = 1000
+		self.strength = 1
+		self.dexterity = 1
+		self.min_damage = 0
+		self.max_damage = 1
 		self.race_name = 'Human'

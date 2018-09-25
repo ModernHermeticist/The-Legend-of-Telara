@@ -39,14 +39,50 @@ class Equipment:
 		return bonus
 
 	@property
-	def power_bonus(self):
+	def min_damage_bonus(self):
 		bonus = 0
 
 		if self.main_hand and self.main_hand.equippable:
-			bonus += self.main_hand.equippable.max_power_bonus
+			bonus += self.main_hand.equippable.min_damage_bonus
 
 		if self.off_hand and self.off_hand.equippable:
-			bonus += self.off_hand.equippable.max_power_bonus
+			bonus += self.off_hand.equippable.min_damage_bonus
+
+		return bonus
+
+	@property
+	def max_damage_bonus(self):
+		bonus = 0
+
+		if self.main_hand and self.main_hand.equippable:
+			bonus += self.main_hand.equippable.max_damage_bonus
+
+		if self.off_hand and self.off_hand.equippable:
+			bonus += self.main_hand.equippable.max_damage_bonus
+
+		return bonus
+
+	@property
+	def strength_bonus(self):
+		bonus = 0
+
+		if self.main_hand and self.main_hand.equippable:
+			bonus += self.main_hand.equippable.strength_bonus
+
+		if self.off_hand and self.off_hand.equippable:
+			bonus += self.off_hand.equippable.strength_bonus
+
+		return bonus
+
+	@property
+	def dexterity_bonus(self):
+		bonus = 0
+
+		if self.main_hand and self.main_hand.equippable:
+			bonus += self.main_hand.equippable.dexterity_bonus
+
+		if self.off_hand and self.off_hand.equippable:
+			bonus += self.off_hand.equippable.dexterity_bonus
 
 		return bonus
 

@@ -188,7 +188,12 @@ def character_screen(player, character_screen_width, character_screen_height, sc
 	y += 1
 
 	libtcod.console_print_rect_ex(window, 0, y, character_screen_width, character_screen_height, libtcod.BKGND_NONE,
-									libtcod.LEFT, 'Attack: {0}'.format(player.combat_class.power))
+									libtcod.LEFT, 'Min Damage: {0}'.format(player.combat_class.min_damage))
+
+	y += 1
+
+	libtcod.console_print_rect_ex(window, 0, y, character_screen_width, character_screen_height, libtcod.BKGND_NONE,
+									libtcod.LEFT, 'Max Damage: {0}'.format(player.combat_class.max_damage))
 
 	y += 1
 

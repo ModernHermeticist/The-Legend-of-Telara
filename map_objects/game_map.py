@@ -165,8 +165,8 @@ class GameMap:
 			entities.append(story_teller)
 
 		if self.dungeon_level == 1:
-			equippable_component = Equippable(EquipmentSlots.MAIN_HAND, ranged=True, min_power_bonus=1, max_power_bonus=2)
-			item = Entity(player.x-1, player.y-1, 'D', libtcod.sepia, 'Flimsy Wooden Bow', render_order=RenderOrder.ITEM,
+			equippable_component = Equippable(EquipmentSlots.MAIN_HAND, ranged=False, min_damage_bonus=1, max_damage_bonus=2)
+			item = Entity(player.x-1, player.y-1, '/', libtcod.cyan, 'Broken Iron Sword', render_order=RenderOrder.ITEM,
 						  equippable=equippable_component)
 			item.item.targeting_range = 7
 			item.item.area_of_effect = 1

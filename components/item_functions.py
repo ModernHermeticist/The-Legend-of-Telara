@@ -4,7 +4,7 @@ from components.ai import ConfusedMonster
 
 from game_messages import Message
 
-def heal(owner, targeting_range, area_of_effect, damage, heal_amount, entities, fov_map, target_x, target_y):
+def heal(owner, targeting_range, area_of_effect, damage, heal_amount, maximum_range, entities, fov_map, target_x, target_y):
 
 	results = []
 
