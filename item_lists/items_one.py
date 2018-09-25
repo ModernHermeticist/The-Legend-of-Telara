@@ -17,11 +17,12 @@ def get_early_items(dungeon_level):
 
 	item_chances = {
 		'healing_potion': 38,
-		'broken_iron_sword': from_dungeon_level([[15,2]], dungeon_level),
-		'cracked_wooden_board': from_dungeon_level([[15,2]], dungeon_level),
-		'lightning_scroll': from_dungeon_level([[20,3]], dungeon_level), 
-		'fireball_scroll': from_dungeon_level([[15,3]], dungeon_level), 
-		'confusion_scroll': from_dungeon_level([[10,2]], dungeon_level)
+		'broken_iron_sword':         from_dungeon_level([[15,2]], dungeon_level),
+		'flimsy_wooden_bow':         from_dungeon_level([[15,2]], dungeon_level),
+		'cracked_wooden_board':      from_dungeon_level([[15,2]], dungeon_level),
+		'lightning_scroll':          from_dungeon_level([[20,3]], dungeon_level), 
+		'fireball_scroll':           from_dungeon_level([[15,3]], dungeon_level), 
+		'confusion_scroll':          from_dungeon_level([[10,2]], dungeon_level)
 		}
 
 	return item_chances
@@ -42,6 +43,15 @@ def choose_early_item(item_choice, x, y):
 		item.item.description = ("Long ago a knight stood atop the battlements of lost Fort Grey Mount.\n"
 								 "He looked wistfully to the fields in the distance.\n\n"
 								 "\"Such a waste..\" He thought, as he threw his sword to the ground.")
+
+	elif item_choice == 'flimsy_wooden_bow':
+		equippable_component = Equippable(EquipmentSlots.MAIN_HAND, ranged=True, min_power_bonus=1, max_power_bonus=2)
+		item = Entity(x, y, 'D', libtcod.brown, 'Flimsy Wooden Bow', render_order=RenderOrder.ITEM,
+					  equippable=equippable_component)
+		item.item.targeting_range = 7
+		item.item.area_of_effect = 1
+		item.item.description = ("Legends tell of a woman who made wielding a bow an art form."
+								"You probably wont get much accomplished with this thing though.")
 
 	elif item_choice == 'cracked_wooden_board':
 		equippable_component = Equippable(EquipmentSlots.OFF_HAND, defense_bonus=1)

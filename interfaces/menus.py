@@ -67,6 +67,8 @@ def main_menu(con, background_image, screen_width, screen_height):
 							 'ALSO THE NEXT THING ON THE TODO LIST IS ADDING PURE RANGED ATTACKS (WEAPONS/CHARACTER SPELLS)')
 	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) - 13, libtcod.BKGND_NONE, libtcod.CENTER,
 							 'ADD BOWS!!!!')
+	libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) - 12, libtcod.BKGND_NONE, libtcod.CENTER,
+							 'ADD SOME KIND OF FLOOR RESPAWN SYSTEM (THAT\'S MONSTERS AND ITEMS)')
 
 
 	libtcod.console_set_default_foreground(0, libtcod.light_yellow)

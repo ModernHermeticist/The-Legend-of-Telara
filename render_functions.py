@@ -149,24 +149,32 @@ def render_bar(panel, x, y, total_width, name, value, maximum, bar_color, back_c
 
 def targeting_overlay(con, mouse, player, game_map, fov_map, colors, targeting_item):
 
+	if targeting_item != None:
+		targeting_range = targeting_item.item.targeting_range
+		targeting_range_offset = int(targeting_range/2)
 
+		area_of_effect = targeting_item.item.area_of_effect
+		area_of_effect_offset = int(area_of_effect/2)
+	else:
+		targeting_range = player.equipment.main_hand.item.targeting_range
+		targeting_range_offset = int(targeting_range/2)
 
-	targeting_range = targeting_item.item.targeting_range
-	targeting_range_offset = int(targeting_range/2)
-
-	area_of_effect = targeting_item.item.area_of_effect
-	area_of_effect_offset = int(area_of_effect/2)
+		area_of_effect = player.equipment.main_hand.item.area_of_effect
+		area_of_effect_offset = int(area_of_effect/2)
 
 
 	for y in range(targeting_range):
 		for x in range(targeting_range):
-			if game_map.tiles[player.x-x+targeting_range_offset][player.y-y+targeting_range_offset].explored:
+			if game_map.tiles[player.x-x+targeting_range_offset][player.y-y+targeting_range_offset].explored and \
+			libtcod.map_is_in_fov(fov_map, player.x-x+targeting_range_offset, player.y-y+targeting_range_offset):
 				libtcod.console_set_char_background(con, player.x-x+targeting_range_offset, 
 					player.y-y+targeting_range_offset, colors.get('targeting_range'), libtcod.BKGND_SET)
+
 
 	if libtcod.map_is_in_fov(fov_map, mouse.cx, mouse.cy):
 		for y in range(area_of_effect):
 			for x in range(area_of_effect):
-				if game_map.tiles[mouse.cx-x+area_of_effect_offset][mouse.cy-y+area_of_effect_offset].explored:
+				if game_map.tiles[mouse.cx-x+area_of_effect_offset][mouse.cy-y+area_of_effect_offset].explored and \
+				libtcod.map_is_in_fov(fov_map, mouse.cx-x+area_of_effect_offset, mouse.cy-y+area_of_effect_offset):
 					libtcod.console_set_char_background(con, mouse.cx-x+area_of_effect_offset, 
 						mouse.cy-y+area_of_effect_offset, colors.get('area_of_effect'), libtcod.BKGND_SET)

@@ -32,6 +32,9 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 	mouse_y = mouse.cy
 	old_mouse_y = mouse_y
 
+	clean_map = False
+
+
 	targeting_item = None
 
 	npc = None
@@ -40,6 +43,10 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 
 	while not libtcod.console_is_window_closed():
 		libtcod.sys_check_for_event(libtcod.EVENT_KEY_PRESS | libtcod.EVENT_MOUSE, key, mouse)
+
+		if clean_map == True:
+			fov_recompute = True
+			clean_map = False
 
 		if fov_recompute:
 			recompute_fov(fov_map, player.x, player.y, constants['fov_radius'], constants['fov_light_walls'], constants['fov_algorithm'])
@@ -59,6 +66,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 		mouse_action = handle_mouse(mouse)
 
 		move =                  action.get('move')
+		ranged_attack =         action.get('ranged_attack')
 		interact =              action.get('interact')
 		inspect_item =          action.get('inspect_item')
 		wait =                  action.get('wait')
@@ -147,6 +155,14 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 			game_state = GameStates.INTERACT
 			message_log.add_message(Message('You begin to look around.'))
 
+		if ranged_attack:
+			if player.equipment.main_hand.equippable.ranged:
+				previous_game_state = GameStates.PLAYERS_TURN
+				game_state = GameStates.TARGETING
+				message_log.add_message(Message('Choose a target to attack.'))
+			else:
+				message_log.add_message(Message('This weapon cannot attack at range.'))
+
 		if inventory_index is not None and previous_game_state != GameStates.PLAYER_DEAD and \
 			inventory_index < len(player.inventory.items):
 			item = player.inventory.items[inventory_index]
@@ -213,19 +229,37 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 		if game_state == GameStates.TARGETING:
 			mouse_x = mouse.cx
 			mouse_y = mouse.cy
-			if old_mouse_y != mouse_y or old_mouse_x != mouse_x:
+
+
+			if (old_mouse_y != mouse_y or old_mouse_x != mouse_x) and libtcod.map_is_in_fov(fov_map, mouse_x, mouse_y):
 				fov_recompute = True
+			elif libtcod.map_is_in_fov(fov_map, old_mouse_x, old_mouse_y) and not libtcod.map_is_in_fov(fov_map, mouse_x, mouse_y):
+				clean_map = True
+
 			old_mouse_x = mouse_x
 			old_mouse_y = mouse_y
-			if left_click:
+			if left_click and targeting_item != None:
 				target_x, target_y = left_click
+				
 				item_use_results = player.inventory.use(targeting_item, entities=entities, fov_map=fov_map,
-														target_x=target_x, target_y=target_y)
+															target_x=target_x, target_y=target_y)
 				player_turn_results.extend(item_use_results)
 				fov_recompute = True
+
 			elif right_click:
 				player_turn_results.append({'targeting_cancelled': True})
 				fov_recompute = True
+
+			elif left_click and targeting_item == None:
+				target_x, target_y = left_click
+				target = get_blocking_entities_at_location(entities, target_x, target_y)
+
+				if target and not target.invulnerable:
+					attack_results = player.combat_class.attack(target)
+					player_turn_results.extend(attack_results)
+					fov_recompute = True
+					game_state = GameStates.ENEMY_TURN
+
 
 
 		if game_state == GameStates.SHOW_INVENTORY:
@@ -285,6 +319,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 				if dead_entity == player:
 					message, game_state = kill_player(dead_entity)
 				else:
+					dead_entity.alive = False
 					message = kill_monster(dead_entity)
 
 				message_log.add_message(message)

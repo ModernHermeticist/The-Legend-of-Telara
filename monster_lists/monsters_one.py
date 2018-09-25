@@ -26,7 +26,7 @@ def choose_easy_monster(monster_choice, dungeon_level, x, y):
 									power=3+(dungeon_level-1), xp=20+(2*(dungeon_level-1)))
 		ai_component = BasicMonster()
 
-		monster = Entity(x, y, 'n', libtcod.desaturated_green, 'Gnoll', blocks=True,
+		monster = Entity(x, y, 'n', libtcod.desaturated_green, 'Gnoll', alive=True, blocks=True,
 						 render_order=RenderOrder.ACTOR, combat_class=class_component, ai=ai_component)
 
 	elif monster_choice == 'orc':
@@ -34,14 +34,14 @@ def choose_easy_monster(monster_choice, dungeon_level, x, y):
 									power=4+(dungeon_level-1), xp=35+(5*(dungeon_level-1)))
 		ai_component = BasicMonster()
 
-		monster = Entity(x, y, 'o', libtcod.desaturated_green, 'Orc', blocks=True,
+		monster = Entity(x, y, 'o', libtcod.desaturated_green, 'Orc', alive=True, blocks=True,
 						 render_order=RenderOrder.ACTOR, combat_class=class_component, ai=ai_component)
 	elif monster_choice == 'troll':
 		class_component = Fighter(hp=30+(2*dungeon_level-1), mp=0, defense=3, 
 									power=6+(dungeon_level-1), xp=100+(5*(dungeon_level-1)))
 		ai_component = BasicMonster()
 
-		monster = Entity(x, y, 'T', libtcod.darker_green, 'Troll', blocks=True, combat_class=class_component,
+		monster = Entity(x, y, 'T', libtcod.darker_green, 'Troll', alive=True, blocks=True, combat_class=class_component,
 						 render_order=RenderOrder.ACTOR, ai=ai_component)
 
 	return monster

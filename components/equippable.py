@@ -1,6 +1,7 @@
 class Equippable:
-	def __init__(self, slot, min_power_bonus=0, max_power_bonus=0, defense_bonus=0, max_hp_bonus=0, max_mp_bonus=0):
+	def __init__(self, slot, ranged=False, min_power_bonus=0, max_power_bonus=0, defense_bonus=0, max_hp_bonus=0, max_mp_bonus=0):
 		self.slot = slot
+		self.ranged = ranged
 		self.max_power_bonus = max_power_bonus
 		self.min_power_bonus = min_power_bonus
 		self.defense_bonus = defense_bonus

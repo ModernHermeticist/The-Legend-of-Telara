@@ -61,6 +61,8 @@ def handle_player_turn_keys(key):
 		return {'take_stairs': True}
 	elif key_char == 'a':
 		return {'show_character_screen': True}
+	elif key_char == 'r':
+		return {'ranged_attack': True}
 	elif key.vk == libtcod.KEY_SPACE:
 		return {'interact': True}
 

@@ -25,7 +25,7 @@ class Inventory:
 
 		return results
 
-	def use(self, item_entity, entities=None, fov_map=None, target_x=None, target_y=None):
+	def use(self, item_entity, entities=None, fov_map=None, game_map=None, target_x=None, target_y=None):
 		results = []
 
 		item_component = item_entity.item
@@ -44,7 +44,7 @@ class Inventory:
 
 			else:
 				item_use_results = item_component.use_function(self.owner, item_component.targeting_range, item_component.area_of_effect, 
-					item_component.damage, item_component.heal_amount, entities, fov_map, target_x, target_y)
+					item_component.damage, item_component.heal_amount, item_component.maximum_range, entities, fov_map, target_x, target_y)
 
 				for item_use_result in item_use_results:
 					if item_use_result.get('consumed'):

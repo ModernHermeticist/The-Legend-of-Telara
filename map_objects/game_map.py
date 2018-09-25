@@ -134,7 +134,7 @@ class GameMap:
 									"means remains to be seen.")
 			item_component = Item(description=item_description, use_function=cast_fireball, targeting=True, targeting_message=Message(
 				'Left-click a target tile for the fireball,\nor right-click to cancel.', libtcod.light_cyan),
-								  targeting_range=9, area_of_effect=3, damage=25)
+								  targeting_range=7, area_of_effect=3, damage=25)
 			item = Entity(player.x+1, player.y, '#', libtcod.red, 'Fireball Scroll', render_order=RenderOrder.ITEM,
 						  item=item_component)
 			entities.append(item)
@@ -150,18 +150,28 @@ class GameMap:
 			entities.append(item)
 
 		if self.dungeon_level == 1:
+			item_description = ("A simple scroll with otherwise unintelligible glyphs scrawled across it.\n"
+									"You feel a jolt of energy when you hold it.\n"
+									"The word \"Lightning\" is scarred into the top of the paper.")
+			item_component = Item(description=item_description, use_function=cast_lightning, damage=40, maximum_range=5)
+			item = Entity(player.x+3, player.y, '#', libtcod.yellow, 'Lightning Scroll', render_order=RenderOrder.ITEM,
+						  item=item_component)
+			entities.append(item)
+
+		if self.dungeon_level == 1:
 			dialogue_component = Dialogue(character='The Story Teller', scene='Intro')
 			story_teller = Entity(center_of_last_room_x - 1, center_of_last_room_y - 1, '@', libtcod.orange, 'The Story Teller', 
 							blocks=True, render_order=RenderOrder.ACTOR, dialogue=dialogue_component, invulnerable=True)
 			entities.append(story_teller)
 
 		if self.dungeon_level == 1:
-			equippable_component = Equippable(EquipmentSlots.MAIN_HAND, min_power_bonus=1, max_power_bonus=3)
-			item = Entity(player.x-1, player.y-1, '/', libtcod.brass, 'Broken Iron Sword', render_order=RenderOrder.ITEM,
+			equippable_component = Equippable(EquipmentSlots.MAIN_HAND, ranged=True, min_power_bonus=1, max_power_bonus=2)
+			item = Entity(player.x-1, player.y-1, 'D', libtcod.sepia, 'Flimsy Wooden Bow', render_order=RenderOrder.ITEM,
 						  equippable=equippable_component)
-			item.item.description = ("Long ago a knight stood atop the battlements of lost Fort Grey Mount.\n"
-									 "He looked wistfully to the fields in the distance.\n\n"
-									 "\"Such a waste..\" He thought, as he threw his sword to the ground.")
+			item.item.targeting_range = 7
+			item.item.area_of_effect = 1
+			item.item.description = ("Legends tell of a woman who made wielding a bow an art form."
+									"You probably wont get much accomplished with this thing though.")
 			entities.append(item)
 
 

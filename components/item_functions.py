@@ -17,12 +17,7 @@ def heal(owner, targeting_range, area_of_effect, damage, heal_amount, entities, 
 
 	return results
 
-def cast_lightning(*args, **kwargs):
-	caster = args[0]
-	entities = kwargs.get('entities')
-	fov_map = kwargs.get('fov_map')
-	damage = kwargs.get('damage')
-	maximum_range = kwargs.get('maximum_range')
+def cast_lightning(caster, targeting_range, area_of_effect, damage, heal_amount, maximum_range, entities, fov_map, target_x, target_y):
 
 	results = []
 
@@ -30,7 +25,7 @@ def cast_lightning(*args, **kwargs):
 	closest_distance = maximum_range + 1
 
 	for entity in entities:
-		if entity.combat_class and entity != caster and libtcod.map_is_in_fov(fov_map, entity.x, entity.y):
+		if entity.alive and entity.combat_class and entity != caster and libtcod.map_is_in_fov(fov_map, entity.x, entity.y):
 			distance = caster.distance_to(entity)
 
 			if distance < closest_distance:
@@ -46,7 +41,7 @@ def cast_lightning(*args, **kwargs):
 
 	return results
 
-def cast_fireball(caster, targeting_range, area_of_effect, damage, heal_amount, entities, fov_map, target_x, target_y):
+def cast_fireball(caster, targeting_range, area_of_effect, damage, heal_amount, maximum_range, entities, fov_map, target_x, target_y):
 
 	results = []
 
@@ -56,8 +51,11 @@ def cast_fireball(caster, targeting_range, area_of_effect, damage, heal_amount, 
 	area_of_effect_offset = int(area_of_effect / 2)
 
 
-	if caster.distance(target_x, target_y) > targeting_range_offset+1:
+	if caster.distance(target_x, target_y) > targeting_range_offset:
 		results.append({'consumed': False, 'message': Message('You cannot target a tile outside your casting range.', libtcod.yellow)})
+		return results
+	elif not libtcod.map_is_in_fov(fov_map, target_x, target_y):
+		results.append({'consumed': False, 'message': Message('You cannot see your target.', libtcod.yellow)})
 		return results
 
 	results.append({'consumed': True, 'message': Message('The fireball explodes, burning everything within {0} tiles!'.format(
