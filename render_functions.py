@@ -12,8 +12,9 @@ from interfaces.menus import inventory_menu, level_up_menu, character_screen, co
 class RenderOrder(Enum):
 	CORPSE = 1
 	STAIRS = 2
-	ITEM = 3
-	ACTOR = 4
+	BONFIRE = 3
+	ITEM = 4
+	ACTOR = 5
 
 def render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse_panel, entities, 
 				player, game_map, fov_map, fov_recompute, message_log,screen_width, screen_height, 

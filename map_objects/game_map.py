@@ -3,6 +3,7 @@ from random import randint
 
 from components.stairs import Stairs
 from components.dialogue import Dialogue
+from components.bonfire import Bonfire
 
 from entity import Entity
 
@@ -128,6 +129,12 @@ class GameMap:
 								render_order=RenderOrder.STAIRS, stairs=stairs_component)
 			entities.append(up_stairs)
 
+		if self.dungeon_level > 1:
+			bonfire_component = Bonfire(self.dungeon_level)
+			up_stairs = Entity(self.stairs_up_x+1, self.stairs_up_y-1, '*', libtcod.dark_red, 'Mysterious Bonfire', 
+								blocks=True, render_order=RenderOrder.BONFIRE, invulnerable=True, bonfire=bonfire_component)
+			entities.append(up_stairs)
+
 		"""
 
 		if self.dungeon_level == 1:
@@ -166,6 +173,7 @@ class GameMap:
 			story_teller = Entity(center_of_last_room_x - 1, center_of_last_room_y - 1, '@', libtcod.orange, 'The Story Teller', 
 							blocks=True, render_order=RenderOrder.ACTOR, dialogue=dialogue_component, invulnerable=True)
 			entities.append(story_teller)
+
 
 		"""
 
@@ -305,3 +313,13 @@ class GameMap:
 		message_log.add_message(Message('You climb down familiar stairs.', libtcod.light_violet))		
 
 		return entities, player, fov_map
+
+	def clear_entities(self, floor_index, entity_index):
+
+		for floor in floor_index:
+			for entities in entity_index:
+				for entity in entities:
+					if not entity.stairs and entity.blocks and not entity.bonfire and not entity.player and entity.alive:
+						entities.remove(entity)
+
+		return entity_index

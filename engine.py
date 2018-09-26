@@ -144,6 +144,13 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 							npc = blocking_target
 					except (AttributeError):
 						pass
+					try:
+						if blocking_target.bonfire != False:
+							message_log.add_message(Message('You see a mysterious bonfire. You cannot resist touching it', libtcod.light_violet))
+							entity_index = blocking_target.bonfire.reset_entities(game_map, floor_index, entity_index)
+							game_state = GameStates.PLAYERS_TURN
+					except (AttributeError):
+						pass
 					message_log.add_message(Message('You see {0}'.format(blocking_target.name), libtcod.white))
 
 				elif non_blocking_target:

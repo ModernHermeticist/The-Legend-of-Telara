@@ -216,7 +216,7 @@ def get_new_game_variables(constants):
 	level_component = Level()
 	equipment_component = Equipment()
 
-	player = Entity(0, 0, '@', libtcod.white, name, sex, blocks=True, render_order=RenderOrder.ACTOR, 
+	player = Entity(0, 0, '@', libtcod.white, name, sex, player=True, blocks=True, render_order=RenderOrder.ACTOR, 
 					combat_class=class_component, race=race_component, inventory=inventory_component, level=level_component,
 					equipment=equipment_component)
 
