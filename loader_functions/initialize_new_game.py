@@ -55,13 +55,16 @@ def get_constants():
 	map_height = 50
 
 	# Some variables for the rooms in the map
-	room_max_size = 10
+	room_max_size = 8
 	room_min_size = 4
-	max_rooms = 60
+	max_rooms = 100
 
 	fov_algorithm = 0
 	fov_light_walls = True
 	fov_radius = 7
+
+	animation_time = 10
+	animation_distance = 5
 
 	max_monsters_per_room = 8
 
@@ -110,6 +113,8 @@ def get_constants():
 				'fov_algorithm':            fov_algorithm,
 				'fov_light_walls':          fov_light_walls,
 				'fov_radius':               fov_radius,
+				'animation_time':           animation_time,
+				'animation_distance':       animation_distance,
 				'max_monsters_per_room':    max_monsters_per_room,
 				'max_items_per_room':       max_items_per_room,
 				'colors':                   colors,
@@ -248,18 +253,22 @@ def get_new_game_variables(constants):
 
 def apply_class_stats_to_race(player):
 
-	player.combat_class.base_max_hp += player.race.hp
-	player.combat_class.hp += player.race.hp
+	player.combat_class.base_max_hp +=        player.race.hp
+	player.combat_class.hp +=                 player.race.hp
 
-	player.combat_class.base_max_mp += player.race.mp
-	player.combat_class.mp += player.race.mp
+	player.combat_class.base_max_mp +=        player.race.mp
+	player.combat_class.mp +=                 player.race.mp
 
-	player.combat_class.base_strength += player.race.strength
+	player.combat_class.base_strength +=      player.race.strength
+	player.combat_class.base_dexterity +=     player.race.dexterity
+	player.combat_class.base_stamina +=       player.race.stamina
+	player.combat_class.base_intelligence +=  player.race.intelligence
 
-	player.combat_class.base_armor += player.race.armor
+	player.combat_class.base_armor +=         player.race.armor
 
-	player.combat_class.base_min_damage += player.race.min_damage
-	player.combat_class.base_max_damage += player.race.max_damage
+	player.combat_class.base_min_damage +=    player.race.min_damage
+	player.combat_class.base_max_damage +=    player.race.max_damage
+
 	return player
 
 def enter_player_name(screen_width, screen_height):

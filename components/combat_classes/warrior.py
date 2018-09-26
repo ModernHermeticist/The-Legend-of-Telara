@@ -7,24 +7,26 @@ from game_messages import Message
 
 
 class Warrior():
-	def __init__(self, class_name='Warrior', hp=10, mp=0, armor=1, min_damage=0, max_damage=1, 
-				strength=1, dexterity=0, xp=0):
-		self.base_max_hp = hp
-		self.hp = hp
-		self.base_max_mp = mp
-		self.mp = mp
-		self.base_min_damage = min_damage
-		self.base_max_damage = max_damage
-		self.base_armor = armor
-		self.base_strength = strength
-		self.base_dexterity = dexterity
-		self.xp = xp
-		self.class_name= class_name
+	def __init__(self, class_name='Warrior', hp=10, mp=0, armor=0, min_damage=0, max_damage=1, 
+				strength=1, dexterity=0, stamina=1, intelligence=0, xp=0):
+		self.base_max_hp =            hp
+		self.hp =                     hp
+		self.base_max_mp =            mp
+		self.mp =                     mp
+		self.base_min_damage =        min_damage
+		self.base_max_damage =        max_damage
+		self.base_armor =             armor
+		self.base_strength =          strength
+		self.base_dexterity =         dexterity
+		self.base_stamina =           stamina
+		self.base_intelligence =      intelligence
+		self.xp =                     xp
+		self.class_name =             class_name
 
 	@property
 	def max_hp(self):
 		if self.owner and self.owner.equipment:
-			bonus = self.owner.equipment.max_hp_bonus
+			bonus = self.owner.equipment.max_hp_bonus + (int(self.stamina / 3)*10)
 		else:
 			bonus = 0
 
@@ -47,6 +49,24 @@ class Warrior():
 			bonus = 0
 
 		return self.base_dexterity + bonus
+
+	@property
+	def stamina(self):
+		if self.owner and self.owner.equipment:
+			bonus = self.owner.equipment.stamina_bonus
+		else:
+			bonus = 0
+
+		return self.base_stamina + bonus
+
+	@property
+	def intelligence(self):
+		if self.owner and self.owner.equipment:
+			bonus = self.owner.equipment.intelligence_bonus
+		else:
+			bonus = 0
+
+		return self.base_intelligence + bonus
 
 	@property
 	def armor(self):

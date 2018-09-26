@@ -32,8 +32,15 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 	mouse_y = mouse.cy
 	old_mouse_y = mouse_y
 
+	#attack_animation_x = 0
+	#attack_animation_y = 0
+
 	clean_map = False
 
+	#attacked = False
+
+	#animation_time = 200
+	#animation_distance = 0
 
 	targeting_item = None
 
@@ -43,6 +50,16 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 
 	while not libtcod.console_is_window_closed():
 		libtcod.sys_check_for_event(libtcod.EVENT_KEY_PRESS | libtcod.EVENT_MOUSE, key, mouse)
+		"""
+		if animation_time == 0:
+			if attacked:
+				animation_distance += 1
+			animation_time = 200
+
+		if animation_distance == 5:
+			animation_distance = 0
+			attacked = False
+		"""
 
 		if clean_map == True:
 			fov_recompute = True
@@ -52,9 +69,10 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 			recompute_fov(fov_map, player.x, player.y, constants['fov_radius'], constants['fov_light_walls'], constants['fov_algorithm'])
 
 		render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse_panel, entities, 
-				   player, game_map, fov_map, fov_recompute, message_log,
-				   constants['screen_width'], constants['screen_height'], constants['bar_width'],
-				   constants['panel_height'], constants['panel_y'], mouse, constants['colors'], game_state, npc, targeting_item, item)
+				   player, game_map, fov_map, fov_recompute, message_log, constants['screen_width'], 
+				   constants['screen_height'], constants['bar_width'], constants['panel_height'], 
+				   constants['panel_y'], mouse, constants['colors'], game_state, npc, targeting_item, item)
+
 
 		fov_recompute = False
 
@@ -96,6 +114,13 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 				if target and not target.invulnerable:
 					attack_results = player.combat_class.attack(target)
 					player_turn_results.extend(attack_results)
+					"""
+					if attacked == False:
+						attack_animation_x = player.x
+						attack_animation_y = player.y
+						attacked = True
+					"""
+					clean_map = True
 
 
 				elif not target:
@@ -211,13 +236,14 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 				message_log.add_message(Message('There are no stairs here.', libtcod.yellow))
 
 		if level_up:
-			if level_up == 'hp':
-				player.combat_class.base_max_hp += 20
-				player.combat_class.hp += 20
-			elif level_up == 'str':
+			if level_up == 'str':
 				player.combat_class.base_strength += 1
 			elif level_up == 'dex':
 				player.combat_class.base_dexterity += 1
+			elif level_up == 'sta':
+				player.combat_class.base_stamina += 1
+			elif level_up == 'int':
+				player.combat_class.base_intelligence += 1
 
 			game_state = previous_game_state
 
@@ -408,6 +434,8 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 						break
 			else:
 				game_state = GameStates.PLAYERS_TURN
+
+		#animation_time -= 1
 
 
 def main():

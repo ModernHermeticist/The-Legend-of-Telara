@@ -16,11 +16,25 @@ from components.item_functions import cast_confuse, cast_fireball, cast_lightnin
 def get_early_items(dungeon_level):
 
 	item_chances = {
-		'healing_potion': 38,
+		'healing_potion':            from_dungeon_level([[48,1]], dungeon_level),
+
+
 		'broken_iron_sword':         from_dungeon_level([[15,2]], dungeon_level),
+
+
 		'flimsy_wooden_bow':         from_dungeon_level([[15,2]], dungeon_level),
+
+
 		'cracked_wooden_board':      from_dungeon_level([[15,2]], dungeon_level),
-		'lightning_scroll':          from_dungeon_level([[20,3]], dungeon_level), 
+
+
+		'dirty_leather_tunic':       from_dungeon_level([[15,1]], dungeon_level),
+
+
+		'dirty_leather_pants':       from_dungeon_level([[15,1]], dungeon_level),
+
+
+		'lightning_scroll':          from_dungeon_level([[15,3]], dungeon_level), 
 		'fireball_scroll':           from_dungeon_level([[15,3]], dungeon_level), 
 		'confusion_scroll':          from_dungeon_level([[10,2]], dungeon_level)
 		}
@@ -36,6 +50,9 @@ def choose_early_item(item_choice, x, y):
 		item = Entity(x, y, '!', libtcod.violet, 'Healing Potion', render_order=RenderOrder.ITEM,
 					  item=item_component)
 
+
+
+
 	elif item_choice == 'broken_iron_sword':
 		equippable_component = Equippable(EquipmentSlots.MAIN_HAND, min_damage_bonus=1, max_damage_bonus=3)
 		item = Entity(x, y, '/', libtcod.brass, 'Broken Iron Sword', render_order=RenderOrder.ITEM,
@@ -43,6 +60,10 @@ def choose_early_item(item_choice, x, y):
 		item.item.description = ("Long ago a knight stood atop the battlements of lost Fort Grey Mount.\n"
 								 "He looked wistfully to the fields in the distance.\n\n"
 								 "\"Such a waste..\" He thought, as he threw his sword to the ground.")
+
+
+
+
 
 	elif item_choice == 'flimsy_wooden_bow':
 		equippable_component = Equippable(EquipmentSlots.MAIN_HAND, ranged=True, min_damage_bonus=1, max_damage_bonus=2)
@@ -53,11 +74,43 @@ def choose_early_item(item_choice, x, y):
 		item.item.description = ("Legends tell of a woman who made wielding a bow an art form."
 								"You probably wont get much accomplished with this thing though.")
 
+
+
+
 	elif item_choice == 'cracked_wooden_board':
 		equippable_component = Equippable(EquipmentSlots.OFF_HAND, armor_bonus=1)
 		item = Entity(x, y, '[', libtcod.darker_orange, 'Cracked Wooden Board', render_order=RenderOrder.ITEM,
 					  equippable=equippable_component)
 		item.item.description = ("In moments of crises even this might be useful.")
+
+
+
+
+
+	elif item_choice == 'dirty_leather_tunic':
+		equippable_component = Equippable(EquipmentSlots.CHEST, armor_bonus=1)
+		item = Entity(x, y, 'T', libtcod.darker_sepia, 'Dirty Leather Tunic', render_order=RenderOrder.ITEM,
+					  equippable=equippable_component)
+		item.item.description = ("It smells something awful and provides next to no protection.")
+
+
+
+
+
+
+	elif item_choice == 'dirty_leather_pants':
+		equippable_component = Equippable(EquipmentSlots.LEGS, armor_bonus=1)
+		item = Entity(x, y, 'M', libtcod.darker_sepia, 'Dirty Leather Pants', render_order=RenderOrder.ITEM,
+					  equippable=equippable_component)
+		item.item.description = ("It smells something awful and provides next to no protection.")
+
+
+
+
+
+
+
+
 
 	elif item_choice == 'fireball_scroll':
 		item_description = ("A simple scroll with otherwise unintelligible glyphs scrawled across it.\n"

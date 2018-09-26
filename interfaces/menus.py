@@ -49,9 +49,27 @@ def inventory_menu(con, header, player, inventory_width, screen_width, screen_he
 
 		for item in player.inventory.items:
 			if player.equipment.main_hand == item:
-				options.append('{0} (on main hand)'.format(item.name))
+				options.append('{0} (in main hand)'.format(item.name))
 			elif player.equipment.off_hand == item:
-				options.append('{0} (on off hand)'.format(item.name))
+				options.append('{0} (in off hand)'.format(item.name))
+			elif player.equipment.chest == item:
+				options.append('{0} (on chest)'.format(item.name))
+			elif player.equipment.legs == item:
+				options.append('{0} (on legs)'.format(item.name))
+			elif player.equipment.feet == item:
+				options.append('{0} (on feet)'.format(item.name))
+			elif player.equipment.arms == item:
+				options.append('{0} (on arms)'.format(item.name))
+			elif player.equipment.hands == item:
+				options.append('{0} (on hands)'.format(item.name))
+			elif player.equipment.shoulders == item:
+				options.append('{0} (on shoulders)'.format(item.name))
+			elif player.equipment.head == item:
+				options.append('{0} (on head)'.format(item.name))
+			elif player.equipment.wrists == item:
+				options.append('{0} (on wrists)'.format(item.name))
+			elif player.equipment.back == item:
+				options.append('{0} (on back)'.format(item.name))
 			else:
 				options.append(item.name)
 
@@ -85,9 +103,10 @@ def main_menu(con, background_image, screen_width, screen_height):
 	menu(con, '', libtcod.black, ['Play a new game', 'Continue last game', 'Controls', 'Quit'], 22, screen_width, screen_height)
 
 def level_up_menu(con, header, player, menu_width, screen_width, screen_height):
-	options = ['Constitution (+20 HP)'.format(player.combat_class.max_hp),
-			   'Strength     (+1 strength)'.format(player.combat_class.base_strength),
-			   'Dexterity    (+1 dexterity)'.format(player.combat_class.base_dexterity)]
+	options = ['Strength     (+1 strength)',
+			   'Dexterity    (+1 dexterity)',
+			   'Stamina      (+1 stamina)',
+			   'Intelligence (+1 intelligence']
 
 	menu(con, header, libtcod.darker_grey, options, menu_width, screen_width, screen_height)
 
@@ -210,6 +229,15 @@ def character_screen(player, character_screen_width, character_screen_height, sc
 	libtcod.console_print_rect_ex(window, 0, y, character_screen_width, character_screen_height, libtcod.BKGND_NONE,
 									libtcod.LEFT, 'Dexterity: {0}'.format(player.combat_class.dexterity))
 
+	y += 1
+
+	libtcod.console_print_rect_ex(window, 0, y, character_screen_width, character_screen_height, libtcod.BKGND_NONE,
+									libtcod.LEFT, 'Stamina: {0}'.format(player.combat_class.stamina))
+
+	y += 1
+
+	libtcod.console_print_rect_ex(window, 0, y, character_screen_width, character_screen_height, libtcod.BKGND_NONE,
+									libtcod.LEFT, 'Intelligence: {0}'.format(player.combat_class.intelligence))
 	
 
 

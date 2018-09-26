@@ -1,5 +1,7 @@
 import libtcodpy as libtcod
 
+from random import randint
+
 from enum import Enum
 
 from game_states import GameStates
@@ -14,8 +16,9 @@ class RenderOrder(Enum):
 	ACTOR = 4
 
 def render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse_panel, entities, 
-				player, game_map, fov_map, fov_recompute, message_log,
-				screen_width, screen_height, bar_width, panel_height, panel_y, mouse, colors, game_state, npc, targeting_item, item):
+				player, game_map, fov_map, fov_recompute, message_log,screen_width, screen_height, 
+				bar_width, panel_height, panel_y, mouse, colors, game_state, npc, targeting_item, item):
+	
 	if fov_recompute:
 		# Draw all the tile in the game map
 		for y in range(game_map.height):
@@ -96,7 +99,7 @@ def render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse
 		level_up_menu(con, 'Level up! Choose a stat to raise:', player, 40, screen_width, screen_height)
 
 	elif game_state == GameStates.CHARACTER_SCREEN:
-		character_screen(player, 30, 17, screen_width, screen_height)
+		character_screen(player, 30, 19, screen_width, screen_height)
 
 	elif game_state == GameStates.INTERACT and npc:
 		dialogue_screen(player, npc, 50, 30, screen_width, screen_height )
@@ -105,6 +108,11 @@ def render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse
 	libtcod.console_blit(char_info_panel, 0, 0, screen_width, panel_height, 0, 0, panel_y)
 	libtcod.console_blit(area_info_panel, 0, 0, screen_width, panel_height, 0, 0, panel_y + 4)
 	libtcod.console_blit(under_mouse_panel, 0, 0, screen_width, panel_height, 0, 0, panel_y - 1)
+
+	"""
+	if animation_distance > 0:
+		damage_overlay(con, attack_animation_x, attack_animation_y, animation_distance)
+	"""
 
 
 def clear_all(con, entities):
@@ -179,3 +187,16 @@ def targeting_overlay(con, mouse, player, game_map, fov_map, colors, targeting_i
 				libtcod.map_is_in_fov(fov_map, mouse.cx-x+area_of_effect_offset, mouse.cy-y+area_of_effect_offset):
 					libtcod.console_set_char_background(con, mouse.cx-x+area_of_effect_offset, 
 						mouse.cy-y+area_of_effect_offset, colors.get('area_of_effect'), libtcod.BKGND_SET)
+"""
+def damage_overlay(con, attack_animation_x, attack_animation_y, animation_distance):
+
+	if animation_distance > 1:
+		libtcod.console_put_char(con, attack_animation_x-(1+animation_distance)+2, attack_animation_y-(1+animation_distance)+2, ' ', libtcod.BKGND_NONE)
+
+
+	libtcod.console_set_default_foreground(con, libtcod.red)
+	libtcod.console_put_char(con, attack_animation_x-(1+animation_distance)+1, attack_animation_y-(1+animation_distance)+1, '*', libtcod.BKGND_NONE)
+
+	if animation_distance == 4:
+		libtcod.console_put_char(con, attack_animation_x-(1+animation_distance)+1, attack_animation_y-(1+animation_distance)+1, ' ', libtcod.BKGND_NONE)
+"""
