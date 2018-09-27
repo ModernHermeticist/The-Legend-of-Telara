@@ -20,6 +20,10 @@ def handle_keys(key, game_state):
 		return handle_level_up_menu(key)
 	elif game_state == GameStates.CHARACTER_SCREEN:
 		return handle_character_screen(key)
+	elif game_state == GameStates.EQUIPMENT_SCREEN:
+		return handle_equipment_screen(key)
+	elif game_state == GameStates.EQUIPMENT_DETAILS:
+		return handle_equipment_details(key)
 	elif game_state == GameStates.INTERACT:
 		return handle_interacting_keys(key)
 	elif game_state == GameStates.SELECT_RACE:
@@ -63,6 +67,8 @@ def handle_player_turn_keys(key):
 		return {'take_stairs': True}
 	elif key_char == 'a':
 		return {'show_character_screen': True}
+	elif key_char == 'e':
+		return {'show_equipment_screen': True}
 	elif key_char == 'r':
 		return {'ranged_attack': True}
 	elif key.vk == libtcod.KEY_SPACE:
@@ -79,8 +85,68 @@ def handle_player_turn_keys(key):
 	# No key was pressed
 	return {}
 
-def handle_character_screen(key):
+
+def handle_equipment_screen(key):
+	key_char = chr(key.c)
+
 	if key.vk == libtcod.KEY_ESCAPE:
+		return {'exit': True}
+
+	elif key_char == 'e':
+		return {'exit': True}
+
+	elif key_char == 'm':
+		return {'main_hand': True}
+
+	elif key_char == 'o':
+		return {'off_hand': True}
+
+	elif key_char == 'h':
+		return {'head': True}
+
+	elif key_char == 's':
+		return {'shoulders': True}
+
+	elif key_char == 'a':
+		return {'arms': True}
+
+	elif key_char == 'w':
+		return {'wrists': True}
+
+	elif key_char == 'n':
+		return {'hands': True}
+
+	elif key_char == 'c':
+		return {'chest': True}
+
+	elif key_char == 'b':
+		return {'belt': True}
+
+	elif key_char == 'l':
+		return {'legs': True}
+
+	elif key_char == 'f':
+		return {'feet': True}
+
+	elif key_char == 'k':
+		return {'back': True}
+
+	return {}
+
+def handle_equipment_details(key):
+	if key.vk == libtcod.KEY_ESCAPE:
+		return {'exit': True}
+
+	return {}
+
+
+def handle_character_screen(key):
+	key_char = chr(key.c)
+
+	if key.vk == libtcod.KEY_ESCAPE:
+		return {'exit': True}
+
+	elif key_char == 'a':
 		return {'exit': True}
 
 	return {}

@@ -45,6 +45,8 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 
 	targeting_item = None
 
+	equipment_choice = 0
+
 	npc = None
 
 	item = None
@@ -72,7 +74,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 		render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse_panel, entities, 
 				   player, game_map, fov_map, fov_recompute, message_log, constants['screen_width'], 
 				   constants['screen_height'], constants['bar_width'], constants['panel_height'], 
-				   constants['panel_y'], mouse, constants['colors'], game_state, npc, targeting_item, item)
+				   constants['panel_y'], mouse, constants['colors'], game_state, npc, targeting_item, item, equipment_choice)
 
 
 		fov_recompute = False
@@ -83,6 +85,15 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 
 		action = handle_keys(key, game_state)
 		mouse_action = handle_mouse(mouse)
+
+		############################################
+		if game_state == GameStates.EQUIPMENT_SCREEN:
+			for equipment in action:
+				if equipment:
+					equipment_choice = equipment
+					break
+
+		############################################
 
 		move =                  action.get('move')
 		ranged_attack =         action.get('ranged_attack')
@@ -96,6 +107,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 		take_stairs =           action.get('take_stairs')
 		level_up =              action.get('level_up')
 		show_character_screen = action.get('show_character_screen')
+		show_equipment_screen = action.get('show_equipment_screen')
 		exit =                  action.get('exit')
 		fullscreen =            action.get('fullscreen')
 
@@ -258,6 +270,10 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 			previous_game_state = game_state
 			game_state = GameStates.CHARACTER_SCREEN
 
+		if show_equipment_screen:
+			previous_game_state = game_state
+			game_state = GameStates.EQUIPMENT_SCREEN
+
 
 		if game_state == GameStates.TARGETING:
 			mouse_x = mouse.cx
@@ -304,9 +320,15 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 				game_state = GameStates.CHOOSE_ITEM_TO_INSPECT
 				message_log.add_message(Message('Choose an item to inspect.', libtcod.yellow))
 
+		if game_state == GameStates.EQUIPMENT_SCREEN:
+			if equipment_choice:
+				previous_game_state = game_state
+				game_state = GameStates.EQUIPMENT_DETAILS
+
 
 		if exit:
-			if game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.CHARACTER_SCREEN, GameStates.INTERACT):
+			if game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.CHARACTER_SCREEN, GameStates.EQUIPMENT_SCREEN, 
+							  GameStates.INTERACT):
 				if game_state == (GameStates.INTERACT):
 					player_turn_results.append({'interacting_cancelled': True})
 					game_state = previous_game_state
@@ -320,6 +342,9 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 				message_log.add_message(Message('Item inspection cancelled.', libtcod.yellow))
 
 			elif game_state == GameStates.INSPECT_ITEM:
+				game_state = previous_game_state
+
+			elif game_state == GameStates.EQUIPMENT_DETAILS:
 				game_state = previous_game_state
 
 			elif game_state == GameStates.TARGETING:

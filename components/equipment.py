@@ -2,7 +2,7 @@ from equipment_slots import EquipmentSlots
 
 class Equipment:
 	def __init__(self, main_hand=None, off_hand=None, chest=None, legs=None, feet=None, \
-					arms=None, hands=None, shoulders=None, head=None, wrists=None, back=None):
+					arms=None, hands=None, shoulders=None, head=None, wrists=None, back=None, belt=None):
 		self.main_hand =    main_hand
 		self.off_hand =     off_hand
 		self.chest =        chest
@@ -14,6 +14,7 @@ class Equipment:
 		self.head =         head
 		self.wrists =       wrists
 		self.back =         back
+		self.belt =         belt
 
 	@property
 	def max_hp_bonus(self):
@@ -51,6 +52,9 @@ class Equipment:
 
 		if self.back and self.back.equippable:
 			bonus += self.back.equippable.max_hp_bonus
+
+		if self.belt and self.belt.equippable:
+			bonus += self.belt.equippable.max_hp_bonus
 
 		return bonus
 
@@ -91,6 +95,9 @@ class Equipment:
 		if self.back and self.back.equippable:
 			bonus += self.back.equippable.max_mp_bonus
 
+		if self.belt and self.belt.equippable:
+			bonus += self.belt.equippable.max_mp_bonus
+
 		return bonus
 
 	@property
@@ -129,6 +136,9 @@ class Equipment:
 
 		if self.back and self.back.equippable:
 			bonus += self.back.equippable.min_damage_bonus
+
+		if self.belt and self.belt.equippable:
+			bonus += self.belt.equippable.min_damage_bonus
 
 		return bonus
 
@@ -169,6 +179,9 @@ class Equipment:
 		if self.back and self.back.equippable:
 			bonus += self.back.equippable.max_damage_bonus
 
+		if self.belt and self.belt.equippable:
+			bonus += self.belt.equippable.max_damage_bonus
+
 		return bonus
 
 	@property
@@ -207,6 +220,9 @@ class Equipment:
 
 		if self.back and self.back.equippable:
 			bonus += self.back.equippable.strength_bonus
+
+		if self.belt and self.belt.equippable:
+			bonus += self.belt.equippable.strength_bonus
 
 		return bonus
 
@@ -247,6 +263,9 @@ class Equipment:
 		if self.back and self.back.equippable:
 			bonus += self.back.equippable.dexterity_bonus
 
+		if self.belt and self.belt.equippable:
+			bonus += self.belt.equippable.dexterity_bonus
+
 		return bonus
 
 	@property
@@ -285,6 +304,9 @@ class Equipment:
 
 		if self.back and self.back.equippable:
 			bonus += self.back.equippable.stamina_bonus
+
+		if self.belt and self.belt.equippable:
+			bonus += self.belt.equippable.stamina_bonus
 
 		return bonus
 
@@ -325,6 +347,9 @@ class Equipment:
 		if self.back and self.back.equippable:
 			bonus += self.back.equippable.intelligence_bonus
 
+		if self.belt and self.belt.equippable:
+			bonus += self.belt.equippable.intelligence_bonus
+
 		return bonus
 
 	@property
@@ -363,6 +388,9 @@ class Equipment:
 
 		if self.back and self.back.equippable:
 			bonus += self.back.equippable.armor_bonus
+
+		if self.belt and self.belt.equippable:
+			bonus += self.belt.equippable.armor_bonus
 
 		return bonus
 

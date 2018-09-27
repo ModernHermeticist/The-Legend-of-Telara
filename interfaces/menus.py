@@ -167,7 +167,7 @@ def character_screen(player, character_screen_width, character_screen_height, sc
 	libtcod.console_clear(window)
 
 	libtcod.console_print_rect_ex(window, 0, y, character_screen_width, character_screen_height, libtcod.BKGND_NONE,
-									libtcod.LEFT, 'Character Information')
+									libtcod.CENTER, 'Character Information')
 
 	y += 1
 
@@ -207,12 +207,12 @@ def character_screen(player, character_screen_width, character_screen_height, sc
 	y += 2
 
 	libtcod.console_print_rect_ex(window, 0, y, character_screen_width, character_screen_height, libtcod.BKGND_NONE,
-									libtcod.LEFT, 'HP/Max HP: {0}/{1}'.format(player.combat_class.hp, player.combat_class.max_hp))
+									libtcod.LEFT, 'HP: {0}/{1}'.format(player.combat_class.hp, player.combat_class.max_hp))
 
 	y += 1
 
 	libtcod.console_print_rect_ex(window, 0, y, character_screen_width, character_screen_height, libtcod.BKGND_NONE,
-									libtcod.LEFT, 'Damage: {0} - {1}'.format(player.combat_class.min_damage, player.combat_class.max_damage))
+									libtcod.LEFT, 'Damage: {0}-{1}'.format(player.combat_class.min_damage, player.combat_class.max_damage))
 
 	y += 1
 
@@ -244,6 +244,369 @@ def character_screen(player, character_screen_width, character_screen_height, sc
 	x = screen_width // 2 - character_screen_width // 2
 	y = screen_height // 2 - character_screen_height // 2
 	libtcod.console_blit(window, 0, 0, character_screen_width, character_screen_height, 0, x, y, 1.0, 1.0)
+
+
+def equipment_screen(player, equipment_screen_width, equipment_screen_height, screen_width, screen_height):
+	y = 0
+	window = libtcod.console_new(equipment_screen_width, equipment_screen_height)
+
+	libtcod.console_set_default_background(window, libtcod.darker_blue)
+	libtcod.console_set_default_foreground(window, libtcod.white)
+	libtcod.console_clear(window)
+
+	libtcod.console_print_rect_ex(window, 0, y, equipment_screen_width, equipment_screen_height, libtcod.BKGND_NONE,
+									libtcod.LEFT, 'Character Equipment')
+
+	y += 2
+
+	# Check for main hand item, if no item print "Empty", else print the item
+	if player.equipment.main_hand:
+		libtcod.console_print_rect_ex(window, 0, y, equipment_screen_width, equipment_screen_height, libtcod.BKGND_NONE,
+										libtcod.LEFT, '(M)ain Hand: {0}'.format(player.equipment.main_hand.name))
+	else:
+		libtcod.console_print_rect_ex(window, 0, y, equipment_screen_width, equipment_screen_height, libtcod.BKGND_NONE,
+										libtcod.LEFT, '(M)ain Hand: Empty')
+
+	y += 1
+
+	# Check for off hand item, if no item print "Empty", else print the item
+	if player.equipment.off_hand:
+		libtcod.console_print_rect_ex(window, 0, y, equipment_screen_width, equipment_screen_height, libtcod.BKGND_NONE,
+										libtcod.LEFT, '(O)ff Hand:  {0}'.format(player.equipment.off_hand.name))
+	else:
+		libtcod.console_print_rect_ex(window, 0, y, equipment_screen_width, equipment_screen_height, libtcod.BKGND_NONE,
+										libtcod.LEFT, '(O)ff Hand:  Empty')
+
+	y += 2
+
+	# Check for head item, if no item print "Empty", else print the item
+	if player.equipment.head:
+		libtcod.console_print_rect_ex(window, 0, y, equipment_screen_width, equipment_screen_height, libtcod.BKGND_NONE,
+										libtcod.LEFT, '(H)ead:      {0}'.format(player.equipment.head.name))
+	else:
+		libtcod.console_print_rect_ex(window, 0, y, equipment_screen_width, equipment_screen_height, libtcod.BKGND_NONE,
+										libtcod.LEFT, '(H)ead:      Empty')
+
+	y += 1
+
+	# Check for shoulders item, if no item print "Empty", else print the item
+	if player.equipment.shoulders:
+		libtcod.console_print_rect_ex(window, 0, y, equipment_screen_width, equipment_screen_height, libtcod.BKGND_NONE,
+										libtcod.LEFT, '(S)houlders: {0}'.format(player.equipment.shoulders.name))
+	else:
+		libtcod.console_print_rect_ex(window, 0, y, equipment_screen_width, equipment_screen_height, libtcod.BKGND_NONE,
+										libtcod.LEFT, '(S)houlders: Empty')
+
+	y += 1
+
+	# Check for arms item, if no item print "Empty", else print the item
+	if player.equipment.arms:
+		libtcod.console_print_rect_ex(window, 0, y, equipment_screen_width, equipment_screen_height, libtcod.BKGND_NONE,
+										libtcod.LEFT, '(A)rms:      {0}'.format(player.equipment.arms.name))
+	else:
+		libtcod.console_print_rect_ex(window, 0, y, equipment_screen_width, equipment_screen_height, libtcod.BKGND_NONE,
+										libtcod.LEFT, '(A)rms:      Empty')
+
+	y += 1
+
+	# Check for wrists item, if no item print "Empty", else print the item
+	if player.equipment.wrists:
+		libtcod.console_print_rect_ex(window, 0, y, equipment_screen_width, equipment_screen_height, libtcod.BKGND_NONE,
+										libtcod.LEFT, '(W)rists:    {0}'.format(player.equipment.wrists.name))
+	else:
+		libtcod.console_print_rect_ex(window, 0, y, equipment_screen_width, equipment_screen_height, libtcod.BKGND_NONE,
+										libtcod.LEFT, '(W)rists:    Empty')
+
+	y += 1
+
+	# Check for hands item, if no item print "Empty", else print the item
+	if player.equipment.hands:
+		libtcod.console_print_rect_ex(window, 0, y, equipment_screen_width, equipment_screen_height, libtcod.BKGND_NONE,
+										libtcod.LEFT, 'Ha(n)ds:     {0}'.format(player.equipment.hands.name))
+	else:
+		libtcod.console_print_rect_ex(window, 0, y, equipment_screen_width, equipment_screen_height, libtcod.BKGND_NONE,
+										libtcod.LEFT, 'Ha(n)ds:     Empty')
+
+	y += 1
+
+	# Check for chest item, if no item print "Empty", else print the item
+	if player.equipment.chest:
+		libtcod.console_print_rect_ex(window, 0, y, equipment_screen_width, equipment_screen_height, libtcod.BKGND_NONE,
+										libtcod.LEFT, '(C)hest:     {0}'.format(player.equipment.chest.name))
+	else:
+		libtcod.console_print_rect_ex(window, 0, y, equipment_screen_width, equipment_screen_height, libtcod.BKGND_NONE,
+										libtcod.LEFT, '(C)hest:     Empty')
+
+	y += 1
+
+	# Check for belt item, if no item print "Empty", else print the item
+	if player.equipment.belt:
+		libtcod.console_print_rect_ex(window, 0, y, equipment_screen_width, equipment_screen_height, libtcod.BKGND_NONE,
+										libtcod.LEFT, '(B)elt:      {0}'.format(player.equipment.belt.name))
+	else:
+		libtcod.console_print_rect_ex(window, 0, y, equipment_screen_width, equipment_screen_height, libtcod.BKGND_NONE,
+										libtcod.LEFT, '(B)elt:      Empty')
+
+	y += 1
+
+	# Check for legs item, if no item print "Empty", else print the item
+	if player.equipment.legs:
+		libtcod.console_print_rect_ex(window, 0, y, equipment_screen_width, equipment_screen_height, libtcod.BKGND_NONE,
+										libtcod.LEFT, '(L)egs:      {0}'.format(player.equipment.legs.name))
+	else:
+		libtcod.console_print_rect_ex(window, 0, y, equipment_screen_width, equipment_screen_height, libtcod.BKGND_NONE,
+										libtcod.LEFT, '(L)egs:      Empty')
+
+	y += 1
+
+	# Check for feet item, if no item print "Empty", else print the item
+	if player.equipment.feet:
+		libtcod.console_print_rect_ex(window, 0, y, equipment_screen_width, equipment_screen_height, libtcod.BKGND_NONE,
+										libtcod.LEFT, '(F)eet:      {0}'.format(player.equipment.feet.name))
+	else:
+		libtcod.console_print_rect_ex(window, 0, y, equipment_screen_width, equipment_screen_height, libtcod.BKGND_NONE,
+										libtcod.LEFT, '(F)eet:      Empty')
+
+	y += 1
+
+	# Check for back item, if no item print "Empty", else print the item
+	if player.equipment.back:
+		libtcod.console_print_rect_ex(window, 0, y, equipment_screen_width, equipment_screen_height, libtcod.BKGND_NONE,
+										libtcod.LEFT, 'Bac(k):      {0}'.format(player.equipment.back.name))
+	else:
+		libtcod.console_print_rect_ex(window, 0, y, equipment_screen_width, equipment_screen_height, libtcod.BKGND_NONE,
+										libtcod.LEFT, 'Bac(k):      Empty')
+
+
+	x = screen_width // 2 - equipment_screen_width // 2
+	y = screen_height // 2 - equipment_screen_height // 2
+	libtcod.console_blit(window, 0, 0, equipment_screen_width, equipment_screen_height, 0, x, y, 1.0, 1.0)
+
+
+def equipment_details_screen(player, selection, equipment_details_screen_width, equipment_details_screen_height, \
+							 screen_width, screen_height):
+
+
+	if selection == 'main_hand':
+		item_name         = player.equipment.main_hand.name
+
+		item_damage_min   = player.equipment.main_hand.equippable.min_damage_bonus
+		item_damage_max   = player.equipment.main_hand.equippable.max_damage_bonus
+		item_armor        = player.equipment.main_hand.equippable.armor_bonus
+		item_hp           = player.equipment.main_hand.equippable.max_hp_bonus
+		item_mp           = player.equipment.main_hand.equippable.max_mp_bonus
+		item_strength     = player.equipment.main_hand.equippable.strength_bonus
+		item_dexterity    = player.equipment.main_hand.equippable.dexterity_bonus
+		item_stamina      = player.equipment.main_hand.equippable.stamina_bonus
+		item_intelligence = player.equipment.main_hand.equippable.intelligence_bonus
+		item_description  = player.equipment.main_hand.item.description
+
+	elif selection == 'off_hand':
+		item_name         = player.equipment.off_hand.name
+
+		item_damage_min   = player.equipment.off_hand.equippable.min_damage_bonus
+		item_damage_max   = player.equipment.off_hand.equippable.max_damage_bonus
+		item_armor        = player.equipment.off_hand.equippable.armor_bonus
+		item_hp           = player.equipment.off_hand.equippable.max_hp_bonus
+		item_mp           = player.equipment.off_hand.equippable.max_mp_bonus
+		item_strength     = player.equipment.off_hand.equippable.strength_bonus
+		item_dexterity    = player.equipment.off_hand.equippable.dexterity_bonus
+		item_stamina      = player.equipment.off_hand.equippable.stamina_bonus
+		item_intelligence = player.equipment.off_hand.equippable.intelligence_bonus
+
+	elif selection == 'head':
+		item_name         = player.equipment.head.name
+
+		item_damage_min   = player.equipment.head.equippable.min_damage_bonus
+		item_damage_max   = player.equipment.head.equippable.max_damage_bonus
+		item_armor        = player.equipment.head.equippable.armor_bonus
+		item_hp           = player.equipment.head.equippable.max_hp_bonus
+		item_mp           = player.equipment.head.equippable.max_mp_bonus
+		item_strength     = player.equipment.head.equippable.strength_bonus
+		item_dexterity    = player.equipment.head.equippable.dexterity_bonus
+		item_stamina      = player.equipment.head.equippable.stamina_bonus
+		item_intelligence = player.equipment.head.equippable.intelligence_bonus
+
+	elif selection == 'shoulders':
+		item_name         = player.equipment.shoulders.name
+
+		item_damage_min   = player.equipment.shoulders.equippable.min_damage_bonus
+		item_damage_max   = player.equipment.shoulders.equippable.max_damage_bonus
+		item_armor        = player.equipment.shoulders.equippable.armor_bonus
+		item_hp           = player.equipment.shoulders.equippable.max_hp_bonus
+		item_mp           = player.equipment.shoulders.equippable.max_mp_bonus
+		item_strength     = player.equipment.shoulders.equippable.strength_bonus
+		item_dexterity    = player.equipment.shoulders.equippable.dexterity_bonus
+		item_stamina      = player.equipment.shoulders.equippable.stamina_bonus
+		item_intelligence = player.equipment.shoulders.equippable.intelligence_bonus
+
+	elif selection == 'arms':
+		item_name         = player.equipment.arms.name
+
+		item_damage_min   = player.equipment.arms.equippable.min_damage_bonus
+		item_damage_max   = player.equipment.arms.equippable.max_damage_bonus
+		item_armor        = player.equipment.arms.equippable.armor_bonus
+		item_hp           = player.equipment.arms.equippable.max_hp_bonus
+		item_mp           = player.equipment.arms.equippable.max_mp_bonus
+		item_strength     = player.equipment.arms.equippable.strength_bonus
+		item_dexterity    = player.equipment.arms.equippable.dexterity_bonus
+		item_stamina      = player.equipment.arms.equippable.stamina_bonus
+		item_intelligence = player.equipment.arms.equippable.intelligence_bonus
+
+	elif selection == 'wrists':
+		item_name         = player.equipment.wrists.name
+
+		item_damage_min   = player.equipment.wrists.equippable.min_damage_bonus
+		item_damage_max   = player.equipment.wrists.equippable.max_damage_bonus
+		item_armor        = player.equipment.wrists.equippable.armor_bonus
+		item_hp           = player.equipment.wrists.equippable.max_hp_bonus
+		item_mp           = player.equipment.wrists.equippable.max_mp_bonus
+		item_strength     = player.equipment.wrists.equippable.strength_bonus
+		item_dexterity    = player.equipment.wrists.equippable.dexterity_bonus
+		item_stamina      = player.equipment.wrists.equippable.stamina_bonus
+		item_intelligence = player.equipment.wrists.equippable.intelligence_bonus
+
+	elif selection == 'hands':
+		item_name         = player.equipment.hands.name
+
+		item_damage_min   = player.equipment.hands.equippable.min_damage_bonus
+		item_damage_max   = player.equipment.hands.equippable.max_damage_bonus
+		item_armor        = player.equipment.hands.equippable.armor_bonus
+		item_hp           = player.equipment.hands.equippable.max_hp_bonus
+		item_mp           = player.equipment.hands.equippable.max_mp_bonus
+		item_strength     = player.equipment.hands.equippable.strength_bonus
+		item_dexterity    = player.equipment.hands.equippable.dexterity_bonus
+		item_stamina      = player.equipment.hands.equippable.stamina_bonus
+		item_intelligence = player.equipment.hands.equippable.intelligence_bonus
+
+	elif selection == 'chest':
+		item_name         = player.equipment.chest.name
+
+		item_damage_min   = player.equipment.chest.equippable.min_damage_bonus
+		item_damage_max   = player.equipment.chest.equippable.max_damage_bonus
+		item_armor        = player.equipment.chest.equippable.armor_bonus
+		item_hp           = player.equipment.chest.equippable.max_hp_bonus
+		item_mp           = player.equipment.chest.equippable.max_mp_bonus
+		item_strength     = player.equipment.chest.equippable.strength_bonus
+		item_dexterity    = player.equipment.chest.equippable.dexterity_bonus
+		item_stamina      = player.equipment.chest.equippable.stamina_bonus
+		item_intelligence = player.equipment.chest.equippable.intelligence_bonus
+
+	elif selection == 'belt':
+		item_name         = player.equipment.belt.name
+
+		item_damage_min   = player.equipment.belt.equippable.min_damage_bonus
+		item_damage_max   = player.equipment.belt.equippable.max_damage_bonus
+		item_armor        = player.equipment.belt.equippable.armor_bonus
+		item_hp           = player.equipment.belt.equippable.max_hp_bonus
+		item_mp           = player.equipment.belt.equippable.max_mp_bonus
+		item_strength     = player.equipment.belt.equippable.strength_bonus
+		item_dexterity    = player.equipment.belt.equippable.dexterity_bonus
+		item_stamina      = player.equipment.belt.equippable.stamina_bonus
+		item_intelligence = player.equipment.belt.equippable.intelligence_bonus
+
+	elif selection == 'legs':
+		item_name         = player.equipment.legs.name
+
+		item_damage_min   = player.equipment.legs.equippable.min_damage_bonus
+		item_damage_max   = player.equipment.legs.equippable.max_damage_bonus
+		item_armor        = player.equipment.legs.equippable.armor_bonus
+		item_hp           = player.equipment.legs.equippable.max_hp_bonus
+		item_mp           = player.equipment.legs.equippable.max_mp_bonus
+		item_strength     = player.equipment.legs.equippable.strength_bonus
+		item_dexterity    = player.equipment.legs.equippable.dexterity_bonus
+		item_stamina      = player.equipment.legs.equippable.stamina_bonus
+		item_intelligence = player.equipment.legs.equippable.intelligence_bonus
+
+	elif selection == 'feet':
+		item_name         = player.equipment.feet.name
+
+		item_damage_min   = player.equipment.feet.equippable.min_damage_bonus
+		item_damage_max   = player.equipment.feet.equippable.max_damage_bonus
+		item_armor        = player.equipment.feet.equippable.armor_bonus
+		item_hp           = player.equipment.feet.equippable.max_hp_bonus
+		item_mp           = player.equipment.feet.equippable.max_mp_bonus
+		item_strength     = player.equipment.feet.equippable.strength_bonus
+		item_dexterity    = player.equipment.feet.equippable.dexterity_bonus
+		item_stamina      = player.equipment.feet.equippable.stamina_bonus
+		item_intelligence = player.equipment.feet.equippable.intelligence_bonus
+
+	elif selection == 'back':
+		item_name         = player.equipment.back.name
+
+		item_damage_min   = player.equipment.back.equippable.min_damage_bonus
+		item_damage_max   = player.equipment.back.equippable.max_damage_bonus
+		item_armor        = player.equipment.back.equippable.armor_bonus
+		item_hp           = player.equipment.back.equippable.max_hp_bonus
+		item_mp           = player.equipment.back.equippable.max_mp_bonus
+		item_strength     = player.equipment.back.equippable.strength_bonus
+		item_dexterity    = player.equipment.back.equippable.dexterity_bonus
+		item_stamina      = player.equipment.back.equippable.stamina_bonus
+		item_intelligence = player.equipment.back.equippable.intelligence_bonus
+
+
+	y = 0
+	window = libtcod.console_new(equipment_details_screen_width, equipment_details_screen_height)
+
+	libtcod.console_set_default_background(window, libtcod.darker_blue)
+	libtcod.console_set_default_foreground(window, libtcod.white)
+	libtcod.console_clear(window)
+
+
+	libtcod.console_print_rect_ex(window, 0, y, equipment_details_screen_width, equipment_details_screen_height, libtcod.BKGND_NONE,
+									libtcod.LEFT, item_name)
+
+	y += 2
+
+
+	libtcod.console_print_rect_ex(window, 0, y, equipment_details_screen_width, equipment_details_screen_height, libtcod.BKGND_NONE,
+									libtcod.LEFT, 'Damage: {0}-{1}'.format(item_damage_min, item_damage_max))
+
+	y += 2
+
+	libtcod.console_print_rect_ex(window, 0, y, equipment_details_screen_width, equipment_details_screen_height, libtcod.BKGND_NONE,
+									libtcod.LEFT, 'Armor: {0}'.format(item_armor))
+
+	y += 2
+
+	libtcod.console_print_rect_ex(window, 0, y, equipment_details_screen_width, equipment_details_screen_height, libtcod.BKGND_NONE,
+									libtcod.LEFT, 'HP: {0}'.format(item_hp))
+
+	y += 1
+
+	libtcod.console_print_rect_ex(window, 0, y, equipment_details_screen_width, equipment_details_screen_height, libtcod.BKGND_NONE,
+									libtcod.LEFT, 'MP: {0}'.format(item_mp))
+
+	y += 2
+
+	libtcod.console_print_rect_ex(window, 0, y, equipment_details_screen_width, equipment_details_screen_height, libtcod.BKGND_NONE,
+									libtcod.LEFT, 'Strength: {0}'.format(item_strength))
+
+	y += 1
+
+	libtcod.console_print_rect_ex(window, 0, y, equipment_details_screen_width, equipment_details_screen_height, libtcod.BKGND_NONE,
+									libtcod.LEFT, 'Dexterity: {0}'.format(item_dexterity))
+
+	y += 1
+
+	libtcod.console_print_rect_ex(window, 0, y, equipment_details_screen_width, equipment_details_screen_height, libtcod.BKGND_NONE,
+									libtcod.LEFT, 'Stamina: {0}'.format(item_stamina))
+
+	y += 1
+
+	libtcod.console_print_rect_ex(window, 0, y, equipment_details_screen_width, equipment_details_screen_height, libtcod.BKGND_NONE,
+									libtcod.LEFT, 'Intelligence: {0}'.format(item_intelligence))
+
+	y += 2
+
+	libtcod.console_print_rect_ex(window, 0, y, equipment_details_screen_width, equipment_details_screen_height, libtcod.BKGND_NONE,
+									libtcod.LEFT, '{0}'.format(item_description))
+
+	x = screen_width // 2 - equipment_details_screen_width // 2
+	y = screen_height // 2 - equipment_details_screen_height // 2
+	libtcod.console_blit(window, 0, 0, equipment_details_screen_width, equipment_details_screen_height, 0, x, y, 1.0, 1.0)
+
+
 
 def dialogue_screen(player, npc, dialogue_screen_width, dialogue_screen_height, screen_width, screen_height):
 	# X = 50 Y = 30

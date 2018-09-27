@@ -7,7 +7,8 @@ from enum import Enum
 from game_states import GameStates
 
 
-from interfaces.menus import inventory_menu, level_up_menu, character_screen, controls_menu, dialogue_screen, inspect_item_menu
+from interfaces.menus import inventory_menu, level_up_menu, character_screen, equipment_screen, \
+							 equipment_details_screen, controls_menu, dialogue_screen, inspect_item_menu
 
 class RenderOrder(Enum):
 	CORPSE = 1
@@ -18,7 +19,7 @@ class RenderOrder(Enum):
 
 def render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse_panel, entities, 
 				player, game_map, fov_map, fov_recompute, message_log,screen_width, screen_height, 
-				bar_width, panel_height, panel_y, mouse, colors, game_state, npc, targeting_item, item):
+				bar_width, panel_height, panel_y, mouse, colors, game_state, npc, targeting_item, item, equipment_choice):
 	
 	if fov_recompute:
 		# Draw all the tile in the game map
@@ -101,6 +102,12 @@ def render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse
 
 	elif game_state == GameStates.CHARACTER_SCREEN:
 		character_screen(player, 30, 19, screen_width, screen_height)
+
+	elif game_state == GameStates.EQUIPMENT_SCREEN:
+		equipment_screen(player, 30, 16, screen_width, screen_height)
+
+	elif game_state == GameStates.EQUIPMENT_DETAILS:
+		equipment_details_screen(player, equipment_choice, 30, 20, screen_width, screen_height)
 
 	elif game_state == GameStates.INTERACT and npc:
 		dialogue_screen(player, npc, 50, 30, screen_width, screen_height )
