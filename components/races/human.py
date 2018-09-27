@@ -1,9 +1,9 @@
 class Human():
 	def __init__(self):
-		self.hp = 1000
+		self.hp = 100
 		self.mp = 10
 		self.armor = 0
-		self.strength = 100
+		self.strength = 1
 		self.dexterity = 1
 		self.stamina = 1
 		self.intelligence = 1

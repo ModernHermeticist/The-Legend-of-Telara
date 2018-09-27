@@ -13,7 +13,7 @@ class Entity:
 	"""
 	def __init__(self, x, y, char, color, name, sex=None, player=False, alive=None, blocks=False, render_order=RenderOrder.CORPSE, 
 					combat_class=None, race=None, ai=None, item=None, inventory=None, stairs=None, level=None, equipment=None, 
-					equippable=None, dialogue=None, invulnerable=False, bonfire=False):
+					equippable=None, dialogue=None, invulnerable=False, bonfire=None):
 		self.x = x
 		self.y = y
 		self.char = char

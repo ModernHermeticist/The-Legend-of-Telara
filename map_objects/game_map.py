@@ -40,6 +40,8 @@ class GameMap:
 		self.stairs_up_x = None
 		self.stairs_up_y = None
 
+		self.room_list = []
+
 
 		self.dungeon_level = dungeon_level
 
@@ -109,6 +111,8 @@ class GameMap:
 				rooms.append(new_room)
 				num_rooms += 1
 
+		self.room_list.append(rooms)
+
 		self.stairs_down_x = center_of_last_room_x
 		self.stairs_down_y = center_of_last_room_y
 
@@ -129,13 +133,14 @@ class GameMap:
 								render_order=RenderOrder.STAIRS, stairs=stairs_component)
 			entities.append(up_stairs)
 
+		"""
+
 		if self.dungeon_level > 1:
 			bonfire_component = Bonfire(self.dungeon_level)
 			up_stairs = Entity(self.stairs_up_x+1, self.stairs_up_y-1, '*', libtcod.dark_red, 'Mysterious Bonfire', 
 								blocks=True, render_order=RenderOrder.BONFIRE, invulnerable=True, bonfire=bonfire_component)
 			entities.append(up_stairs)
 
-		"""
 
 		if self.dungeon_level == 1:
 			item_description = ("A simple scroll with otherwise unintelligible glyphs scrawled across it.\n"
@@ -314,12 +319,18 @@ class GameMap:
 
 		return entities, player, fov_map
 
-	def clear_entities(self, floor_index, entity_index):
+	def clear_entities(self, entity_index):
 
-		for floor in floor_index:
-			for entities in entity_index:
-				for entity in entities:
-					if not entity.stairs and entity.blocks and not entity.bonfire and not entity.player and entity.alive:
-						entities.remove(entity)
+		for entities in entity_index:
+			for entity in entities:
+				#if not entity.stairs and entity.blocks and not entity.bonfire and not entity.player and entity.alive:
+				if not (entity.stairs and entity.bonfire) and entity.blocks and entity.alive:
+					entities.remove(entity)
 
+		return entity_index
+
+	def replace_entities(self, original_entity_index, entity_index):
+
+		for x in range(len(original_entity_index)-1):
+			entity_index[x] = original_entity_index[x]
 		return entity_index

@@ -17,7 +17,8 @@ from font_functions import load_customfont
 
 
 def play_game(player, entities, game_map, message_log, game_state, con, message_panel,
-					 char_info_panel, area_info_panel, under_mouse_panel, constants, floor_index, entity_index, fov_index):
+					 char_info_panel, area_info_panel, under_mouse_panel, constants, floor_index, 
+					 original_entity_index, entity_index, fov_index):
 	fov_recompute = True
 	fov_map = initialize_fov(game_map)
 	key = libtcod.Key()
@@ -144,14 +145,12 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 							npc = blocking_target
 					except (AttributeError):
 						pass
-					try:
-						if blocking_target.bonfire != False:
-							message_log.add_message(Message('You see a mysterious bonfire. You cannot resist touching it', libtcod.light_violet))
-							entity_index = blocking_target.bonfire.reset_entities(game_map, floor_index, entity_index)
-							game_state = GameStates.PLAYERS_TURN
-					except (AttributeError):
-						pass
-					message_log.add_message(Message('You see {0}'.format(blocking_target.name), libtcod.white))
+					if blocking_target.bonfire is not None:
+						message_log.add_message(Message('You see a mysterious bonfire. You cannot resist touching it', libtcod.light_violet))
+						entity_index = blocking_target.bonfire.reset_entities(game_map, original_entity_index, entity_index)
+						game_state = GameStates.PLAYERS_TURN
+					else:
+						message_log.add_message(Message('You see {0}'.format(blocking_target.name), libtcod.white))
 
 				elif non_blocking_target:
 					message_log.add_message(Message('You see {0}'.format(non_blocking_target.name), libtcod.white))
@@ -218,6 +217,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 							fov_map = initialize_fov(game_map)
 							floor_index.append(game_map.tiles)
 							entity_index.append(entities)
+							original_entity_index.append(entities)
 							fov_index.append(fov_map)
 							fov_recompute = True
 							libtcod.console_clear(con)
@@ -508,9 +508,11 @@ def main():
 					fov_map = initialize_fov(game_map)
 					floor_index = []
 					entity_index = []
+					original_entity_index = entity_index
 					fov_index = []
 					floor_index.append(game_map.tiles)
 					entity_index.append(entities)
+					original_entity_index.append(entities)
 					fov_index.append(fov_map)
 					game_state = GameStates.PLAYERS_TURN
 					show_main_menu = False
@@ -545,7 +547,8 @@ def main():
 		elif show_main_menu == False and show_controls_menu == False:
 			libtcod.console_clear(con)
 			play_game(player, entities, game_map, message_log, game_state, con, message_panel,
-					 char_info_panel, area_info_panel, under_mouse_panel, constants, floor_index, entity_index, fov_index)
+					 char_info_panel, area_info_panel, under_mouse_panel, constants, floor_index, 
+					 original_entity_index, entity_index, fov_index)
 
 			show_main_menu = True
 
