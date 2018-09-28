@@ -5,6 +5,15 @@ from random import randint
 from game_messages import Message
 
 
+class BasicWanderingMonster():
+	def take_turn(self, target, fov_map, game_map):
+		results = []
+
+		monster = self.owner
+
+		monster.random_move(game_map, entities)
+
+
 class BasicMonster():
 	def take_turn(self, target, fov_map, game_map, entities):
 		results = []

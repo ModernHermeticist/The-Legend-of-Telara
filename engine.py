@@ -87,7 +87,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 		mouse_action = handle_mouse(mouse)
 
 		############################################
-		if game_state == GameStates.EQUIPMENT_SCREEN:
+		if game_state == GameStates.EQUIPMENT_SCREEN and not action.get('exit'):
 			for equipment in action:
 				if equipment:
 					equipment_choice = equipment
@@ -127,17 +127,18 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 				if target and not target.invulnerable:
 					attack_results = player.combat_class.attack(target)
 					player_turn_results.extend(attack_results)
-					"""
-					if attacked == False:
-						attack_animation_x = player.x
-						attack_animation_y = player.y
-						attacked = True
-					"""
+
 					clean_map = True
 
 
 				elif not target:
 					player.move(dx, dy)
+
+					if player.combat_class.turns_until_rest == 0:
+						pass
+					else:
+						player.combat_class.turns_until_rest -= 1
+
 					fov_recompute = True
 
 				game_state = GameStates.ENEMY_TURN
@@ -173,6 +174,13 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 
 
 		elif wait:
+			if player.combat_class.turns_until_rest == 0:
+				pass
+			else:
+				player.combat_class.turns_until_rest -= 1
+
+			message = player.combat_class.rest()
+			message_log.add_message(Message(message, libtcod.green))
 			game_state = GameStates.ENEMY_TURN
 
 		elif pickup and game_state == GameStates.PLAYERS_TURN:
@@ -327,7 +335,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 
 
 		if exit:
-			if game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.CHARACTER_SCREEN, GameStates.EQUIPMENT_SCREEN, 
+			if game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.CHARACTER_SCREEN, 
 							  GameStates.INTERACT):
 				if game_state == (GameStates.INTERACT):
 					player_turn_results.append({'interacting_cancelled': True})
@@ -344,8 +352,12 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 			elif game_state == GameStates.INSPECT_ITEM:
 				game_state = previous_game_state
 
+			elif game_state == GameStates.EQUIPMENT_SCREEN:
+				game_state = GameStates.PLAYERS_TURN
+
 			elif game_state == GameStates.EQUIPMENT_DETAILS:
 				game_state = previous_game_state
+				equipment_choice = False
 
 			elif game_state == GameStates.TARGETING:
 				player_turn_results.append({'targeting_cancelled': True})
@@ -354,7 +366,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 
 			else:
 				libtcod.console_clear(0)
-				save_game(player, entities, game_map, message_log, game_state, floor_index, entity_index, fov_index)
+				save_game(player, entities, game_map, message_log, game_state, floor_index, original_entity_index, entity_index, fov_index)
 
 				return True
 
@@ -477,7 +489,8 @@ def main():
 	#mixer.music.play(loops=0, start=0.0)
 	#mixer.music.set_volume(0.01)
 
-	libtcod.console_set_custom_font('terminal12x12_gs_ro.png', libtcod.FONT_LAYOUT_ASCII_INROW | libtcod.FONT_TYPE_GREYSCALE, 16, 16)
+	libtcod.console_set_custom_font('terminal16x16_gs_ro.png', libtcod.FONT_LAYOUT_ASCII_INROW | libtcod.FONT_TYPE_GREYSCALE, 16, 16)
+
 
 	libtcod.console_init_root(constants['screen_width'], constants['screen_height'], constants['window_title'], False, libtcod.RENDERER_OPENGL)
 
@@ -486,6 +499,8 @@ def main():
 	char_info_panel = libtcod.console_new(constants['char_info_panel_width'], constants['char_info_panel_height'])
 	area_info_panel = libtcod.console_new(constants['area_info_panel_width'], constants['area_info_panel_height'])
 	under_mouse_panel = libtcod.console_new(constants['under_mouse_panel_width'], constants['under_mouse_panel_height'])
+
+	load_customfont()
 
 
 	player = None
@@ -544,7 +559,8 @@ def main():
 
 			elif load_saved_game:
 				try:
-					player, entities, game_map, message_log, game_state, floor_index, entity_index, fov_index = load_game()
+					player, entities, game_map, message_log, game_state, floor_index, original_entity_index, \
+					entity_index, fov_index = load_game()
 					show_main_menu = False
 				except FileNotFoundError:
 					show_load_error_message = True

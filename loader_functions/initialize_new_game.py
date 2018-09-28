@@ -28,8 +28,8 @@ from render_functions import RenderOrder
 def get_constants():
 	window_title = 'The Legend of Telara'
 
-	screen_width = 120
-	screen_height = 70
+	screen_width = 108
+	screen_height = 63
 
 	bar_width = 21
 	panel_height = 7
@@ -51,8 +51,8 @@ def get_constants():
 
 
 	# Size of the map
-	map_width = 110
-	map_height = 50
+	map_width = 99
+	map_height = 45
 
 	# Some variables for the rooms in the map
 	room_max_size = 8
@@ -216,7 +216,7 @@ def get_new_game_variables(constants):
 	level_component = Level()
 	equipment_component = Equipment()
 
-	player = Entity(0, 0, '@', libtcod.white, name, sex, player=True, blocks=True, render_order=RenderOrder.ACTOR, 
+	player = Entity(0, 0, 1, libtcod.white, name, sex, player=True, blocks=True, render_order=RenderOrder.ACTOR, 
 					combat_class=class_component, race=race_component, inventory=inventory_component, level=level_component,
 					equipment=equipment_component)
 
@@ -277,7 +277,7 @@ def enter_player_name(screen_width, screen_height):
 			   'w', 'x', 'y', 'z']
 	name = ''
 	x = len(name) + int(screen_width / 2 - 11) + 10
-	y = int(screen_height / 2)
+	y = int(screen_height / 2) + 1
 	key = libtcod.console_wait_for_keypress(True)
 	while True:
 		if key.vk == libtcod.KEY_BACKSPACE:

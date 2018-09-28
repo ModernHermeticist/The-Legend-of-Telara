@@ -2,6 +2,8 @@ import libtcodpy as libtcod
 
 import math
 
+from random import randint
+
 from components.item import Item
 
 from render_functions import RenderOrder
@@ -81,6 +83,14 @@ class Entity:
 		# Move the entity by a given amount
 		self.x += dx
 		self.y += dy
+
+	def random_move(self, game_map, entities):
+		dx = randint(-1,1)
+		dy = randint(-1,1)
+		
+		if not (game_map.is_blocked(self.x + dx, self.y + dy) or
+					get_blocking_entities_at_location(entities, self.x + dx, self.y + dy)):
+			self.move(dx, dy)
 
 	def move_towards(self, target_x, target_y, game_map, entities):
 		dx = target_x - self.x

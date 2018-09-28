@@ -73,7 +73,7 @@ def inventory_menu(con, header, player, inventory_width, screen_width, screen_he
 			else:
 				options.append(item.name)
 
-	menu(con, header, libtcod.darker_blue, options, inventory_width, screen_width, screen_height)
+	menu(con, header, libtcod.darkest_blue, options, inventory_width, screen_width, screen_height)
 
 def main_menu(con, background_image, screen_width, screen_height):
 	#libtcod.image_blit_2x(background_image, 0, 0, 0)
@@ -108,14 +108,14 @@ def level_up_menu(con, header, player, menu_width, screen_width, screen_height):
 			   'Stamina      (+1 stamina)',
 			   'Intelligence (+1 intelligence']
 
-	menu(con, header, libtcod.darker_grey, options, menu_width, screen_width, screen_height)
+	menu(con, header, libtcod.darkest_blue, options, menu_width, screen_width, screen_height)
 
 def inspect_item_menu(con, header, item, menu_width, menu_height, screen_width, screen_height):
 
 	y = 0
 	window = libtcod.console_new(menu_width, menu_height)
 
-	libtcod.console_set_default_background(window, libtcod.darker_blue)
+	libtcod.console_set_default_background(window, libtcod.darkest_blue)
 	libtcod.console_set_default_foreground(window, libtcod.white)
 	libtcod.console_clear(window)
 
@@ -162,14 +162,14 @@ def character_screen(player, character_screen_width, character_screen_height, sc
 	y = 0
 	window = libtcod.console_new(character_screen_width, character_screen_height)
 
-	libtcod.console_set_default_background(window, libtcod.darker_blue)
+	libtcod.console_set_default_background(window, libtcod.darkest_blue)
 	libtcod.console_set_default_foreground(window, libtcod.white)
 	libtcod.console_clear(window)
 
 	libtcod.console_print_rect_ex(window, 0, y, character_screen_width, character_screen_height, libtcod.BKGND_NONE,
-									libtcod.CENTER, 'Character Information')
+									libtcod.LEFT, 'Character Information')
 
-	y += 1
+	y += 2
 
 	libtcod.console_print_rect_ex(window, 0, y, character_screen_width, character_screen_height, libtcod.BKGND_NONE,
 									libtcod.LEFT, 'Name: {0}'.format(player.name))
@@ -250,7 +250,7 @@ def equipment_screen(player, equipment_screen_width, equipment_screen_height, sc
 	y = 0
 	window = libtcod.console_new(equipment_screen_width, equipment_screen_height)
 
-	libtcod.console_set_default_background(window, libtcod.darker_blue)
+	libtcod.console_set_default_background(window, libtcod.darkest_blue)
 	libtcod.console_set_default_foreground(window, libtcod.white)
 	libtcod.console_clear(window)
 
@@ -388,173 +388,753 @@ def equipment_details_screen(player, selection, equipment_details_screen_width, 
 
 
 	if selection == 'main_hand':
-		item_name         = player.equipment.main_hand.name
-
-		item_damage_min   = player.equipment.main_hand.equippable.min_damage_bonus
-		item_damage_max   = player.equipment.main_hand.equippable.max_damage_bonus
-		item_armor        = player.equipment.main_hand.equippable.armor_bonus
-		item_hp           = player.equipment.main_hand.equippable.max_hp_bonus
-		item_mp           = player.equipment.main_hand.equippable.max_mp_bonus
-		item_strength     = player.equipment.main_hand.equippable.strength_bonus
-		item_dexterity    = player.equipment.main_hand.equippable.dexterity_bonus
-		item_stamina      = player.equipment.main_hand.equippable.stamina_bonus
-		item_intelligence = player.equipment.main_hand.equippable.intelligence_bonus
-		item_description  = player.equipment.main_hand.item.description
+		if player.equipment.main_hand != None:
+			item_slot = 'Main Hand'
+			if player.equipment.main_hand.name != None:
+				item_name         = player.equipment.main_hand.name
+			else:
+				item_name         = ' '
+			if player.equipment.main_hand.equippable.min_damage_bonus != None:
+				item_damage_min   = player.equipment.main_hand.equippable.min_damage_bonus
+			else:
+				item_damage_min   = '0'
+			if player.equipment.main_hand.equippable.max_damage_bonus != None:
+				item_damage_max   = player.equipment.main_hand.equippable.max_damage_bonus
+			else:
+				item_damage_min   = '0'
+			if player.equipment.main_hand.equippable.armor_bonus != None:
+				item_armor        = player.equipment.main_hand.equippable.armor_bonus
+			else:
+				item_armor        = '0'
+			if player.equipment.main_hand.equippable.max_hp_bonus != None:
+				item_hp           = player.equipment.main_hand.equippable.max_hp_bonus
+			else:
+				item_hp           = '0'
+			if player.equipment.main_hand.equippable.max_mp_bonus != None:
+				item_mp           = player.equipment.main_hand.equippable.max_mp_bonus
+			else:
+				item_mp           = '0'
+			if player.equipment.main_hand.equippable.strength_bonus != None:
+				item_strength     = player.equipment.main_hand.equippable.strength_bonus
+			else:
+				item_strength     = '0'
+			if player.equipment.main_hand.equippable.dexterity_bonus != None:
+				item_dexterity    = player.equipment.main_hand.equippable.dexterity_bonus
+			else:
+				item_dexterity    = '0'
+			if player.equipment.main_hand.equippable.stamina_bonus != None:
+				item_stamina      = player.equipment.main_hand.equippable.stamina_bonus
+			else:
+				item_stamina      = '0'
+			if player.equipment.main_hand.equippable.intelligence_bonus != None:
+				item_intelligence = player.equipment.main_hand.equippable.intelligence_bonus
+			else:
+				item_intelligence = '0'
+			if player.equipment.main_hand.item.description != None:
+				item_description  = player.equipment.main_hand.item.description
+			else:
+				item_description  = ' '
+		else:
+			item_slot         = 'Main Hand'
+			item_description  = ' '
+			item_name         = ' '
+			item_damage_min   = '0'
+			item_damage_max   = '0'
+			item_armor        = '0'
+			item_hp           = '0'
+			item_mp           = '0'
+			item_strength     = '0'
+			item_dexterity    = '0'
+			item_stamina      = '0'
+			item_intelligence = '0'
 
 	elif selection == 'off_hand':
-		item_name         = player.equipment.off_hand.name
-
-		item_damage_min   = player.equipment.off_hand.equippable.min_damage_bonus
-		item_damage_max   = player.equipment.off_hand.equippable.max_damage_bonus
-		item_armor        = player.equipment.off_hand.equippable.armor_bonus
-		item_hp           = player.equipment.off_hand.equippable.max_hp_bonus
-		item_mp           = player.equipment.off_hand.equippable.max_mp_bonus
-		item_strength     = player.equipment.off_hand.equippable.strength_bonus
-		item_dexterity    = player.equipment.off_hand.equippable.dexterity_bonus
-		item_stamina      = player.equipment.off_hand.equippable.stamina_bonus
-		item_intelligence = player.equipment.off_hand.equippable.intelligence_bonus
+		if player.equipment.off_hand != None:
+			item_slot = 'Off Hand'
+			if player.equipment.off_hand.name != None:
+				item_name         = player.equipment.off_hand.name
+			else:
+				item_name         = ' '
+			if player.equipment.off_hand.equippable.min_damage_bonus != None:
+				item_damage_min   = player.equipment.off_hand.equippable.min_damage_bonus
+			else:
+				item_damage_min   = '0'
+			if player.equipment.off_hand.equippable.max_damage_bonus != None:
+				item_damage_max   = player.equipment.off_hand.equippable.max_damage_bonus
+			else:
+				item_damage_min   = '0'
+			if player.equipment.off_hand.equippable.armor_bonus != None:
+				item_armor        = player.equipment.off_hand.equippable.armor_bonus
+			else:
+				item_armor        = '0'
+			if player.equipment.off_hand.equippable.max_hp_bonus != None:
+				item_hp           = player.equipment.off_hand.equippable.max_hp_bonus
+			else:
+				item_hp           = '0'
+			if player.equipment.off_hand.equippable.max_mp_bonus != None:
+				item_mp           = player.equipment.off_hand.equippable.max_mp_bonus
+			else:
+				item_mp           = '0'
+			if player.equipment.off_hand.equippable.strength_bonus != None:
+				item_strength     = player.equipment.off_hand.equippable.strength_bonus
+			else:
+				item_strength     = '0'
+			if player.equipment.off_hand.equippable.dexterity_bonus != None:
+				item_dexterity    = player.equipment.off_hand.equippable.dexterity_bonus
+			else:
+				item_dexterity    = '0'
+			if player.equipment.off_hand.equippable.stamina_bonus != None:
+				item_stamina      = player.equipment.off_hand.equippable.stamina_bonus
+			else:
+				item_stamina      = '0'
+			if player.equipment.off_hand.equippable.intelligence_bonus != None:
+				item_intelligence = player.equipment.off_hand.equippable.intelligence_bonus
+			else:
+				item_intelligence = '0'
+			if player.equipment.off_hand.item.description != None:
+				item_description  = player.equipment.off_hand.item.description
+			else:
+				item_description  = ' '
+		else:
+			item_slot         = 'Off Hand'
+			item_description  = ' '
+			item_name         = ' '
+			item_damage_min   = '0'
+			item_damage_max   = '0'
+			item_armor        = '0'
+			item_hp           = '0'
+			item_mp           = '0'
+			item_strength     = '0'
+			item_dexterity    = '0'
+			item_stamina      = '0'
+			item_intelligence = '0'
 
 	elif selection == 'head':
-		item_name         = player.equipment.head.name
-
-		item_damage_min   = player.equipment.head.equippable.min_damage_bonus
-		item_damage_max   = player.equipment.head.equippable.max_damage_bonus
-		item_armor        = player.equipment.head.equippable.armor_bonus
-		item_hp           = player.equipment.head.equippable.max_hp_bonus
-		item_mp           = player.equipment.head.equippable.max_mp_bonus
-		item_strength     = player.equipment.head.equippable.strength_bonus
-		item_dexterity    = player.equipment.head.equippable.dexterity_bonus
-		item_stamina      = player.equipment.head.equippable.stamina_bonus
-		item_intelligence = player.equipment.head.equippable.intelligence_bonus
+		if player.equipment.head != None:
+			item_slot = 'Head'
+			if player.equipment.head.name != None:
+				item_name         = player.equipment.head.name
+			else:
+				item_name         = ' '
+			if player.equipment.head.equippable.min_damage_bonus != None:
+				item_damage_min   = player.equipment.head.equippable.min_damage_bonus
+			else:
+				item_damage_min   = '0'
+			if player.equipment.head.equippable.max_damage_bonus != None:
+				item_damage_max   = player.equipment.head.equippable.max_damage_bonus
+			else:
+				item_damage_min   = '0'
+			if player.equipment.head.equippable.armor_bonus != None:
+				item_armor        = player.equipment.head.equippable.armor_bonus
+			else:
+				item_armor        = '0'
+			if player.equipment.head.equippable.max_hp_bonus != None:
+				item_hp           = player.equipment.head.equippable.max_hp_bonus
+			else:
+				item_hp           = '0'
+			if player.equipment.head.equippable.max_mp_bonus != None:
+				item_mp           = player.equipment.head.equippable.max_mp_bonus
+			else:
+				item_mp           = '0'
+			if player.equipment.head.equippable.strength_bonus != None:
+				item_strength     = player.equipment.head.equippable.strength_bonus
+			else:
+				item_strength     = '0'
+			if player.equipment.head.equippable.dexterity_bonus != None:
+				item_dexterity    = player.equipment.head.equippable.dexterity_bonus
+			else:
+				item_dexterity    = '0'
+			if player.equipment.head.equippable.stamina_bonus != None:
+				item_stamina      = player.equipment.head.equippable.stamina_bonus
+			else:
+				item_stamina      = '0'
+			if player.equipment.head.equippable.intelligence_bonus != None:
+				item_intelligence = player.equipment.head.equippable.intelligence_bonus
+			else:
+				item_intelligence = '0'
+			if player.equipment.head.item.description != None:
+				item_description  = player.equipment.head.item.description
+			else:
+				item_description  = ' '
+		else:
+			item_slot         = 'Head'
+			item_description  = ' '
+			item_name         = ' '
+			item_damage_min   = '0'
+			item_damage_max   = '0'
+			item_armor        = '0'
+			item_hp           = '0'
+			item_mp           = '0'
+			item_strength     = '0'
+			item_dexterity    = '0'
+			item_stamina      = '0'
+			item_intelligence = '0'
 
 	elif selection == 'shoulders':
-		item_name         = player.equipment.shoulders.name
-
-		item_damage_min   = player.equipment.shoulders.equippable.min_damage_bonus
-		item_damage_max   = player.equipment.shoulders.equippable.max_damage_bonus
-		item_armor        = player.equipment.shoulders.equippable.armor_bonus
-		item_hp           = player.equipment.shoulders.equippable.max_hp_bonus
-		item_mp           = player.equipment.shoulders.equippable.max_mp_bonus
-		item_strength     = player.equipment.shoulders.equippable.strength_bonus
-		item_dexterity    = player.equipment.shoulders.equippable.dexterity_bonus
-		item_stamina      = player.equipment.shoulders.equippable.stamina_bonus
-		item_intelligence = player.equipment.shoulders.equippable.intelligence_bonus
+		if player.equipment.shoulders != None:
+			item_slot = 'Shoulders'
+			if player.equipment.shoulders.name != None:
+				item_name         = player.equipment.shoulders.name
+			else:
+				item_name         = ' '
+			if player.equipment.shoulders.equippable.min_damage_bonus != None:
+				item_damage_min   = player.equipment.shoulders.equippable.min_damage_bonus
+			else:
+				item_damage_min   = '0'
+			if player.equipment.shoulders.equippable.max_damage_bonus != None:
+				item_damage_max   = player.equipment.shoulders.equippable.max_damage_bonus
+			else:
+				item_damage_min   = '0'
+			if player.equipment.shoulders.equippable.armor_bonus != None:
+				item_armor        = player.equipment.shoulders.equippable.armor_bonus
+			else:
+				item_armor        = '0'
+			if player.equipment.shoulders.equippable.max_hp_bonus != None:
+				item_hp           = player.equipment.shoulders.equippable.max_hp_bonus
+			else:
+				item_hp           = '0'
+			if player.equipment.shoulders.equippable.max_mp_bonus != None:
+				item_mp           = player.equipment.shoulders.equippable.max_mp_bonus
+			else:
+				item_mp           = '0'
+			if player.equipment.shoulders.equippable.strength_bonus != None:
+				item_strength     = player.equipment.shoulders.equippable.strength_bonus
+			else:
+				item_strength     = '0'
+			if player.equipment.shoulders.equippable.dexterity_bonus != None:
+				item_dexterity    = player.equipment.shoulders.equippable.dexterity_bonus
+			else:
+				item_dexterity    = '0'
+			if player.equipment.shoulders.equippable.stamina_bonus != None:
+				item_stamina      = player.equipment.shoulders.equippable.stamina_bonus
+			else:
+				item_stamina      = '0'
+			if player.equipment.shoulders.equippable.intelligence_bonus != None:
+				item_intelligence = player.equipment.shoulders.equippable.intelligence_bonus
+			else:
+				item_intelligence = '0'
+			if player.equipment.shoulders.item.description != None:
+				item_description  = player.equipment.shoulders.item.description
+			else:
+				item_description  = ' '
+		else:
+			item_slot         = 'Head'
+			item_description  = ' '
+			item_name         = ' '
+			item_damage_min   = '0'
+			item_damage_max   = '0'
+			item_armor        = '0'
+			item_hp           = '0'
+			item_mp           = '0'
+			item_strength     = '0'
+			item_dexterity    = '0'
+			item_stamina      = '0'
+			item_intelligence = '0'
 
 	elif selection == 'arms':
-		item_name         = player.equipment.arms.name
-
-		item_damage_min   = player.equipment.arms.equippable.min_damage_bonus
-		item_damage_max   = player.equipment.arms.equippable.max_damage_bonus
-		item_armor        = player.equipment.arms.equippable.armor_bonus
-		item_hp           = player.equipment.arms.equippable.max_hp_bonus
-		item_mp           = player.equipment.arms.equippable.max_mp_bonus
-		item_strength     = player.equipment.arms.equippable.strength_bonus
-		item_dexterity    = player.equipment.arms.equippable.dexterity_bonus
-		item_stamina      = player.equipment.arms.equippable.stamina_bonus
-		item_intelligence = player.equipment.arms.equippable.intelligence_bonus
+		if player.equipment.arms != None:
+			item_slot = 'Arms'
+			if player.equipment.arms.name != None:
+				item_name         = player.equipment.arms.name
+			else:
+				item_name         = ' '
+			if player.equipment.arms.equippable.min_damage_bonus != None:
+				item_damage_min   = player.equipment.arms.equippable.min_damage_bonus
+			else:
+				item_damage_min   = '0'
+			if player.equipment.arms.equippable.max_damage_bonus != None:
+				item_damage_max   = player.equipment.arms.equippable.max_damage_bonus
+			else:
+				item_damage_min   = '0'
+			if player.equipment.arms.equippable.armor_bonus != None:
+				item_armor        = player.equipment.arms.equippable.armor_bonus
+			else:
+				item_armor        = '0'
+			if player.equipment.arms.equippable.max_hp_bonus != None:
+				item_hp           = player.equipment.arms.equippable.max_hp_bonus
+			else:
+				item_hp           = '0'
+			if player.equipment.arms.equippable.max_mp_bonus != None:
+				item_mp           = player.equipment.arms.equippable.max_mp_bonus
+			else:
+				item_mp           = '0'
+			if player.equipment.arms.equippable.strength_bonus != None:
+				item_strength     = player.equipment.arms.equippable.strength_bonus
+			else:
+				item_strength     = '0'
+			if player.equipment.arms.equippable.dexterity_bonus != None:
+				item_dexterity    = player.equipment.arms.equippable.dexterity_bonus
+			else:
+				item_dexterity    = '0'
+			if player.equipment.arms.equippable.stamina_bonus != None:
+				item_stamina      = player.equipment.arms.equippable.stamina_bonus
+			else:
+				item_stamina      = '0'
+			if player.equipment.arms.equippable.intelligence_bonus != None:
+				item_intelligence = player.equipment.arms.equippable.intelligence_bonus
+			else:
+				item_intelligence = '0'
+			if player.equipment.arms.item.description != None:
+				item_description  = player.equipment.arms.item.description
+			else:
+				item_description  = ' '
+		else:
+			item_slot         = 'Arms'
+			item_description  = ' '
+			item_name         = ' '
+			item_damage_min   = '0'
+			item_damage_max   = '0'
+			item_armor        = '0'
+			item_hp           = '0'
+			item_mp           = '0'
+			item_strength     = '0'
+			item_dexterity    = '0'
+			item_stamina      = '0'
+			item_intelligence = '0'
 
 	elif selection == 'wrists':
-		item_name         = player.equipment.wrists.name
-
-		item_damage_min   = player.equipment.wrists.equippable.min_damage_bonus
-		item_damage_max   = player.equipment.wrists.equippable.max_damage_bonus
-		item_armor        = player.equipment.wrists.equippable.armor_bonus
-		item_hp           = player.equipment.wrists.equippable.max_hp_bonus
-		item_mp           = player.equipment.wrists.equippable.max_mp_bonus
-		item_strength     = player.equipment.wrists.equippable.strength_bonus
-		item_dexterity    = player.equipment.wrists.equippable.dexterity_bonus
-		item_stamina      = player.equipment.wrists.equippable.stamina_bonus
-		item_intelligence = player.equipment.wrists.equippable.intelligence_bonus
+		if player.equipment.wrists != None:
+			item_slot = 'Wrists'
+			if player.equipment.wrists.name != None:
+				item_name         = player.equipment.wrists.name
+			else:
+				item_name         = ' '
+			if player.equipment.wrists.equippable.min_damage_bonus != None:
+				item_damage_min   = player.equipment.wrists.equippable.min_damage_bonus
+			else:
+				item_damage_min   = '0'
+			if player.equipment.wrists.equippable.max_damage_bonus != None:
+				item_damage_max   = player.equipment.wrists.equippable.max_damage_bonus
+			else:
+				item_damage_min   = '0'
+			if player.equipment.wrists.equippable.armor_bonus != None:
+				item_armor        = player.equipment.wrists.equippable.armor_bonus
+			else:
+				item_armor        = '0'
+			if player.equipment.wrists.equippable.max_hp_bonus != None:
+				item_hp           = player.equipment.wrists.equippable.max_hp_bonus
+			else:
+				item_hp           = '0'
+			if player.equipment.wrists.equippable.max_mp_bonus != None:
+				item_mp           = player.equipment.wrists.equippable.max_mp_bonus
+			else:
+				item_mp           = '0'
+			if player.equipment.wrists.equippable.strength_bonus != None:
+				item_strength     = player.equipment.wrists.equippable.strength_bonus
+			else:
+				item_strength     = '0'
+			if player.equipment.wrists.equippable.dexterity_bonus != None:
+				item_dexterity    = player.equipment.wrists.equippable.dexterity_bonus
+			else:
+				item_dexterity    = '0'
+			if player.equipment.wrists.equippable.stamina_bonus != None:
+				item_stamina      = player.equipment.wrists.equippable.stamina_bonus
+			else:
+				item_stamina      = '0'
+			if player.equipment.wrists.equippable.intelligence_bonus != None:
+				item_intelligence = player.equipment.wrists.equippable.intelligence_bonus
+			else:
+				item_intelligence = '0'
+			if player.equipment.wrists.item.description != None:
+				item_description  = player.equipment.wrists.item.description
+			else:
+				item_description  = ' '
+		else:
+			item_slot         = 'Wrists'
+			item_description  = ' '
+			item_name         = ' '
+			item_damage_min   = '0'
+			item_damage_max   = '0'
+			item_armor        = '0'
+			item_hp           = '0'
+			item_mp           = '0'
+			item_strength     = '0'
+			item_dexterity    = '0'
+			item_stamina      = '0'
+			item_intelligence = '0'
 
 	elif selection == 'hands':
-		item_name         = player.equipment.hands.name
-
-		item_damage_min   = player.equipment.hands.equippable.min_damage_bonus
-		item_damage_max   = player.equipment.hands.equippable.max_damage_bonus
-		item_armor        = player.equipment.hands.equippable.armor_bonus
-		item_hp           = player.equipment.hands.equippable.max_hp_bonus
-		item_mp           = player.equipment.hands.equippable.max_mp_bonus
-		item_strength     = player.equipment.hands.equippable.strength_bonus
-		item_dexterity    = player.equipment.hands.equippable.dexterity_bonus
-		item_stamina      = player.equipment.hands.equippable.stamina_bonus
-		item_intelligence = player.equipment.hands.equippable.intelligence_bonus
+		if player.equipment.hands != None:
+			item_slot = 'Hands'
+			if player.equipment.hands.name != None:
+				item_name         = player.equipment.hands.name
+			else:
+				item_name         = ' '
+			if player.equipment.hands.equippable.min_damage_bonus != None:
+				item_damage_min   = player.equipment.hands.equippable.min_damage_bonus
+			else:
+				item_damage_min   = '0'
+			if player.equipment.hands.equippable.max_damage_bonus != None:
+				item_damage_max   = player.equipment.hands.equippable.max_damage_bonus
+			else:
+				item_damage_min   = '0'
+			if player.equipment.hands.equippable.armor_bonus != None:
+				item_armor        = player.equipment.hands.equippable.armor_bonus
+			else:
+				item_armor        = '0'
+			if player.equipment.hands.equippable.max_hp_bonus != None:
+				item_hp           = player.equipment.hands.equippable.max_hp_bonus
+			else:
+				item_hp           = '0'
+			if player.equipment.hands.equippable.max_mp_bonus != None:
+				item_mp           = player.equipment.hands.equippable.max_mp_bonus
+			else:
+				item_mp           = '0'
+			if player.equipment.hands.equippable.strength_bonus != None:
+				item_strength     = player.equipment.hands.equippable.strength_bonus
+			else:
+				item_strength     = '0'
+			if player.equipment.hands.equippable.dexterity_bonus != None:
+				item_dexterity    = player.equipment.hands.equippable.dexterity_bonus
+			else:
+				item_dexterity    = '0'
+			if player.equipment.hands.equippable.stamina_bonus != None:
+				item_stamina      = player.equipment.hands.equippable.stamina_bonus
+			else:
+				item_stamina      = '0'
+			if player.equipment.hands.equippable.intelligence_bonus != None:
+				item_intelligence = player.equipment.hands.equippable.intelligence_bonus
+			else:
+				item_intelligence = '0'
+			if player.equipment.hands.item.description != None:
+				item_description  = player.equipment.hands.item.description
+			else:
+				item_description  = ' '
+		else:
+			item_slot         = 'Hands'
+			item_description  = ' '
+			item_name         = ' '
+			item_damage_min   = '0'
+			item_damage_max   = '0'
+			item_armor        = '0'
+			item_hp           = '0'
+			item_mp           = '0'
+			item_strength     = '0'
+			item_dexterity    = '0'
+			item_stamina      = '0'
+			item_intelligence = '0'
 
 	elif selection == 'chest':
-		item_name         = player.equipment.chest.name
-
-		item_damage_min   = player.equipment.chest.equippable.min_damage_bonus
-		item_damage_max   = player.equipment.chest.equippable.max_damage_bonus
-		item_armor        = player.equipment.chest.equippable.armor_bonus
-		item_hp           = player.equipment.chest.equippable.max_hp_bonus
-		item_mp           = player.equipment.chest.equippable.max_mp_bonus
-		item_strength     = player.equipment.chest.equippable.strength_bonus
-		item_dexterity    = player.equipment.chest.equippable.dexterity_bonus
-		item_stamina      = player.equipment.chest.equippable.stamina_bonus
-		item_intelligence = player.equipment.chest.equippable.intelligence_bonus
+		if player.equipment.chest != None:
+			item_slot = 'Chest'
+			if player.equipment.chest.name != None:
+				item_name         = player.equipment.chest.name
+			else:
+				item_name         = ' '
+			if player.equipment.chest.equippable.min_damage_bonus != None:
+				item_damage_min   = player.equipment.chest.equippable.min_damage_bonus
+			else:
+				item_damage_min   = '0'
+			if player.equipment.chest.equippable.max_damage_bonus != None:
+				item_damage_max   = player.equipment.chest.equippable.max_damage_bonus
+			else:
+				item_damage_min   = '0'
+			if player.equipment.chest.equippable.armor_bonus != None:
+				item_armor        = player.equipment.chest.equippable.armor_bonus
+			else:
+				item_armor        = '0'
+			if player.equipment.chest.equippable.max_hp_bonus != None:
+				item_hp           = player.equipment.chest.equippable.max_hp_bonus
+			else:
+				item_hp           = '0'
+			if player.equipment.chest.equippable.max_mp_bonus != None:
+				item_mp           = player.equipment.chest.equippable.max_mp_bonus
+			else:
+				item_mp           = '0'
+			if player.equipment.chest.equippable.strength_bonus != None:
+				item_strength     = player.equipment.chest.equippable.strength_bonus
+			else:
+				item_strength     = '0'
+			if player.equipment.chest.equippable.dexterity_bonus != None:
+				item_dexterity    = player.equipment.chest.equippable.dexterity_bonus
+			else:
+				item_dexterity    = '0'
+			if player.equipment.chest.equippable.stamina_bonus != None:
+				item_stamina      = player.equipment.chest.equippable.stamina_bonus
+			else:
+				item_stamina      = '0'
+			if player.equipment.chest.equippable.intelligence_bonus != None:
+				item_intelligence = player.equipment.chest.equippable.intelligence_bonus
+			else:
+				item_intelligence = '0'
+			if player.equipment.chest.item.description != None:
+				item_description  = player.equipment.chest.item.description
+			else:
+				item_description  = ' '
+		else:
+			item_slot         = 'Chest'
+			item_description  = ' '
+			item_name         = ' '
+			item_damage_min   = '0'
+			item_damage_max   = '0'
+			item_armor        = '0'
+			item_hp           = '0'
+			item_mp           = '0'
+			item_strength     = '0'
+			item_dexterity    = '0'
+			item_stamina      = '0'
+			item_intelligence = '0'
 
 	elif selection == 'belt':
-		item_name         = player.equipment.belt.name
-
-		item_damage_min   = player.equipment.belt.equippable.min_damage_bonus
-		item_damage_max   = player.equipment.belt.equippable.max_damage_bonus
-		item_armor        = player.equipment.belt.equippable.armor_bonus
-		item_hp           = player.equipment.belt.equippable.max_hp_bonus
-		item_mp           = player.equipment.belt.equippable.max_mp_bonus
-		item_strength     = player.equipment.belt.equippable.strength_bonus
-		item_dexterity    = player.equipment.belt.equippable.dexterity_bonus
-		item_stamina      = player.equipment.belt.equippable.stamina_bonus
-		item_intelligence = player.equipment.belt.equippable.intelligence_bonus
+		if player.equipment.belt != None:
+			item_slot = 'Belt'
+			if player.equipment.belt.name != None:
+				item_name         = player.equipment.belt.name
+			else:
+				item_name         = ' '
+			if player.equipment.belt.equippable.min_damage_bonus != None:
+				item_damage_min   = player.equipment.belt.equippable.min_damage_bonus
+			else:
+				item_damage_min   = '0'
+			if player.equipment.belt.equippable.max_damage_bonus != None:
+				item_damage_max   = player.equipment.belt.equippable.max_damage_bonus
+			else:
+				item_damage_min   = '0'
+			if player.equipment.belt.equippable.armor_bonus != None:
+				item_armor        = player.equipment.belt.equippable.armor_bonus
+			else:
+				item_armor        = '0'
+			if player.equipment.belt.equippable.max_hp_bonus != None:
+				item_hp           = player.equipment.belt.equippable.max_hp_bonus
+			else:
+				item_hp           = '0'
+			if player.equipment.belt.equippable.max_mp_bonus != None:
+				item_mp           = player.equipment.belt.equippable.max_mp_bonus
+			else:
+				item_mp           = '0'
+			if player.equipment.belt.equippable.strength_bonus != None:
+				item_strength     = player.equipment.belt.equippable.strength_bonus
+			else:
+				item_strength     = '0'
+			if player.equipment.belt.equippable.dexterity_bonus != None:
+				item_dexterity    = player.equipment.belt.equippable.dexterity_bonus
+			else:
+				item_dexterity    = '0'
+			if player.equipment.belt.equippable.stamina_bonus != None:
+				item_stamina      = player.equipment.belt.equippable.stamina_bonus
+			else:
+				item_stamina      = '0'
+			if player.equipment.belt.equippable.intelligence_bonus != None:
+				item_intelligence = player.equipment.belt.equippable.intelligence_bonus
+			else:
+				item_intelligence = '0'
+			if player.equipment.belt.item.description != None:
+				item_description  = player.equipment.belt.item.description
+			else:
+				item_description  = ' '
+		else:
+			item_slot         = 'Belt'
+			item_description  = ' '
+			item_name         = ' '
+			item_damage_min   = '0'
+			item_damage_max   = '0'
+			item_armor        = '0'
+			item_hp           = '0'
+			item_mp           = '0'
+			item_strength     = '0'
+			item_dexterity    = '0'
+			item_stamina      = '0'
+			item_intelligence = '0'
 
 	elif selection == 'legs':
-		item_name         = player.equipment.legs.name
-
-		item_damage_min   = player.equipment.legs.equippable.min_damage_bonus
-		item_damage_max   = player.equipment.legs.equippable.max_damage_bonus
-		item_armor        = player.equipment.legs.equippable.armor_bonus
-		item_hp           = player.equipment.legs.equippable.max_hp_bonus
-		item_mp           = player.equipment.legs.equippable.max_mp_bonus
-		item_strength     = player.equipment.legs.equippable.strength_bonus
-		item_dexterity    = player.equipment.legs.equippable.dexterity_bonus
-		item_stamina      = player.equipment.legs.equippable.stamina_bonus
-		item_intelligence = player.equipment.legs.equippable.intelligence_bonus
+		if player.equipment.legs != None:
+			item_slot = 'Legs'
+			if player.equipment.legs.name != None:
+				item_name         = player.equipment.legs.name
+			else:
+				item_name         = ' '
+			if player.equipment.legs.equippable.min_damage_bonus != None:
+				item_damage_min   = player.equipment.legs.equippable.min_damage_bonus
+			else:
+				item_damage_min   = '0'
+			if player.equipment.legs.equippable.max_damage_bonus != None:
+				item_damage_max   = player.equipment.legs.equippable.max_damage_bonus
+			else:
+				item_damage_min   = '0'
+			if player.equipment.legs.equippable.armor_bonus != None:
+				item_armor        = player.equipment.legs.equippable.armor_bonus
+			else:
+				item_armor        = '0'
+			if player.equipment.legs.equippable.max_hp_bonus != None:
+				item_hp           = player.equipment.legs.equippable.max_hp_bonus
+			else:
+				item_hp           = '0'
+			if player.equipment.legs.equippable.max_mp_bonus != None:
+				item_mp           = player.equipment.legs.equippable.max_mp_bonus
+			else:
+				item_mp           = '0'
+			if player.equipment.legs.equippable.strength_bonus != None:
+				item_strength     = player.equipment.legs.equippable.strength_bonus
+			else:
+				item_strength     = '0'
+			if player.equipment.legs.equippable.dexterity_bonus != None:
+				item_dexterity    = player.equipment.legs.equippable.dexterity_bonus
+			else:
+				item_dexterity    = '0'
+			if player.equipment.legs.equippable.stamina_bonus != None:
+				item_stamina      = player.equipment.legs.equippable.stamina_bonus
+			else:
+				item_stamina      = '0'
+			if player.equipment.legs.equippable.intelligence_bonus != None:
+				item_intelligence = player.equipment.legs.equippable.intelligence_bonus
+			else:
+				item_intelligence = '0'
+			if player.equipment.legs.item.description != None:
+				item_description  = player.equipment.legs.item.description
+			else:
+				item_description  = ' '
+		else:
+			item_slot         = 'Legs'
+			item_description  = ' '
+			item_name         = ' '
+			item_damage_min   = '0'
+			item_damage_max   = '0'
+			item_armor        = '0'
+			item_hp           = '0'
+			item_mp           = '0'
+			item_strength     = '0'
+			item_dexterity    = '0'
+			item_stamina      = '0'
+			item_intelligence = '0'
 
 	elif selection == 'feet':
-		item_name         = player.equipment.feet.name
-
-		item_damage_min   = player.equipment.feet.equippable.min_damage_bonus
-		item_damage_max   = player.equipment.feet.equippable.max_damage_bonus
-		item_armor        = player.equipment.feet.equippable.armor_bonus
-		item_hp           = player.equipment.feet.equippable.max_hp_bonus
-		item_mp           = player.equipment.feet.equippable.max_mp_bonus
-		item_strength     = player.equipment.feet.equippable.strength_bonus
-		item_dexterity    = player.equipment.feet.equippable.dexterity_bonus
-		item_stamina      = player.equipment.feet.equippable.stamina_bonus
-		item_intelligence = player.equipment.feet.equippable.intelligence_bonus
+		if player.equipment.head != None:
+			item_slot = 'Feet'
+			if player.equipment.feet.name != None:
+				item_name         = player.equipment.feet.name
+			else:
+				item_name         = ' '
+			if player.equipment.feet.equippable.min_damage_bonus != None:
+				item_damage_min   = player.equipment.feet.equippable.min_damage_bonus
+			else:
+				item_damage_min   = '0'
+			if player.equipment.feet.equippable.max_damage_bonus != None:
+				item_damage_max   = player.equipment.feet.equippable.max_damage_bonus
+			else:
+				item_damage_min   = '0'
+			if player.equipment.feet.equippable.armor_bonus != None:
+				item_armor        = player.equipment.feet.equippable.armor_bonus
+			else:
+				item_armor        = '0'
+			if player.equipment.feet.equippable.max_hp_bonus != None:
+				item_hp           = player.equipment.feet.equippable.max_hp_bonus
+			else:
+				item_hp           = '0'
+			if player.equipment.feet.equippable.max_mp_bonus != None:
+				item_mp           = player.equipment.feet.equippable.max_mp_bonus
+			else:
+				item_mp           = '0'
+			if player.equipment.feet.equippable.strength_bonus != None:
+				item_strength     = player.equipment.feet.equippable.strength_bonus
+			else:
+				item_strength     = '0'
+			if player.equipment.feet.equippable.dexterity_bonus != None:
+				item_dexterity    = player.equipment.feet.equippable.dexterity_bonus
+			else:
+				item_dexterity    = '0'
+			if player.equipment.feet.equippable.stamina_bonus != None:
+				item_stamina      = player.equipment.feet.equippable.stamina_bonus
+			else:
+				item_stamina      = '0'
+			if player.equipment.feet.equippable.intelligence_bonus != None:
+				item_intelligence = player.equipment.feet.equippable.intelligence_bonus
+			else:
+				item_intelligence = '0'
+			if player.equipment.feet.item.description != None:
+				item_description  = player.equipment.feet.item.description
+			else:
+				item_description  = ' '
+		else:
+			item_slot         = 'Feet'
+			item_description  = ' '
+			item_name         = ' '
+			item_damage_min   = '0'
+			item_damage_max   = '0'
+			item_armor        = '0'
+			item_hp           = '0'
+			item_mp           = '0'
+			item_strength     = '0'
+			item_dexterity    = '0'
+			item_stamina      = '0'
+			item_intelligence = '0'
 
 	elif selection == 'back':
-		item_name         = player.equipment.back.name
-
-		item_damage_min   = player.equipment.back.equippable.min_damage_bonus
-		item_damage_max   = player.equipment.back.equippable.max_damage_bonus
-		item_armor        = player.equipment.back.equippable.armor_bonus
-		item_hp           = player.equipment.back.equippable.max_hp_bonus
-		item_mp           = player.equipment.back.equippable.max_mp_bonus
-		item_strength     = player.equipment.back.equippable.strength_bonus
-		item_dexterity    = player.equipment.back.equippable.dexterity_bonus
-		item_stamina      = player.equipment.back.equippable.stamina_bonus
-		item_intelligence = player.equipment.back.equippable.intelligence_bonus
+		if player.equipment.back != None:
+			item_slot = 'Back'
+			if player.equipment.back.name != None:
+				item_name         = player.equipment.back.name
+			else:
+				item_name         = ' '
+			if player.equipment.back.equippable.min_damage_bonus != None:
+				item_damage_min   = player.equipment.back.equippable.min_damage_bonus
+			else:
+				item_damage_min   = '0'
+			if player.equipment.back.equippable.max_damage_bonus != None:
+				item_damage_max   = player.equipment.back.equippable.max_damage_bonus
+			else:
+				item_damage_min   = '0'
+			if player.equipment.back.equippable.armor_bonus != None:
+				item_armor        = player.equipment.back.equippable.armor_bonus
+			else:
+				item_armor        = '0'
+			if player.equipment.back.equippable.max_hp_bonus != None:
+				item_hp           = player.equipment.back.equippable.max_hp_bonus
+			else:
+				item_hp           = '0'
+			if player.equipment.back.equippable.max_mp_bonus != None:
+				item_mp           = player.equipment.back.equippable.max_mp_bonus
+			else:
+				item_mp           = '0'
+			if player.equipment.back.equippable.strength_bonus != None:
+				item_strength     = player.equipment.back.equippable.strength_bonus
+			else:
+				item_strength     = '0'
+			if player.equipment.back.equippable.dexterity_bonus != None:
+				item_dexterity    = player.equipment.back.equippable.dexterity_bonus
+			else:
+				item_dexterity    = '0'
+			if player.equipment.back.equippable.stamina_bonus != None:
+				item_stamina      = player.equipment.back.equippable.stamina_bonus
+			else:
+				item_stamina      = '0'
+			if player.equipment.back.equippable.intelligence_bonus != None:
+				item_intelligence = player.equipment.back.equippable.intelligence_bonus
+			else:
+				item_intelligence = '0'
+			if player.equipment.back.item.description != None:
+				item_description  = player.equipment.back.item.description
+			else:
+				item_description  = ' '
+		else:
+			item_slot         = 'Back'
+			item_description  = ' '
+			item_name         = ' '
+			item_damage_min   = '0'
+			item_damage_max   = '0'
+			item_armor        = '0'
+			item_hp           = '0'
+			item_mp           = '0'
+			item_strength     = '0'
+			item_dexterity    = '0'
+			item_stamina      = '0'
+			item_intelligence = '0'
 
 
 	y = 0
 	window = libtcod.console_new(equipment_details_screen_width, equipment_details_screen_height)
 
-	libtcod.console_set_default_background(window, libtcod.darker_blue)
+	libtcod.console_set_default_background(window, libtcod.darkest_blue)
 	libtcod.console_set_default_foreground(window, libtcod.white)
 	libtcod.console_clear(window)
 
 
 	libtcod.console_print_rect_ex(window, 0, y, equipment_details_screen_width, equipment_details_screen_height, libtcod.BKGND_NONE,
 									libtcod.LEFT, item_name)
+
+	y += 2
+
+	libtcod.console_print_rect_ex(window, 0, y, equipment_details_screen_width, equipment_details_screen_height, libtcod.BKGND_NONE,
+									libtcod.LEFT, item_slot)
 
 	y += 2
 
@@ -580,17 +1160,17 @@ def equipment_details_screen(player, selection, equipment_details_screen_width, 
 	y += 2
 
 	libtcod.console_print_rect_ex(window, 0, y, equipment_details_screen_width, equipment_details_screen_height, libtcod.BKGND_NONE,
-									libtcod.LEFT, 'Strength: {0}'.format(item_strength))
+									libtcod.LEFT, 'Strength:     {0}'.format(item_strength))
 
 	y += 1
 
 	libtcod.console_print_rect_ex(window, 0, y, equipment_details_screen_width, equipment_details_screen_height, libtcod.BKGND_NONE,
-									libtcod.LEFT, 'Dexterity: {0}'.format(item_dexterity))
+									libtcod.LEFT, 'Dexterity:    {0}'.format(item_dexterity))
 
 	y += 1
 
 	libtcod.console_print_rect_ex(window, 0, y, equipment_details_screen_width, equipment_details_screen_height, libtcod.BKGND_NONE,
-									libtcod.LEFT, 'Stamina: {0}'.format(item_stamina))
+									libtcod.LEFT, 'Stamina:      {0}'.format(item_stamina))
 
 	y += 1
 

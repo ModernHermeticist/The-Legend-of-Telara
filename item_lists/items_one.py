@@ -16,7 +16,7 @@ from components.item_functions import cast_confuse, cast_fireball, cast_lightnin
 def get_early_items(dungeon_level):
 
 	item_chances = {
-		'healing_potion':            from_dungeon_level([[55,1]], dungeon_level),
+		'healing_potion':            from_dungeon_level([[40,1]], dungeon_level),
 
 
 		'broken_iron_sword':         from_dungeon_level([[15,2]], dungeon_level),
