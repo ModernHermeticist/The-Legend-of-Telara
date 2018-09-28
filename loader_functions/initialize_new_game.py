@@ -79,6 +79,13 @@ def get_constants():
 		'targeting_range':      libtcod.Color(152, 251, 152)  
 	}
 
+	tiles = {
+		'dark_wall':            259,
+		'dark_ground':          257,
+		'light_wall':           260,
+		'light_ground':         258
+	}
+
 	sexes = ['Male',
 		     'Female']
 
@@ -117,6 +124,7 @@ def get_constants():
 				'animation_distance':       animation_distance,
 				'max_monsters_per_room':    max_monsters_per_room,
 				'max_items_per_room':       max_items_per_room,
+				'tiles':                    tiles,
 				'colors':                   colors,
 				'sexes':                    sexes,
 				'races':                    races,

@@ -74,7 +74,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 		render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse_panel, entities, 
 				   player, game_map, fov_map, fov_recompute, message_log, constants['screen_width'], 
 				   constants['screen_height'], constants['bar_width'], constants['panel_height'], 
-				   constants['panel_y'], mouse, constants['colors'], game_state, npc, targeting_item, item, equipment_choice)
+				   constants['panel_y'], mouse, constants['tiles'], constants['colors'], game_state, npc, targeting_item, item, equipment_choice)
 
 
 		fov_recompute = False
@@ -489,7 +489,7 @@ def main():
 	#mixer.music.play(loops=0, start=0.0)
 	#mixer.music.set_volume(0.01)
 
-	libtcod.console_set_custom_font('terminal16x16_gs_ro.png', libtcod.FONT_LAYOUT_ASCII_INROW | libtcod.FONT_TYPE_GREYSCALE, 16, 16)
+	libtcod.console_set_custom_font('terminal16x16_gs_ro.png', libtcod.FONT_LAYOUT_ASCII_INROW | libtcod.FONT_TYPE_GREYSCALE, 16, 17)
 
 
 	libtcod.console_init_root(constants['screen_width'], constants['screen_height'], constants['window_title'], False, libtcod.RENDERER_OPENGL)
