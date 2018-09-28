@@ -26,7 +26,7 @@ def choose_easy_monster(monster_choice, dungeon_level, x, y):
 									max_damage=2+(dungeon_level-1), xp=20+(2*(dungeon_level-1)))
 		ai_component = BasicMonster()
 
-		monster = Entity(x, y, 'n', libtcod.desaturated_green, 'Gnoll', alive=True, blocks=True,
+		monster = Entity(x, y, 3, libtcod.desaturated_green, 'Gnoll', alive=True, blocks=True,
 						 render_order=RenderOrder.ACTOR, combat_class=class_component, ai=ai_component)
 
 	elif monster_choice == 'orc':
@@ -41,7 +41,7 @@ def choose_easy_monster(monster_choice, dungeon_level, x, y):
 									max_damage=4+(dungeon_level-1), xp=100+(5*(dungeon_level-1)))
 		ai_component = BasicMonster()
 
-		monster = Entity(x, y, 'T', libtcod.darker_green, 'Troll', alive=True, blocks=True, combat_class=class_component,
+		monster = Entity(x, y, 4, libtcod.darker_green, 'Troll', alive=True, blocks=True, combat_class=class_component,
 						 render_order=RenderOrder.ACTOR, ai=ai_component)
 
 	return monster
