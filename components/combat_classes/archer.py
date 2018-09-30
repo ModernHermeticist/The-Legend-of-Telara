@@ -23,6 +23,8 @@ class Archer():
 		self.xp =                     xp
 		self.class_name =             class_name
 
+		self.turns_until_rest =       0
+
 	@property
 	def max_hp(self):
 		if self.owner and self.owner.equipment:
@@ -112,6 +114,11 @@ class Archer():
 		if self.hp <= 0:
 			results.append({'dead': self.owner, 'xp': self.xp})
 
+		if self.turns_until_rest == 5:
+			pass
+		else:
+			self.turns_until_rest = 5
+
 		return results
 
 	def heal(self, amount):
@@ -119,6 +126,21 @@ class Archer():
 
 		if self.hp > self.max_hp:
 			self.hp = self.max_hp
+
+	def rest(self):
+		if self.turns_until_rest != 0:
+			return 'The recent combat keeps you from resting.'
+		rest_max = int(0.55 * self.max_hp) 
+		if self.hp >= rest_max:
+			return 'Resting can only soothe your wounds so much.'
+
+		amount = randint(1, int(self.max_hp / 20))
+		self.hp += amount
+
+		if self.hp > rest_max:
+			self.hp = rest_max
+
+		return 'Resting soothes your wounds.'
 
 	def attack(self, target):
 		results = []

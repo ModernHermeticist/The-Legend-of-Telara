@@ -130,20 +130,24 @@ def render_all(con, message_panel, char_info_panel, area_info_panel, under_mouse
 	"""
 
 
-def clear_all(con, entities):
+def clear_all(con, entities, fov_map, game_map):
 	for entity in entities:
-		clear_entity(con, entity)
+		clear_entity(con, entity, fov_map, game_map)
 
 
 def draw_entity(con, entity, fov_map, game_map):
 	if libtcod.map_is_in_fov(fov_map, entity.x, entity.y) or (entity.stairs and game_map.tiles[entity.x][entity.y].explored):
-		libtcod.console_set_default_foreground(con, entity.color)
-		libtcod.console_set_char_background(con, entity.x, entity.y, libtcod.white, libtcod.BKGND_ALPHA(1.0))
-		libtcod.console_put_char(con, entity.x, entity.y, entity.char, libtcod.BKGND_OVERLAY)
+		libtcod.console_put_char_ex(con, entity.x, entity.y, entity.char, libtcod.white, libtcod.black)
 
-def clear_entity(con, entity):
+def clear_entity(con, entity, fov_map, game_map):
 	# Erase the character that represents this object
-	libtcod.console_put_char(con, entity.x, entity.y, ' ', libtcod.BKGND_NONE)
+	visible = libtcod.map_is_in_fov(fov_map, entity.x, entity.y)
+	if visible:
+		libtcod.console_put_char_ex(con, entity.x, entity.y, 257, libtcod.white, libtcod.black)
+	elif game_map.tiles[entity.x][entity.y].explored:
+		libtcod.console_put_char_ex(con, entity.x, entity.y, 256, libtcod.white, libtcod.black)
+	else:
+		libtcod.console_put_char_ex(con, entity.x, entity.y, ' ', libtcod.white, libtcod.black)
 
 
 def get_names_under_mouse(mouse, entities, fov_map):
@@ -192,8 +196,8 @@ def targeting_overlay(con, mouse, player, game_map, fov_map, colors, targeting_i
 			if game_map.tiles[player.x-x+targeting_range_offset][player.y-y+targeting_range_offset].explored and \
 			libtcod.map_is_in_fov(fov_map, player.x-x+targeting_range_offset, player.y-y+targeting_range_offset) and not \
 			game_map.tiles[player.x-x+targeting_range_offset][player.y-y+targeting_range_offset].blocked:
-				libtcod.console_set_char_background(con, player.x-x+targeting_range_offset, 
-					player.y-y+targeting_range_offset, colors.get('targeting_range'), libtcod.BKGND_SET)
+				libtcod.console_put_char_ex(con, player.x-x+targeting_range_offset, 
+					player.y-y+targeting_range_offset, ' ', libtcod.green, libtcod.green)
 
 
 	if libtcod.map_is_in_fov(fov_map, mouse.cx, mouse.cy):
@@ -201,8 +205,8 @@ def targeting_overlay(con, mouse, player, game_map, fov_map, colors, targeting_i
 			for x in range(area_of_effect):
 				if game_map.tiles[mouse.cx-x+area_of_effect_offset][mouse.cy-y+area_of_effect_offset].explored and \
 				libtcod.map_is_in_fov(fov_map, mouse.cx-x+area_of_effect_offset, mouse.cy-y+area_of_effect_offset):
-					libtcod.console_set_char_background(con, mouse.cx-x+area_of_effect_offset, 
-						mouse.cy-y+area_of_effect_offset, colors.get('area_of_effect'), libtcod.BKGND_SET)
+					libtcod.console_put_char_ex(con, mouse.cx-x+area_of_effect_offset, 
+						mouse.cy-y+area_of_effect_offset, ' ', libtcod.red, libtcod.red)
 """
 def damage_overlay(con, attack_animation_x, attack_animation_y, animation_distance):
 

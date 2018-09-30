@@ -51,6 +51,12 @@ class GameMap:
 		return tiles
 
 	def make_map(self, max_rooms, room_min_size, room_max_size, map_width, map_height, player, entities):
+		stairs_up          =  260
+		stairs_down        =  261
+		mysterious_old_man =  284
+		generic_bow        =  277
+
+
 		rooms = []
 		num_rooms = 0
 
@@ -123,13 +129,13 @@ class GameMap:
 		self.stairs_up_y = player.y
 
 		stairs_component = Stairs(self.dungeon_level + 1)
-		down_stairs = Entity(self.stairs_down_x, self.stairs_down_y, '>', libtcod.black, 'Stairs Down', 
+		down_stairs = Entity(self.stairs_down_x, self.stairs_down_y, stairs_down, libtcod.white, 'Stairs Down', 
 							render_order=RenderOrder.STAIRS, stairs=stairs_component)
 		entities.append(down_stairs)
 
 		if self.dungeon_level > 1:
 			stairs_component = Stairs(self.dungeon_level - 1)
-			up_stairs = Entity(self.stairs_up_x, self.stairs_up_y, '<', libtcod.black, 'Stairs Up', 
+			up_stairs = Entity(self.stairs_up_x, self.stairs_up_y, stairs_up, libtcod.white, 'Stairs Up', 
 								render_order=RenderOrder.STAIRS, stairs=stairs_component)
 			entities.append(up_stairs)
 
@@ -175,8 +181,8 @@ class GameMap:
 
 		if self.dungeon_level == 1:
 			dialogue_component = Dialogue(character='The Story Teller', scene='Intro')
-			story_teller = Entity(center_of_last_room_x - 1, center_of_last_room_y - 1, '@', libtcod.orange, 'The Story Teller', 
-							blocks=True, render_order=RenderOrder.ACTOR, dialogue=dialogue_component, invulnerable=True)
+			story_teller = Entity(center_of_last_room_x - 1, center_of_last_room_y - 1, mysterious_old_man, libtcod.orange, 
+				'The Story Teller', blocks=True, render_order=RenderOrder.ACTOR, dialogue=dialogue_component, invulnerable=True)
 			entities.append(story_teller)
 
 
@@ -190,17 +196,18 @@ class GameMap:
 									 "He looked wistfully to the fields in the distance.\n\n"
 								 	 "\"Such a waste..\" He thought, as he threw his sword to the ground.")
 			entities.append(item)
+		"""
 
 		if self.dungeon_level == 1:
 			equippable_component = Equippable(EquipmentSlots.MAIN_HAND, ranged=True, min_damage_bonus=1, max_damage_bonus=2)
-			item = Entity(player.x-1, player.y-1, 'D', libtcod.sepia, 'Flimsy Wooden Bow', render_order=RenderOrder.ITEM,
+			item = Entity(player.x-1, player.y-1, generic_bow, libtcod.sepia, 'Flimsy Wooden Bow', render_order=RenderOrder.ITEM,
 						  equippable=equippable_component)
 			item.item.targeting_range = 9
 			item.item.area_of_effect = 1
 			item.item.description = ("Legends tell of a woman who made wielding a bow an art form."
 									"You probably wont get much accomplished with this thing though.")
 			entities.append(item)
-		"""
+		
 
 
 	def create_room(self, room):

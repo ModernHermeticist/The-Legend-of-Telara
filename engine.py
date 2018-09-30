@@ -81,7 +81,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 
 		libtcod.console_flush()
 
-		clear_all(con, entities)
+		clear_all(con, entities, fov_map, game_map)
 
 		action = handle_keys(key, game_state)
 		mouse_action = handle_mouse(mouse)
@@ -489,7 +489,7 @@ def main():
 	#mixer.music.play(loops=0, start=0.0)
 	#mixer.music.set_volume(0.01)
 
-	libtcod.console_set_custom_font('terminal16x16_gs_ro.png', libtcod.FONT_LAYOUT_ASCII_INROW | libtcod.FONT_TYPE_GREYSCALE, 16, 17)
+	libtcod.console_set_custom_font('terminal16x16_gs_ro.png', libtcod.FONT_LAYOUT_ASCII_INROW, 16, 18)
 
 
 	libtcod.console_init_root(constants['screen_width'], constants['screen_height'], constants['window_title'], False, libtcod.RENDERER_OPENGL)
@@ -500,7 +500,7 @@ def main():
 	area_info_panel = libtcod.console_new(constants['area_info_panel_width'], constants['area_info_panel_height'])
 	under_mouse_panel = libtcod.console_new(constants['under_mouse_panel_width'], constants['under_mouse_panel_height'])
 
-	load_customfont()
+	#load_customfont()
 
 
 	player = None

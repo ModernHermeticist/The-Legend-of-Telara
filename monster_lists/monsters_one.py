@@ -21,9 +21,9 @@ def get_easy_monsters(dungeon_level):
 
 
 def choose_easy_monster(monster_choice, dungeon_level, x, y):
-	orc = 2
-	gnoll = 3
-	troll = 4
+	orc = 272
+	gnoll = 273
+	troll = 274
 
 
 	if monster_choice == 'gnoll':
@@ -31,7 +31,7 @@ def choose_easy_monster(monster_choice, dungeon_level, x, y):
 									max_damage=2+(dungeon_level-1), xp=20+(2*(dungeon_level-1)))
 		ai_component = BasicMonster()
 
-		monster = Entity(x, y, gnoll, libtcod.desaturated_green, 'Gnoll', alive=True, blocks=True,
+		monster = Entity(x, y, gnoll, libtcod.desaturated_green, 'Gnoll', monster=True, alive=True, blocks=True,
 						 render_order=RenderOrder.ACTOR, combat_class=class_component, ai=ai_component)
 
 	elif monster_choice == 'orc':
@@ -39,14 +39,14 @@ def choose_easy_monster(monster_choice, dungeon_level, x, y):
 									max_damage=3+(dungeon_level-1), xp=35+(5*(dungeon_level-1)))
 		ai_component = BasicMonster()
 
-		monster = Entity(x, y, orc, libtcod.desaturated_green, 'Orc', alive=True, blocks=True,
+		monster = Entity(x, y, orc, libtcod.desaturated_green, 'Orc', monster=True, alive=True, blocks=True,
 						 render_order=RenderOrder.ACTOR, combat_class=class_component, ai=ai_component)
 	elif monster_choice == 'troll':
 		class_component = Fighter(hp=30+(2*dungeon_level-1), mp=0, armor=3, min_damage=0,
 									max_damage=4+(dungeon_level-1), xp=100+(5*(dungeon_level-1)))
 		ai_component = BasicMonster()
 
-		monster = Entity(x, y, troll, libtcod.darker_green, 'Troll', alive=True, blocks=True, combat_class=class_component,
+		monster = Entity(x, y, troll, libtcod.darker_green, 'Troll', monster=True, alive=True, blocks=True, combat_class=class_component,
 						 render_order=RenderOrder.ACTOR, ai=ai_component)
 
 	return monster
