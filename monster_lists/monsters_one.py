@@ -13,9 +13,10 @@ from entity import Entity
 def get_easy_monsters(dungeon_level):
 
 	monster_chances = {
-			'orc': from_dungeon_level([[60,1],[30,3],[10,4],[0,5]], dungeon_level),
-			'gnoll': from_dungeon_level([[80,1],[50,2],[30,3],[0,4]], dungeon_level),
-			'troll': from_dungeon_level([[15,3],[30,5],[60,7]], dungeon_level)
+			'orc'              : from_dungeon_level([[60,1],[30,3],[10,4],[0,5]], dungeon_level),
+			'gnoll'            : from_dungeon_level([[80,1],[50,2],[30,3],[0,4]], dungeon_level),
+			'troll'            : from_dungeon_level([[15,3],[30,5],[60,7]], dungeon_level),
+			#'orc_battle_master': from_dungeon_level([[0,4], [100,5], [0,6]], dungeon_level)
 			}
 	return monster_chances
 
@@ -24,6 +25,7 @@ def choose_easy_monster(monster_choice, dungeon_level, x, y):
 	orc = 272
 	gnoll = 273
 	troll = 274
+	orc_battle_master = 286
 
 
 	if monster_choice == 'gnoll':
@@ -48,5 +50,6 @@ def choose_easy_monster(monster_choice, dungeon_level, x, y):
 
 		monster = Entity(x, y, troll, libtcod.darker_green, 'Troll', monster=True, alive=True, blocks=True, combat_class=class_component,
 						 render_order=RenderOrder.ACTOR, ai=ai_component)
+
 
 	return monster

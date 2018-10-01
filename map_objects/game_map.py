@@ -185,6 +185,14 @@ class GameMap:
 				'The Story Teller', blocks=True, render_order=RenderOrder.ACTOR, dialogue=dialogue_component, invulnerable=True)
 			entities.append(story_teller)
 
+		if self.dungeon_level == 5:
+			class_component = Fighter(hp=100, mp=0, armor=5, min_damage=3, max_damage=8, xp=400)
+			ai_component = BasicMonster()
+
+			monster = Entity(x, y, orc_battle_master, libtcod.darker_green, 'Jagrak, Orc Battle Master', monster=True, alive=True, 
+							 blocks=True, combat_class=class_component, render_order=RenderOrder.ACTOR, ai=ai_component)
+			entities.append(monster)
+
 
 		"""
 

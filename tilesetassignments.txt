@@ -30,3 +30,4 @@
 	confusion_scroll_2   =  283
 	mysterious_old_man_2 =  284
 	corpse_2             =  285
+	orc_battle_master    =  286
