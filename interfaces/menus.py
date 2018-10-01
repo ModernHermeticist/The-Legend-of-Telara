@@ -1207,4 +1207,4 @@ def dialogue_screen(player, npc, dialogue_screen_width, dialogue_screen_height, 
 	
 
 def message_box(con, header, background_color, width, screen_width, screen_height):
-	menu(con, header, background_color, [], width, screen_width, screen_height)
+	menu(con, header, background_color, [], width, screen_width, screen_height, False)

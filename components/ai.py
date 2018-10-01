@@ -20,6 +20,9 @@ class BasicMonster():
 
 		monster = self.owner
 		if libtcod.map_is_in_fov(fov_map, monster.x, monster.y):
+			monster.aggro = True
+
+		if monster.aggro == True:
 
 			if monster.distance_to(target) >= 2:
 				monster.move_astar(target, entities, game_map)
@@ -27,6 +30,19 @@ class BasicMonster():
 			elif target.combat_class.hp > 0:
 				attack_results = monster.combat_class.attack(target)
 				results.extend(attack_results)
+
+		return results
+
+	def approach_player_on_wait(self, target, fov_map, game_map, entities):
+		results = []
+
+		monster = self.owner
+		if monster.distance_to(target) >= 2 and monster.distance_to(target) <= 8:
+			monster.move_astar(target, entities, game_map)
+
+		elif libtcod.map_is_in_fov(fov_map, monster.x, monster.y) and target.combat_class.hp > 0:
+			attack_results = monster.combat_class.attack(target)
+			results.extend(attack_results)
 
 		return results
 

@@ -141,12 +141,12 @@ class Warrior():
 		if self.hp > rest_max:
 			self.hp = rest_max
 
-		return 'Resting soothes your wounds.'
+		return 'You sense that the noise made by resting may have drawn enemies. Despite that you feel slightly refreshed.'
 
 	def attack(self, target):
 		results = []
 
-		damage = randint(self.min_damage, self.max_damage) - target.combat_class.armor
+		damage = int(randint(self.min_damage, self.max_damage) * (1 / (1+target.combat_class.armor)))
 
 		if damage > 0:
 			results.append({'message': Message('{0} attacks {1} for {2} damage.'.format(

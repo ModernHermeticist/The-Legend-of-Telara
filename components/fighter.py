@@ -72,7 +72,7 @@ class Fighter():
 	def attack(self, target):
 		results = []
 
-		damage = randint(self.min_power, self.power) - target.combat_class.defense
+		damage = int(randint(self.min_power, self.power) * (1 / (1+target.combat_class.armor)))
 
 		if damage > 0:
 			results.append({'message': Message('{0} attacks {1} for {2} hit points.'.format(

@@ -452,34 +452,37 @@ def play_game(player, entities, game_map, message_log, game_state, con, message_
 				game_state = GameStates.ENEMY_TURN
 
 		if game_state == GameStates.ENEMY_TURN:
-			for entity in entities:
-				if entity.ai:
-					enemy_turn_results = entity.ai.take_turn(player, fov_map, game_map, entities)
+				for entity in entities:
+					if entity.ai:
+						if wait:
+							enemy_turn_results = entity.ai.approach_player_on_wait(player, fov_map, game_map, entities)
+						else:
+							enemy_turn_results = entity.ai.take_turn(player, fov_map, game_map, entities)
 
-					for enemy_turn_result in enemy_turn_results:
-						message = enemy_turn_result.get('message')
-						dead_entity = enemy_turn_result.get('dead')
+							for enemy_turn_result in enemy_turn_results:
+								message = enemy_turn_result.get('message')
+								dead_entity = enemy_turn_result.get('dead')
 
-						if message:
-							message_log.add_message(message)
+								if message:
+									message_log.add_message(message)
 
-						if dead_entity:
-							if dead_entity == player:
-								message, game_state = kill_player(dead_entity)
-							else:
-								message = kill_monster(dead_entity)
+								if dead_entity:
+									if dead_entity == player:
+										message, game_state = kill_player(dead_entity)
+									else:
+										message = kill_monster(dead_entity)
 
-							message_log.add_message(message)
+									message_log.add_message(message)
 
-							if game_state == GameStates.PLAYER_DEAD:
-								break
+									if game_state == GameStates.PLAYER_DEAD:
+										break
 
-					if game_state == GameStates.PLAYER_DEAD:
-						break
-			else:
-				game_state = GameStates.PLAYERS_TURN
+						if game_state == GameStates.PLAYER_DEAD:
+							break
+				else:
+					game_state = GameStates.PLAYERS_TURN
 
-		#animation_time -= 1
+			#animation_time -= 1
 
 
 def main():
@@ -527,7 +530,7 @@ def main():
 						constants['screen_height'])
 
 			if show_load_error_message:
-				message_box(con, 'No saved games to load', 50, constants['screen_width'], constants['screen_height'])
+				message_box(con, 'No saved games to load', libtcod.darker_blue, 23, constants['screen_width'], constants['screen_height'])
 
 			libtcod.console_flush()
 
